@@ -29,7 +29,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# environment files
+# Production Render Backend API URL:
+# https://kochuvila-agencies-backend.onrender.com
+# https://kochuvila-agencies-backend.onrender.com/api
 .env*.local
 
 # vercel
