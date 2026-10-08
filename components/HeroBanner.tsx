@@ -4,9 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  ShieldCheck,
   Truck,
-  CreditCard,
   ChevronLeft,
   ChevronRight,
   Tv,
@@ -17,16 +15,14 @@ import {
   Utensils,
   WashingMachine,
   Flame,
-  CheckCircle2,
   Clock,
   Star,
   MapPin,
   Sparkles,
   Zap,
-  Percent,
 } from 'lucide-react';
 
-// ─── 1. CATEGORY NAVIGATION BUBBLES DATA (PLACED UNDER HERO SLIDER) ─────────
+// ─── 1. CATEGORY NAVIGATION DATA (PLACED UNDER HERO SLIDER) ─────────────────
 interface CategoryBubble {
   id: string;
   name: string;
@@ -37,7 +33,7 @@ interface CategoryBubble {
   badgeColor?: string;
 }
 
-const CATEGORY_BUBBLES: CategoryBubble[] = [
+const CATEGORY_ITEMS: CategoryBubble[] = [
   {
     id: 'top-offers',
     name: 'Top Offers',
@@ -181,7 +177,7 @@ const HERO_BANNERS: HeroBannerSlide[] = [
   },
 ];
 
-// ─── 3. AMAZON QUAD CARDS DATA (4 MULTI-ITEM SECTIONS) ──────────────────────
+// ─── 3. AMAZON QUAD CARDS DATA ─────────────────────────────────────────────
 const APPLIANCE_QUAD = [
   {
     name: 'Split Inverter ACs',
@@ -217,7 +213,7 @@ const FURNITURE_QUAD = [
     href: '/products?category=furniture&subcategory=sofas',
   },
   {
-    name: 'Hydraulic Storage Beds',
+    name: 'Storage Beds',
     offer: 'Solid Wood Timber',
     image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
     href: '/products?category=furniture&subcategory=beds',
@@ -263,78 +259,13 @@ const ENTERTAINMENT_QUAD = [
   },
 ];
 
-// ─── 4. QUICK TRENDING DEALS REEL DATA ──────────────────────────────────────
-const QUICK_TRENDING_ITEMS = [
-  {
-    name: 'Daikin 1.5 Ton 5-Star Split AC',
-    brand: 'Daikin',
-    price: 45490,
-    mrp: 67200,
-    discount: '32% OFF',
-    tag: '5-Star Inverter',
-    image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=400&q=80',
-    href: '/products/daikin-1-5-ton-5-star-inverter-split-ac',
-  },
-  {
-    name: 'Sony Bravia 55" 4K Google TV',
-    brand: 'Sony',
-    price: 54990,
-    mrp: 79900,
-    discount: '31% OFF',
-    tag: 'Top Rated 4K',
-    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=400&q=80',
-    href: '/products?category=appliances&subcategory=televisions',
-  },
-  {
-    name: 'Royal Heritage Solid Teak Sofa',
-    brand: 'Royal Oak',
-    price: 46500,
-    mrp: 69900,
-    discount: '33% OFF',
-    tag: 'Pure Teakwood',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
-    href: '/products?category=furniture&subcategory=sofas',
-  },
-  {
-    name: 'LG 655L Side-by-Side Refrigerator',
-    brand: 'LG',
-    price: 79990,
-    mrp: 109990,
-    discount: '27% OFF',
-    tag: 'Smart Inverter',
-    image: 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=400&q=80',
-    href: '/products?category=appliances&subcategory=refrigerators',
-  },
-  {
-    name: 'Faber 60cm Auto-Clean Chimney',
-    brand: 'Faber',
-    price: 13990,
-    mrp: 24990,
-    discount: '44% OFF',
-    tag: 'Filterless 1200m³',
-    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
-    href: '/products/faber-60cm-1200-m3h-auto-clean-kitchen-chimney',
-  },
-  {
-    name: 'Solid Teak 6-Seater Dining Table',
-    brand: 'Royal Oak',
-    price: 48990,
-    mrp: 69990,
-    discount: '30% OFF',
-    tag: 'Includes 6 Chairs',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=400&q=80',
-    href: '/products/solid-teak-wood-6-seater-dining-table-set',
-  },
-];
-
 export default function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [countdown, setCountdown] = useState({ hours: 5, minutes: 42, seconds: 18 });
   const touchStartX = useRef<number | null>(null);
-  const dealScrollRef = useRef<HTMLDivElement>(null);
 
-  const SLIDE_DURATION = 4500;
+  const SLIDE_DURATION = 5000;
   const totalSlides = HERO_BANNERS.length;
 
   const nextSlide = useCallback(() => {
@@ -395,28 +326,21 @@ export default function HeroBanner() {
     touchStartX.current = null;
   };
 
-  const scrollDeals = (direction: 'left' | 'right') => {
-    if (dealScrollRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
-      dealScrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
-    }
-  };
-
   const formatTwoDigits = (num: number) => String(num).padStart(2, '0');
 
   return (
-    <div className="bg-[#EAEDED]/70 pb-8 sm:pb-12 space-y-4 sm:space-y-6">
+    <div className="bg-[#EAEDED]/70 pb-6 sm:pb-10 space-y-3.5 sm:space-y-5">
       
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 1: MAIN PROMOTIONAL HERO BANNER CAROUSEL (TOP OF HERO)
+          PART 1: MAIN PROMOTIONAL HERO BANNER CAROUSEL (TOP)
          ──────────────────────────────────────────────────────────────────────── */}
-      <section aria-label="Featured Promotions" className="w-full relative overflow-hidden bg-slate-950">
+      <section aria-label="Featured Promotions" className="w-full relative overflow-hidden bg-slate-900">
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="relative w-full h-[260px] xs:h-[320px] sm:h-[400px] md:h-[460px] lg:h-[500px] xl:h-[540px] group select-none overflow-hidden"
+          className="relative w-full h-[250px] xs:h-[300px] sm:h-[380px] md:h-[440px] lg:h-[480px] group select-none overflow-hidden"
         >
           {/* Banner Slides */}
           {HERO_BANNERS.map((slide, idx) => {
@@ -431,7 +355,7 @@ export default function HeroBanner() {
                 tabIndex={isActive ? 0 : -1}
                 aria-hidden={!isActive}
               >
-                {/* Full-bleed Banner Graphic */}
+                {/* Full Banner Graphic */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={slide.image}
@@ -440,15 +364,15 @@ export default function HeroBanner() {
                   draggable={false}
                 />
 
-                {/* Left Gradient Overlay for High Contrast Text */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent pointer-events-none" />
+                {/* Left Scrim for Text Readability without Muddying the Image */}
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/40 to-transparent pointer-events-none" />
 
-                {/* Subtle bottom shadow vignette */}
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/60 to-transparent pointer-events-none" />
+                {/* Subtle Bottom Vignette */}
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-950/50 to-transparent pointer-events-none" />
 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 md:px-16 max-w-2xl text-white">
-                  <div className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-bold text-brand-lightBlue mb-3 sm:mb-4 w-fit shadow-lg">
+                  <div className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-bold text-brand-lightBlue mb-2.5 sm:mb-3.5 w-fit shadow-md">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span className="font-black uppercase tracking-wider text-[10px] sm:text-[11px]">
                       {slide.badge}
@@ -459,17 +383,18 @@ export default function HeroBanner() {
                     {slide.title}
                   </h1>
 
-                  <p className="text-xs sm:text-sm md:text-base text-slate-200 mt-2 sm:mt-3 leading-relaxed drop-shadow-sm max-w-xl">
+                  <p className="text-xs sm:text-sm md:text-base text-slate-200 mt-2 leading-relaxed drop-shadow-sm max-w-xl">
                     {slide.subtitle}
                   </p>
 
-                  {/* Bank Offer Strip inside banner */}
-                  <div className="mt-3 sm:mt-4 inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/40 text-amber-200 px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold backdrop-blur-xs w-fit">
+                  {/* Bank Offer Badge */}
+                  <div className="mt-3 inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/40 text-amber-200 px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold backdrop-blur-xs w-fit">
                     <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                     <span>{slide.bankOffer}</span>
                   </div>
 
-                  <div className="mt-4 sm:mt-6 flex items-center gap-3">
+                  {/* CTA Button */}
+                  <div className="mt-4 sm:mt-5 flex items-center gap-3">
                     <span className="px-5 py-2.5 sm:px-6 sm:py-3 bg-brand-primary hover:bg-brand-primaryHover text-white rounded-xl text-xs sm:text-sm font-black shadow-button transition-all inline-flex items-center gap-2">
                       <span>{slide.ctaText}</span>
                       <ArrowRight className="w-4 h-4" />
@@ -480,32 +405,32 @@ export default function HeroBanner() {
             );
           })}
 
-          {/* Left Navigation Arrow */}
+          {/* Left Arrow Button */}
           <button
             onClick={(e) => {
               e.preventDefault();
               prevSlide();
             }}
             aria-label="Previous Slide"
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
           >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          {/* Right Navigation Arrow */}
+          {/* Right Arrow Button */}
           <button
             onClick={(e) => {
               e.preventDefault();
               nextSlide();
             }}
             aria-label="Next Slide"
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
           >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            <ChevronRight className="w-5 h-5" />
           </button>
 
-          {/* Bottom Indicators */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+          {/* Slider Indicators */}
+          <div className="absolute bottom-3 right-4 sm:bottom-5 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
             {HERO_BANNERS.map((_, idx) => (
               <button
                 key={idx}
@@ -526,12 +451,12 @@ export default function HeroBanner() {
       </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 2: FLIPKART STYLE CATEGORY QUICK NAVIGATION (PLACED UNDER HERO SLIDER)
+          PART 2: CATEGORY QUICK NAVIGATION BAR (DIRECTLY UNDER HERO SLIDER)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-brand-border/80 shadow-xs px-3 sm:px-5 py-3">
           <div className="flex items-center justify-between gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
-            {CATEGORY_BUBBLES.map((cat) => (
+            {CATEGORY_ITEMS.map((cat) => (
               <Link
                 key={cat.id}
                 href={cat.href}
@@ -717,7 +642,7 @@ export default function HeroBanner() {
             </Link>
           </div>
 
-          {/* ── CARD 4: LIGHTNING FLASH DEAL (Flipkart Style) ── */}
+          {/* ── CARD 4: LIGHTNING FLASH DEAL (Deal of the Day) ── */}
           <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group relative overflow-hidden">
             <div>
               <div className="flex items-center justify-between gap-1 mb-2">
@@ -781,192 +706,6 @@ export default function HeroBanner() {
             </Link>
           </div>
 
-        </div>
-      </section>
-
-      {/* ────────────────────────────────────────────────────────────────────────
-          PART 4: FLIPKART / AMAZON 3-COLUMN BANK & BENEFIT BANNER STRIP
-         ──────────────────────────────────────────────────────────────────────── */}
-      <section aria-label="Financing and Delivery Benefits" className="max-w-7xl mx-auto px-2 sm:px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white flex items-center gap-3.5 shadow-sm border border-blue-800/40">
-            <div className="w-11 h-11 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center shrink-0 text-blue-300">
-              <Percent className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-bold text-blue-300 uppercase tracking-wider block">Bank Festival Offer</span>
-              <p className="text-xs sm:text-sm font-black text-white leading-tight">Instant 10% Off on Federal &amp; HDFC</p>
-              <span className="text-[10.5px] text-slate-300">On appliances &amp; teak furniture</span>
-            </div>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 text-white flex items-center gap-3.5 shadow-sm border border-emerald-800/40">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 text-emerald-300">
-              <CreditCard className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">Zero Cost Financing</span>
-              <p className="text-xs sm:text-sm font-black text-white leading-tight">0% Interest EMI from ₹1,299/mo</p>
-              <span className="text-[10.5px] text-slate-300">Bajaj Finserv &amp; major credit cards</span>
-            </div>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950 via-yellow-950 to-slate-900 text-white flex items-center gap-3.5 shadow-sm border border-amber-800/40">
-            <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0 text-amber-300">
-              <Truck className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block">Kerala Express Dispatch</span>
-              <p className="text-xs sm:text-sm font-black text-white leading-tight">24-48 Hour Doorstep Unboxing</p>
-              <span className="text-[10.5px] text-slate-300">Covering all 14 districts safely</span>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ────────────────────────────────────────────────────────────────────────
-          PART 5: HORIZONTAL BLOCKBUSTER DEALS REEL ("TRENDING IN KERALA")
-         ──────────────────────────────────────────────────────────────────────── */}
-      <section aria-label="Trending Offers" className="max-w-7xl mx-auto px-2 sm:px-4">
-        <div className="bg-white rounded-2xl border border-brand-border p-4 sm:p-5 shadow-card">
-          <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary">
-                  Blockbuster Deals
-                </span>
-              </div>
-              <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                Trending Offers in Kerala • Up to 44% Off
-              </h3>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => scrollDeals('left')}
-                aria-label="Scroll deals left"
-                className="w-8 h-8 rounded-full border border-slate-200 hover:border-brand-primary hover:text-brand-primary text-slate-600 flex items-center justify-center transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => scrollDeals('right')}
-                aria-label="Scroll deals right"
-                className="w-8 h-8 rounded-full border border-slate-200 hover:border-brand-primary hover:text-brand-primary text-slate-600 flex items-center justify-center transition-colors"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-              <Link
-                href="/products?isDeal=true"
-                className="hidden sm:inline-flex items-center gap-1 text-xs font-black text-brand-primary hover:underline ml-2"
-              >
-                <span>See all deals</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Horizontal Reel */}
-          <div
-            ref={dealScrollRef}
-            className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-1"
-          >
-            {QUICK_TRENDING_ITEMS.map((item, idx) => (
-              <Link
-                key={idx}
-                href={item.href}
-                className="group/deal flex-none w-[180px] sm:w-[210px] p-2.5 rounded-xl bg-slate-50 hover:bg-white hover:shadow-card border border-slate-200/80 hover:border-brand-primary/40 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="aspect-square rounded-lg overflow-hidden bg-white relative mb-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover/deal:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                    <span className="absolute bottom-1.5 left-1.5 bg-emerald-600 text-white text-[9.5px] font-black px-1.5 py-0.5 rounded shadow-2xs">
-                      {item.discount}
-                    </span>
-                  </div>
-
-                  <span className="text-[10px] font-bold text-brand-primary uppercase tracking-wider block">
-                    {item.brand}
-                  </span>
-                  <p className="text-xs font-bold text-slate-800 line-clamp-2 leading-tight group-hover/deal:text-brand-primary transition-colors">
-                    {item.name}
-                  </p>
-                </div>
-
-                <div className="mt-2 pt-2 border-t border-slate-200/60">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs sm:text-sm font-black text-slate-900">
-                      ₹{item.price.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-[10px] text-slate-400 line-through">
-                      ₹{item.mrp.toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                  <span className="text-[9.5px] font-semibold text-slate-500 block truncate mt-0.5">
-                    {item.tag}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ────────────────────────────────────────────────────────────────────────
-          PART 6: SERVICE ASSURANCE TRUST STRIP
-         ──────────────────────────────────────────────────────────────────────── */}
-      <section aria-label="Customer Guarantees" className="max-w-7xl mx-auto px-2 sm:px-4">
-        <div className="bg-white rounded-2xl border border-brand-border p-3.5 sm:p-4 shadow-card">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-            <div className="flex items-center gap-3 pt-2 md:pt-0">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-black text-slate-900 text-xs sm:text-[13px]">100% Genuine Warranty</p>
-                <p className="text-[11px] text-slate-600">Direct from LG, Samsung, Bosch</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2 md:pt-0 md:pl-4">
-              <div className="w-10 h-10 rounded-xl bg-brand-lightBlueSoft text-brand-primary flex items-center justify-center shrink-0 border border-brand-lightBlue/40">
-                <Truck className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-black text-slate-900 text-xs sm:text-[13px]">Kerala-Wide Delivery</p>
-                <p className="text-[11px] text-slate-600">Covering all 14 districts safely</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2 md:pt-0 md:pl-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
-                <CreditCard className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-black text-slate-900 text-xs sm:text-[13px]">Zero-Cost EMI Options</p>
-                <p className="text-[11px] text-slate-600">Easy monthly installments</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2 md:pt-0 md:pl-4">
-              <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 border border-purple-100">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-black text-slate-900 text-xs sm:text-[13px]">Free Installation &amp; Demo</p>
-                <p className="text-[11px] text-slate-600">Certified technicians at doorstep</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
