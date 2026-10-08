@@ -104,28 +104,18 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <div className="hidden sm:flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('login');
-                    setAuthModalOpen(true);
-                  }}
-                  className="px-3 py-1.5 text-xs font-bold text-slate-800 hover:text-brand-primary rounded-xl hover:bg-slate-50 transition-all border border-slate-200"
-                >
-                  Login
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('signup');
-                    setAuthModalOpen(true);
-                  }}
-                  className="px-3.5 py-1.5 text-xs font-black text-white bg-brand-primary hover:bg-brand-primaryHover rounded-xl shadow-xs transition-all active:scale-98"
-                >
-                  Sign Up
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('login');
+                  setAuthModalOpen(true);
+                }}
+                className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-800 hover:text-brand-primary rounded-xl bg-slate-50 hover:bg-slate-100 transition-all border border-slate-200 shadow-xs group"
+                title="Login or Create an Account"
+              >
+                <User className="w-3.5 h-3.5 text-brand-primary group-hover:scale-110 transition-transform" />
+                <span>Login / Sign Up</span>
+              </button>
             )}
 
             {/* Cart */}
@@ -360,28 +350,18 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <button
-                  onClick={() => {
-                    setAuthMode('login');
-                    setAuthModalOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 text-center bg-slate-50 hover:bg-slate-100"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => {
-                    setAuthMode('signup');
-                    setAuthModalOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="py-2.5 rounded-xl bg-brand-primary text-white text-xs font-black text-center shadow-xs hover:bg-brand-primaryHover"
-                >
-                  Sign Up
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('login');
+                  setAuthModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-2.5 rounded-xl bg-brand-primary text-white text-xs font-black text-center shadow-xs hover:bg-brand-primaryHover flex items-center justify-center gap-2 mb-3"
+              >
+                <User className="w-4 h-4" />
+                <span>Login / Sign Up</span>
+              </button>
             )}
 
             <Link

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
-  X,
   Mail,
   Lock,
   User as UserIcon,
@@ -15,14 +16,9 @@ import {
   Eye,
   EyeOff,
   Building2,
+  Home,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
-
-interface AuthModalProps {
-  isOpen: boolean;
-  initialMode?: 'login' | 'signup';
-  onClose: () => void;
-}
 
 const KERALA_DISTRICTS = [
   'Thiruvananthapuram',
@@ -41,8 +37,9 @@ const KERALA_DISTRICTS = [
   'Kasaragod',
 ];
 
-export default function AuthModal({ isOpen, initialMode = 'login', onClose }: AuthModalProps) {
-  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
+export default function LoginClient() {
+  const router = useRouter();
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
   const setAuth = useAuthStore((state) => state.setAuth);
 
   // Login form state
@@ -62,26 +59,6 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Sync mode & lock body scroll on open
-  useEffect(() => {
-    setMode(initialMode);
-    setError(null);
-    setSuccessMsg(null);
-  }, [initialMode, isOpen]);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -98,12 +75,11 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
       if (res.ok) {
         const data = await res.json();
         setAuth(data.user, data.token);
-        setSuccessMsg('Welcome back!');
+        setSuccessMsg('Welcome back! Redirecting to your account...');
         setTimeout(() => {
-          onClose();
-        }, 500);
+          router.push('/account');
+        }, 600);
       } else {
-        // Fallback user login for seamless UX
         const fallbackUser = {
           _id: `usr-${Date.now()}`,
           name: loginEmail.split('@')[0].toUpperCase() || 'Kerala Customer',
@@ -112,13 +88,12 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
           phone: '+91 94470 23456',
         };
         setAuth(fallbackUser, 'mock-jwt-token');
-        setSuccessMsg('Successfully signed in!');
+        setSuccessMsg('Successfully signed in! Redirecting...');
         setTimeout(() => {
-          onClose();
-        }, 500);
+          router.push('/account');
+        }, 600);
       }
     } catch {
-      // Local fallback in case backend is offline
       const fallbackUser = {
         _id: `usr-${Date.now()}`,
         name: loginEmail.split('@')[0].toUpperCase() || 'Kerala Customer',
@@ -127,10 +102,10 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
         phone: '+91 94470 23456',
       };
       setAuth(fallbackUser, 'mock-jwt-token');
-      setSuccessMsg('Successfully signed in!');
+      setSuccessMsg('Successfully signed in! Redirecting...');
       setTimeout(() => {
-        onClose();
-      }, 500);
+        router.push('/account');
+      }, 600);
     } finally {
       setLoading(false);
     }
@@ -166,8 +141,8 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
       setAuth(newUser, 'mock-jwt-token');
       setSuccessMsg('Account created successfully! Welcome to Kochuvila Agencies.');
       setTimeout(() => {
-        onClose();
-      }, 600);
+        router.push('/account');
+      }, 700);
     } catch (err: any) {
       setError(err?.message || 'Failed to create account');
     } finally {
@@ -186,43 +161,36 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="relative w-full max-w-[460px] my-auto bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors backdrop-blur-md"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Branded Header Banner */}
-        <div className="bg-gradient-to-br from-[#071426] via-[#0B2545] to-[#017ED0] p-6 text-white text-left relative shrink-0">
+    <div className="min-h-[85vh] bg-gradient-to-b from-slate-50 via-slate-100/60 to-white flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col my-auto animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Header Banner */}
+        <div className="bg-gradient-to-br from-[#071426] via-[#0B2545] to-[#017ED0] p-6 sm:p-8 text-white text-left relative">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs text-brand-lightBlue hover:text-white font-bold mb-3 transition-colors"
+          >
+            <Home className="w-3.5 h-3.5" />
+            <span>Back to Home</span>
+          </Link>
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-brand-lightBlue">
               Kochuvila Customer Hub
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black font-display tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white">
             {mode === 'login' ? 'Welcome Back' : 'Create an Account'}
-          </h2>
-          <p className="text-xs text-slate-300 mt-1 max-w-[340px]">
+          </h1>
+          <p className="text-xs text-slate-300 mt-1.5 max-w-[360px]">
             {mode === 'login'
-              ? 'Sign in to access your orders, warranties & express checkout.'
+              ? 'Sign in to access your orders, warranty status & express checkout.'
               : 'Join Kerala’s trusted home appliances & teakwood furniture store.'}
           </p>
         </div>
 
-        {/* Segmented Control / Single-Switch Tabs */}
-        <div className="p-4 pb-2 bg-slate-50/70 border-b border-slate-100 shrink-0">
+        {/* Single Switch Tab Bar */}
+        <div className="p-4 pb-2 bg-slate-50/70 border-b border-slate-100">
           <div className="grid grid-cols-2 p-1 bg-slate-200/70 rounded-2xl">
             <button
               type="button"
@@ -230,7 +198,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                 setMode('login');
                 setError(null);
               }}
-              className={`py-2 text-xs font-black rounded-xl transition-all ${
+              className={`py-2.5 text-xs font-black rounded-xl transition-all ${
                 mode === 'login'
                   ? 'bg-white text-brand-primary shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -244,7 +212,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                 setMode('signup');
                 setError(null);
               }}
-              className={`py-2 text-xs font-black rounded-xl transition-all ${
+              className={`py-2.5 text-xs font-black rounded-xl transition-all ${
                 mode === 'signup'
                   ? 'bg-white text-brand-primary shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -255,8 +223,8 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
           </div>
         </div>
 
-        {/* Scrollable Form Body */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-4">
+        {/* Form Body */}
+        <div className="p-6 sm:p-8 space-y-4">
           {error && (
             <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
@@ -315,7 +283,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                 </div>
               </div>
 
-              {/* Demo 1-Click Fill Helper */}
+              {/* Demo Login Buttons */}
               <div className="pt-1 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
                 <span className="text-[11px] text-slate-600 font-bold block mb-2">
                   Quick Demo Sign-In:
@@ -341,7 +309,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
               >
                 {loading ? 'Verifying...' : 'Sign In to Account'}
                 <ArrowRight className="w-4 h-4" />
@@ -374,7 +342,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Anand Varma"
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
                   />
                 </div>
               </div>
@@ -391,7 +359,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
                     placeholder="anand@example.com"
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
                   />
                 </div>
               </div>
@@ -409,7 +377,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="98471 23456"
-                      className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                      className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
                     />
                   </div>
                 </div>
@@ -423,7 +391,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     <select
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
-                      className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                      className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
                     >
                       {KERALA_DISTRICTS.map((dist) => (
                         <option key={dist} value={dist}>
@@ -447,7 +415,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
                   />
                   <button
                     type="button"
@@ -463,7 +431,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
               >
                 {loading ? 'Creating Account...' : 'Complete Sign Up'}
                 <Sparkles className="w-4 h-4" />

@@ -22,12 +22,15 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { formatINR } from '@/lib/utils';
+import AuthModal from '@/components/AuthModal';
 
 export default function AccountClient() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'addresses' | 'coupons' | 'support'>('orders');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   // Demo order history with authentic Kerala tracking
   const demoOrders = [
@@ -121,23 +124,46 @@ export default function AccountClient() {
           {/* Left Navigation Sidebar */}
           <div className="lg:col-span-4 space-y-4">
             {/* User Profile Summary Card */}
-            <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-brand-lightBlueSoft text-brand-primary flex items-center justify-center font-black text-xl border border-brand-lightBlue/60">
-                {user?.name ? user.name[0].toUpperCase() : 'K'}
+            {!user ? (
+              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card text-center space-y-3.5">
+                <div className="w-14 h-14 rounded-2xl bg-brand-lightBlueSoft text-brand-primary flex items-center justify-center font-black text-xl border border-brand-lightBlue/60 mx-auto">
+                  <User className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-black text-base text-black">Customer Access</h3>
+                  <p className="text-xs text-slate-500 mt-1">Sign in to view your orders, warranties & saved addresses</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('login');
+                    setAuthModalOpen(true);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span>Login / Sign Up</span>
+                </button>
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-black text-base text-black truncate">
-                  {user?.name || 'Valued Kerala Customer'}
-                </h3>
-                <p className="text-xs text-slate-500 truncate">
-                  {user?.email || 'customer@kochuvilaagencies.com'}
-                </p>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 mt-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  Verified Customer
-                </span>
+            ) : (
+              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-brand-lightBlueSoft text-brand-primary flex items-center justify-center font-black text-xl border border-brand-lightBlue/60">
+                  {user.name ? user.name[0].toUpperCase() : 'K'}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-black text-base text-black truncate">
+                    {user.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 truncate">
+                    {user.email}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 mt-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    Verified Customer
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Navigation Tabs */}
             <div className="bg-white rounded-3xl p-3 border border-brand-border shadow-card space-y-1">
@@ -534,6 +560,12 @@ export default function AccountClient() {
           </div>
         </div>
       </div>
+
+      <AuthModal
+        isOpen={authModalOpen}
+        initialMode={authMode}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 }
