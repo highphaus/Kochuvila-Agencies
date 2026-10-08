@@ -48,7 +48,7 @@ export default function Navbar() {
 
 
       {/* Main navigation area */}
-      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5">
+      <div className="max-w-7xl mx-auto px-4 py-1.5 sm:py-2">
         <div className="flex items-center justify-between gap-4">
           {/* Brand Logo with exact brand icon */}
           <Logo />

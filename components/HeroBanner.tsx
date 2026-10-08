@@ -17,6 +17,9 @@ import {
   MapPin,
   Sparkles,
   Truck,
+  ShieldCheck,
+  CreditCard,
+  Building2,
   Zap,
 } from 'lucide-react';
 
@@ -229,7 +232,7 @@ export default function HeroBanner() {
     <div className="bg-[#EAEDED]/70 pt-2 sm:pt-3 pb-8 sm:pb-12 space-y-3.5 sm:space-y-4">
       
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 1: MULTIPLE SECTION IMAGES (AMAZON / FLIPKART MULTI-BANNER HERO)
+          PART 1: MULTIPLE REAL IMAGE SECTIONS (AMAZON / FLIPKART BENTO GRID)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Featured Department Banners" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
@@ -237,7 +240,7 @@ export default function HeroBanner() {
           {/* ── MAIN FEATURED BANNER IMAGE (LG & SAMSUNG FESTIVAL) ── */}
           <Link
             href="/products?category=appliances"
-            className="lg:col-span-8 group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-[16/8.5] lg:aspect-auto lg:h-[420px] shadow-sm hover:shadow-xl transition-all duration-300 block"
+            className="lg:col-span-8 group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-[16/8.5] lg:aspect-auto lg:h-[440px] shadow-card hover:shadow-xl border border-slate-200/80 transition-all duration-300 block"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -245,21 +248,33 @@ export default function HeroBanner() {
               alt="LG & Samsung Kerala Premier Appliance Festival"
               className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500 select-none"
             />
-            {/* Bottom Floating Glass Badge */}
-            <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 z-10 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-white/20 text-white shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+
+            {/* Top Floating Badge */}
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 hidden xs:inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-black tracking-wider uppercase">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Festive Mega Offers • Official Brand Warranty</span>
+            </div>
+
+            {/* Bottom Floating Glass CTA */}
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-white/25 text-white shadow-xl group-hover:bg-slate-950 transition-colors">
               <span className="text-xs sm:text-sm font-black">Shop Festive Appliance Offers</span>
               <ArrowRight className="w-4 h-4 text-cyan-300 group-hover:translate-x-1 transition-transform" />
+            </div>
+
+            {/* Subtle Right Bank Offer Pill */}
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10 hidden sm:inline-flex items-center gap-1.5 bg-amber-500/25 border border-amber-400/40 text-amber-200 px-3 py-1.5 rounded-xl text-[11px] font-bold backdrop-blur-md">
+              <Zap className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span>Instant 10% Off on Cards</span>
             </div>
           </Link>
 
           {/* ── RIGHT COLUMN: 2 STACKED IMAGE SECTIONS (TEAKWOOD & INVERTER ACs) ── */}
-          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:h-[420px]">
+          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:h-[440px]">
             
             {/* Image Section 2: Malabar Teakwood */}
             <Link
               href="/products?category=furniture"
-              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-auto sm:h-[195px] lg:h-[202px] shadow-sm hover:shadow-xl transition-all duration-300 block"
+              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-auto sm:h-[200px] lg:h-[212px] shadow-card hover:shadow-xl border border-slate-200/80 transition-all duration-300 block"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -267,13 +282,18 @@ export default function HeroBanner() {
                 alt="Handcrafted Teak Living & Bedroom Sets"
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 select-none"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-3 left-3 sm:bottom-3 sm:left-3.5 z-10 flex items-center justify-between right-3 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
+              
+              <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 z-10">
+                <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-amber-200 bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-300/30">
+                  🪵 100% Malabar Teak
+                </span>
+              </div>
+
+              <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-10 flex items-center justify-between right-2.5 sm:right-3 text-white">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 block">
-                    100% Seasoned Malabar Teak
-                  </span>
-                  <p className="text-xs sm:text-sm font-black drop-shadow-sm">Teak Living &amp; Bedroom Sets</p>
+                  <p className="text-xs sm:text-sm font-black drop-shadow-sm leading-tight">Teak Living &amp; Bedroom Sets</p>
+                  <span className="text-[10px] text-amber-200/90 font-medium">Lifetime Structural Guarantee</span>
                 </div>
                 <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-amber-500 group-hover:text-black transition-colors shrink-0">
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -284,7 +304,7 @@ export default function HeroBanner() {
             {/* Image Section 3: Inverter ACs */}
             <Link
               href="/products?category=appliances&subcategory=air-conditioners"
-              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-auto sm:h-[195px] lg:h-[202px] shadow-sm hover:shadow-xl transition-all duration-300 block"
+              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 aspect-[16/9] sm:aspect-auto sm:h-[200px] lg:h-[212px] shadow-card hover:shadow-xl border border-slate-200/80 transition-all duration-300 block"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -292,13 +312,18 @@ export default function HeroBanner() {
                 alt="Tropical Inverter Cooling Festival"
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 select-none"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-3 left-3 sm:bottom-3 sm:left-3.5 z-10 flex items-center justify-between right-3 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
+              
+              <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 z-10">
+                <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-cyan-200 bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-full border border-cyan-300/30">
+                  ❄️ 5-Star Inverter ACs
+                </span>
+              </div>
+
+              <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-10 flex items-center justify-between right-2.5 sm:right-3 text-white">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-300 block">
-                    Tropical Inverter ACs
-                  </span>
-                  <p className="text-xs sm:text-sm font-black drop-shadow-sm">Beat The Kerala Heat</p>
+                  <p className="text-xs sm:text-sm font-black drop-shadow-sm leading-tight">Daikin &amp; Voltas Split ACs</p>
+                  <span className="text-[10px] text-cyan-200/90 font-medium">Free Installation Kit Included</span>
                 </div>
                 <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition-colors shrink-0">
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -312,7 +337,33 @@ export default function HeroBanner() {
       </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 2: CATEGORY QUICK NAVIGATION STRIP (UNDER HERO SECTION)
+          PART 2: MINIMALIST ASSURANCE STRIP (KERALA-WIDE TRUST)
+         ──────────────────────────────────────────────────────────────────────── */}
+      <section aria-label="Customer Guarantees" className="max-w-7xl mx-auto px-2 sm:px-4">
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-3.5 shadow-2xs">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 text-xs divide-y md:divide-y-0 md:divide-x divide-slate-100">
+            <div className="flex items-center gap-2.5 pt-1.5 md:pt-0">
+              <Truck className="w-4 h-4 text-brand-primary shrink-0" />
+              <span className="font-bold text-slate-800 text-[11px] sm:text-xs">Kerala 24-48 Hr Express Delivery</span>
+            </div>
+            <div className="flex items-center gap-2.5 pt-1.5 md:pt-0 md:pl-3">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="font-bold text-slate-800 text-[11px] sm:text-xs">100% Brand Official Warranty</span>
+            </div>
+            <div className="flex items-center gap-2.5 pt-1.5 md:pt-0 md:pl-3">
+              <CreditCard className="w-4 h-4 text-amber-600 shrink-0" />
+              <span className="font-bold text-slate-800 text-[11px] sm:text-xs">0% Interest Easy EMI Options</span>
+            </div>
+            <div className="flex items-center gap-2.5 pt-1.5 md:pt-0 md:pl-3">
+              <Building2 className="w-4 h-4 text-purple-600 shrink-0" />
+              <span className="font-bold text-slate-800 text-[11px] sm:text-xs">25,000 Sq.Ft Mega Showroom</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ────────────────────────────────────────────────────────────────────────
+          PART 3: CATEGORY QUICK NAVIGATION STRIP (UNDER HERO SECTION)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs px-3 sm:px-5 py-3.5">
@@ -321,7 +372,7 @@ export default function HeroBanner() {
               <Link
                 key={cat.id}
                 href={cat.href}
-                className="group flex flex-col items-center min-w-[78px] sm:min-w-[98px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 transition-all shrink-0"
+                className="group flex flex-col items-center min-w-[78px] sm:min-w-[98px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 hover:-translate-y-0.5 transition-all duration-200 shrink-0"
               >
                 <div className="relative mb-1.5 sm:mb-2">
                   <div
@@ -350,7 +401,7 @@ export default function HeroBanner() {
       </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 3: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
+          PART 4: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Featured Categories & Deals" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
