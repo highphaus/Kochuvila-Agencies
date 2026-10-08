@@ -23,11 +23,10 @@ import {
   MapPin,
   Sparkles,
   Zap,
-  Tag,
   Percent,
 } from 'lucide-react';
 
-// ─── 1. FLIPKART STYLE TOP CATEGORY NAVIGATION STRIP ───────────────────────
+// ─── 1. CATEGORY NAVIGATION BUBBLES DATA (PLACED UNDER HERO SLIDER) ─────────
 interface CategoryBubble {
   id: string;
   name: string;
@@ -38,7 +37,7 @@ interface CategoryBubble {
   badgeColor?: string;
 }
 
-const TOP_CATEGORY_BAR: CategoryBubble[] = [
+const CATEGORY_BUBBLES: CategoryBubble[] = [
   {
     id: 'top-offers',
     name: 'Top Offers',
@@ -117,7 +116,7 @@ const TOP_CATEGORY_BAR: CategoryBubble[] = [
   },
 ];
 
-// ─── 2. MULTI-SLIDE HERO BANNER CAROUSEL DATA ───────────────────────────────
+// ─── 2. HERO SLIDER DATA ───────────────────────────────────────────────────
 interface HeroBannerSlide {
   id: number;
   image: string;
@@ -264,7 +263,7 @@ const ENTERTAINMENT_QUAD = [
   },
 ];
 
-// ─── 4. QUICK TRENDING DEALS REEL (HORIZONTAL CAROUSEL) ─────────────────────
+// ─── 4. QUICK TRENDING DEALS REEL DATA ──────────────────────────────────────
 const QUICK_TRENDING_ITEMS = [
   {
     name: 'Daikin 1.5 Ton 5-Star Split AC',
@@ -406,53 +405,18 @@ export default function HeroBanner() {
   const formatTwoDigits = (num: number) => String(num).padStart(2, '0');
 
   return (
-    <div className="bg-[#EAEDED]/70 pb-6 sm:pb-8">
+    <div className="bg-[#EAEDED]/70 pb-8 sm:pb-12 space-y-4 sm:space-y-6">
+      
       {/* ────────────────────────────────────────────────────────────────────────
-          1. FLIPKART STYLE TOP CATEGORY NAVIGATION STRIP (ABOVE THE HERO BANNER)
+          PART 1: MAIN PROMOTIONAL HERO BANNER CAROUSEL (TOP OF HERO)
          ──────────────────────────────────────────────────────────────────────── */}
-      <div className="bg-white border-b border-brand-border/80 shadow-2xs">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-2.5">
-          <div className="flex items-center justify-between gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
-            {TOP_CATEGORY_BAR.map((cat) => (
-              <Link
-                key={cat.id}
-                href={cat.href}
-                className="group flex flex-col items-center min-w-[72px] sm:min-w-[92px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 transition-all shrink-0"
-              >
-                <div className="relative mb-1">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-brand-lightBlueSoft/60 border border-brand-border group-hover:border-brand-primary group-hover:bg-white group-hover:shadow-card flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    {cat.icon}
-                  </div>
-                  {cat.badge && (
-                    <span
-                      className={`absolute -top-1.5 -right-2 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-2xs tracking-tighter ${cat.badgeColor}`}
-                    >
-                      {cat.badge}
-                    </span>
-                  )}
-                </div>
-                <span className="text-[11px] sm:text-xs font-bold text-slate-800 group-hover:text-brand-primary transition-colors leading-tight line-clamp-1">
-                  {cat.name}
-                </span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium hidden sm:block truncate max-w-[85px]">
-                  {cat.subtitle}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ────────────────────────────────────────────────────────────────────────
-          2. AMAZON / FLIPKART FULL-WIDTH MULTI-SLIDE BANNER CAROUSEL
-         ──────────────────────────────────────────────────────────────────────── */}
-      <div className="w-full relative overflow-hidden bg-slate-950">
+      <section aria-label="Featured Promotions" className="w-full relative overflow-hidden bg-slate-950">
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="relative w-full h-[280px] xs:h-[340px] sm:h-[440px] md:h-[500px] lg:h-[560px] xl:h-[600px] group select-none overflow-hidden"
+          className="relative w-full h-[260px] xs:h-[320px] sm:h-[400px] md:h-[460px] lg:h-[500px] xl:h-[540px] group select-none overflow-hidden"
         >
           {/* Banner Slides */}
           {HERO_BANNERS.map((slide, idx) => {
@@ -476,11 +440,11 @@ export default function HeroBanner() {
                   draggable={false}
                 />
 
-                {/* Left Gradient Overlay for Text Readability */}
+                {/* Left Gradient Overlay for High Contrast Text */}
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent pointer-events-none" />
 
-                {/* Bottom Fade Gradient for Amazon-style Overlapping Cards */}
-                <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#EAEDED] via-[#EAEDED]/40 to-transparent pointer-events-none" />
+                {/* Subtle bottom shadow vignette */}
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/60 to-transparent pointer-events-none" />
 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 md:px-16 max-w-2xl text-white">
@@ -541,7 +505,7 @@ export default function HeroBanner() {
           </button>
 
           {/* Bottom Indicators */}
-          <div className="absolute bottom-5 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
             {HERO_BANNERS.map((_, idx) => (
               <button
                 key={idx}
@@ -559,15 +523,51 @@ export default function HeroBanner() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          3. AMAZON-STYLE OVERLAPPING MULTI-SECTION QUAD CARDS (4-COLUMN GRID)
+          PART 2: FLIPKART STYLE CATEGORY QUICK NAVIGATION (PLACED UNDER HERO SLIDER)
          ──────────────────────────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 -mt-16 sm:-mt-24 md:-mt-28 relative z-30">
+      <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
+        <div className="bg-white rounded-2xl border border-brand-border/80 shadow-xs px-3 sm:px-5 py-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
+            {CATEGORY_BUBBLES.map((cat) => (
+              <Link
+                key={cat.id}
+                href={cat.href}
+                className="group flex flex-col items-center min-w-[76px] sm:min-w-[96px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 transition-all shrink-0"
+              >
+                <div className="relative mb-1 sm:mb-1.5">
+                  <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-brand-lightBlueSoft/60 border border-brand-border group-hover:border-brand-primary group-hover:bg-white group-hover:shadow-card flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+                    {cat.icon}
+                  </div>
+                  {cat.badge && (
+                    <span
+                      className={`absolute -top-1.5 -right-2 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-2xs tracking-tighter ${cat.badgeColor}`}
+                    >
+                      {cat.badge}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11.5px] sm:text-xs font-bold text-slate-800 group-hover:text-brand-primary transition-colors leading-tight line-clamp-1">
+                  {cat.name}
+                </span>
+                <span className="text-[9.5px] sm:text-[10px] text-slate-500 font-medium hidden sm:block truncate max-w-[90px]">
+                  {cat.subtitle}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ────────────────────────────────────────────────────────────────────────
+          PART 3: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
+         ──────────────────────────────────────────────────────────────────────── */}
+      <section aria-label="Featured Categories & Deals" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           
-          {/* ── QUAD CARD 1: APPLIANCES FESTIVAL (Amazon Style) ── */}
+          {/* ── CARD 1: APPLIANCES FESTIVAL (Amazon Style) ── */}
           <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
@@ -617,7 +617,7 @@ export default function HeroBanner() {
             </Link>
           </div>
 
-          {/* ── QUAD CARD 2: MALABAR TEAKWOOD (Amazon Style) ── */}
+          {/* ── CARD 2: MALABAR TEAKWOOD (Amazon Style) ── */}
           <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
@@ -667,7 +667,7 @@ export default function HeroBanner() {
             </Link>
           </div>
 
-          {/* ── QUAD CARD 3: 4K SMART TVS & AUDIO (Amazon Style) ── */}
+          {/* ── CARD 3: 4K SMART TVS & AUDIO (Amazon Style) ── */}
           <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
@@ -782,12 +782,12 @@ export default function HeroBanner() {
           </div>
 
         </div>
-      </div>
+      </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          4. FLIPKART / AMAZON 3-COLUMN BANK & BENEFIT BANNER STRIP
+          PART 4: FLIPKART / AMAZON 3-COLUMN BANK & BENEFIT BANNER STRIP
          ──────────────────────────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 mt-4 sm:mt-5">
+      <section aria-label="Financing and Delivery Benefits" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           
           <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white flex items-center gap-3.5 shadow-sm border border-blue-800/40">
@@ -824,12 +824,12 @@ export default function HeroBanner() {
           </div>
 
         </div>
-      </div>
+      </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          5. AMAZON / FLIPKART HORIZONTAL PRODUCT CAROUSEL ("TRENDING IN KERALA")
+          PART 5: HORIZONTAL BLOCKBUSTER DEALS REEL ("TRENDING IN KERALA")
          ──────────────────────────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 mt-4 sm:mt-5">
+      <section aria-label="Trending Offers" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-brand-border p-4 sm:p-5 shadow-card">
           <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
             <div>
@@ -919,12 +919,12 @@ export default function HeroBanner() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          6. SERVICE ASSURANCE TRUST STRIP
+          PART 6: SERVICE ASSURANCE TRUST STRIP
          ──────────────────────────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 mt-4 sm:mt-5">
+      <section aria-label="Customer Guarantees" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-brand-border p-3.5 sm:p-4 shadow-card">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
             <div className="flex items-center gap-3 pt-2 md:pt-0">
@@ -968,7 +968,8 @@ export default function HeroBanner() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Mail,
@@ -62,6 +63,12 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Sync mode & lock body scroll on open
   useEffect(() => {
     setMode(initialMode);
@@ -80,7 +87,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,9 +192,9 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
     }
   };
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -491,6 +498,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
