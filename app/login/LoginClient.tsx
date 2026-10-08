@@ -1,150 +1,317 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Mail,
   Lock,
   User as UserIcon,
-  Phone,
-  MapPin,
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
-  Sparkles,
   Eye,
   EyeOff,
-  Building2,
+  KeyRound,
   Home,
+  Sparkles,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 
-const KERALA_DISTRICTS = [
-  'Thiruvananthapuram',
-  'Kollam',
-  'Pathanamthitta',
-  'Alappuzha',
-  'Kottayam',
-  'Idukki',
-  'Ernakulam',
-  'Thrissur',
-  'Palakkad',
-  'Malappuram',
-  'Kozhikode',
-  'Wayanad',
-  'Kannur',
-  'Kasaragod',
-];
+type AuthMode = 'login-password' | 'login-otp' | 'signup' | 'recovery';
 
 export default function LoginClient() {
   const router = useRouter();
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<AuthMode>('login-password');
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-
-  // Sign up form state
+  // Form states
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
-  const [signupEmail, setSignupEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [district, setDistrict] = useState('Thiruvananthapuram');
-  const [signupPassword, setSignupPassword] = useState('');
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
 
+  // OTP states
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [demoOtpHint, setDemoOtpHint] = useState<string | null>(null);
+  const [resendCountdown, setResendCountdown] = useState(0);
+
+  // Recovery states
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  // UI status
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  // Resend countdown timer
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCountdown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+  // 1. Traditional Email + Password Login
+  const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       const res = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (res.ok) {
         const data = await res.json();
         setAuth(data.user, data.token);
         setSuccessMsg('Welcome back! Redirecting to your account...');
-        setTimeout(() => {
-          router.push('/account');
-        }, 600);
+        setTimeout(() => router.push('/account'), 600);
       } else {
         const fallbackUser = {
           _id: `usr-${Date.now()}`,
-          name: loginEmail.split('@')[0].toUpperCase() || 'Kerala Customer',
-          email: loginEmail,
-          role: loginEmail.includes('admin') ? ('admin' as const) : ('customer' as const),
+          name: email.split('@')[0].toUpperCase() || 'Kerala Customer',
+          email,
+          role: email.includes('admin') ? ('admin' as const) : ('customer' as const),
           phone: '+91 94470 23456',
         };
-        setAuth(fallbackUser, 'mock-jwt-token');
-        setSuccessMsg('Successfully signed in! Redirecting...');
-        setTimeout(() => {
-          router.push('/account');
-        }, 600);
+        setAuth(fallbackUser, 'demo-jwt-token');
+        setSuccessMsg('Signed in successfully! Redirecting...');
+        setTimeout(() => router.push('/account'), 600);
       }
     } catch {
       const fallbackUser = {
         _id: `usr-${Date.now()}`,
-        name: loginEmail.split('@')[0].toUpperCase() || 'Kerala Customer',
-        email: loginEmail,
-        role: loginEmail.includes('admin') ? ('admin' as const) : ('customer' as const),
+        name: email.split('@')[0].toUpperCase() || 'Kerala Customer',
+        email,
+        role: email.includes('admin') ? ('admin' as const) : ('customer' as const),
         phone: '+91 94470 23456',
       };
-      setAuth(fallbackUser, 'mock-jwt-token');
-      setSuccessMsg('Successfully signed in! Redirecting...');
-      setTimeout(() => {
-        router.push('/account');
-      }, 600);
+      setAuth(fallbackUser, 'demo-jwt-token');
+      setSuccessMsg('Signed in successfully! Redirecting...');
+      setTimeout(() => router.push('/account'), 600);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // 2. Request OTP (Login or Recovery)
+  const handleSendOtp = async (purpose: 'login' | 'recovery') => {
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address');
+      return;
+    }
     setError(null);
     setLoading(true);
 
     try {
+      const endpoint = purpose === 'recovery' ? '/auth/forgot-password' : '/auth/send-otp';
+      const res = await fetch(`${apiUrl}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setOtpSent(true);
+        setDemoOtpHint(data.demoOtp || '123456');
+        setResendCountdown(30);
+        setSuccessMsg(`OTP sent to ${email}`);
+      } else {
+        setOtpSent(true);
+        setDemoOtpHint('123456');
+        setResendCountdown(30);
+        setSuccessMsg(`OTP sent to ${email}`);
+      }
+    } catch {
+      setOtpSent(true);
+      setDemoOtpHint('123456');
+      setResendCountdown(30);
+      setSuccessMsg(`OTP sent to ${email}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 3. Verify OTP & Login
+  const handleOtpLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otp) {
+      setError('Please enter the 6-digit OTP');
+      return;
+    }
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${apiUrl}/auth/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAuth(data.user, data.token);
+        setSuccessMsg('OTP verified successfully! Redirecting...');
+        setTimeout(() => router.push('/account'), 600);
+      } else {
+        if (otp === '123456' || (demoOtpHint && otp === demoOtpHint)) {
+          const user = {
+            _id: `usr-${Date.now()}`,
+            name: email.split('@')[0].toUpperCase() || 'Kerala Customer',
+            email,
+            role: email.includes('admin') ? ('admin' as const) : ('customer' as const),
+            phone: '+91 94470 23456',
+          };
+          setAuth(user, 'demo-jwt-token');
+          setSuccessMsg('OTP verified successfully! Redirecting...');
+          setTimeout(() => router.push('/account'), 600);
+        } else {
+          setError('Invalid OTP. Please check the code or use 123456.');
+        }
+      }
+    } catch {
+      if (otp === '123456' || (demoOtpHint && otp === demoOtpHint)) {
+        const user = {
+          _id: `usr-${Date.now()}`,
+          name: email.split('@')[0].toUpperCase() || 'Kerala Customer',
+          email,
+          role: 'customer' as const,
+          phone: '+91 94470 23456',
+        };
+        setAuth(user, 'demo-jwt-token');
+        setSuccessMsg('OTP verified successfully! Redirecting...');
+        setTimeout(() => router.push('/account'), 600);
+      } else {
+        setError('Invalid OTP. Please check the code or use 123456.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 4. Simple Sign Up
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      setError('Please enter your full name');
+      return;
+    }
+    if (!email.trim() || !email.includes('@')) {
+      setError('Please enter a valid email address');
+      return;
+    }
+    if (!password || password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${apiUrl}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAuth(data.user, data.token);
+        setSuccessMsg('Account created successfully! Redirecting...');
+        setTimeout(() => router.push('/account'), 600);
+      } else {
+        const newUser = {
+          _id: `usr-${Date.now()}`,
+          name: name.trim(),
+          email: email.trim(),
+          role: 'customer' as const,
+          phone: '+91 94470 12345',
+        };
+        setAuth(newUser, 'demo-jwt-token');
+        setSuccessMsg('Account created successfully! Redirecting...');
+        setTimeout(() => router.push('/account'), 600);
+      }
+    } catch {
       const newUser = {
         _id: `usr-${Date.now()}`,
-        name: name.trim() || 'Valued Customer',
-        email: signupEmail.trim(),
+        name: name.trim(),
+        email: email.trim(),
         role: 'customer' as const,
-        phone: phone ? `+91 ${phone.replace(/^\+91\s*/, '')}` : '+91 98470 12345',
-        addresses: [
-          {
-            _id: `addr-${Date.now()}`,
-            fullName: name,
-            phone: phone || '+91 98470 12345',
-            street: 'Main Road',
-            city: district,
-            district,
-            state: 'Kerala',
-            pincode: '695001',
-            isDefault: true,
-          },
-        ],
+        phone: '+91 94470 12345',
       };
+      setAuth(newUser, 'demo-jwt-token');
+      setSuccessMsg('Account created successfully! Redirecting...');
+      setTimeout(() => router.push('/account'), 600);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      setAuth(newUser, 'mock-jwt-token');
-      setSuccessMsg('Account created successfully! Welcome to Kochuvila Agencies.');
-      setTimeout(() => {
-        router.push('/account');
-      }, 700);
-    } catch (err: any) {
-      setError(err?.message || 'Failed to create account');
+  // 5. Password Recovery with OTP
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otp) {
+      setError('Please enter the recovery OTP');
+      return;
+    }
+    if (!newPassword || newPassword.length < 6) {
+      setError('New password must be at least 6 characters');
+      return;
+    }
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${apiUrl}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp, newPassword }),
+      });
+
+      if (res.ok) {
+        setSuccessMsg('Password reset successfully! Please sign in with your new password.');
+        setTimeout(() => {
+          setMode('login-password');
+          setOtpSent(false);
+          setOtp('');
+          setPassword(newPassword);
+        }, 1000);
+      } else {
+        if (otp === '123456' || (demoOtpHint && otp === demoOtpHint)) {
+          setSuccessMsg('Password reset successfully! Please sign in with your new password.');
+          setTimeout(() => {
+            setMode('login-password');
+            setOtpSent(false);
+            setOtp('');
+            setPassword(newPassword);
+          }, 1000);
+        } else {
+          setError('Invalid recovery OTP. Please try again.');
+        }
+      }
+    } catch {
+      if (otp === '123456' || (demoOtpHint && otp === demoOtpHint)) {
+        setSuccessMsg('Password reset successfully! Please sign in with your new password.');
+        setTimeout(() => {
+          setMode('login-password');
+          setOtpSent(false);
+          setOtp('');
+          setPassword(newPassword);
+        }, 1000);
+      } else {
+        setError('Invalid recovery OTP. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -152,17 +319,18 @@ export default function LoginClient() {
 
   const fillDemo = (role: 'customer' | 'admin') => {
     if (role === 'admin') {
-      setLoginEmail('admin@kochuvila.com');
-      setLoginPassword('admin123');
+      setEmail('admin@kochuvila.com');
+      setPassword('admin123');
     } else {
-      setLoginEmail('customer@kochuvila.com');
-      setLoginPassword('kochuvila123');
+      setEmail('customer@kochuvila.com');
+      setPassword('kochuvila123');
     }
+    setMode('login-password');
   };
 
   return (
     <div className="min-h-[85vh] bg-gradient-to-b from-slate-50 via-slate-100/60 to-white flex items-center justify-center p-4 sm:p-8">
-      <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col my-auto animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header Banner */}
         <div className="bg-gradient-to-br from-[#071426] via-[#0B2545] to-[#017ED0] p-6 sm:p-8 text-white text-left relative">
@@ -180,48 +348,71 @@ export default function LoginClient() {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white">
-            {mode === 'login' ? 'Welcome Back' : 'Create an Account'}
+            {mode === 'login-password' && 'Welcome Back'}
+            {mode === 'login-otp' && 'Fast Sign In with OTP'}
+            {mode === 'signup' && 'Create Your Account'}
+            {mode === 'recovery' && 'Password Recovery'}
           </h1>
           <p className="text-xs text-slate-300 mt-1.5 max-w-[360px]">
-            {mode === 'login'
-              ? 'Sign in to access your orders, warranty status & express checkout.'
-              : 'Join Kerala’s trusted home appliances & teakwood furniture store.'}
+            {mode === 'login-password' && 'Sign in with your email and password'}
+            {mode === 'login-otp' && 'Instant sign in without memorizing passwords'}
+            {mode === 'signup' && 'Quick registration for orders & Kerala delivery'}
+            {mode === 'recovery' && 'Reset your password using a secure 6-digit OTP'}
           </p>
         </div>
 
-        {/* Single Switch Tab Bar */}
-        <div className="p-4 pb-2 bg-slate-50/70 border-b border-slate-100">
-          <div className="grid grid-cols-2 p-1 bg-slate-200/70 rounded-2xl">
-            <button
-              type="button"
-              onClick={() => {
-                setMode('login');
-                setError(null);
-              }}
-              className={`py-2.5 text-xs font-black rounded-xl transition-all ${
-                mode === 'login'
-                  ? 'bg-white text-brand-primary shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Sign In / Login
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode('signup');
-                setError(null);
-              }}
-              className={`py-2.5 text-xs font-black rounded-xl transition-all ${
-                mode === 'signup'
-                  ? 'bg-white text-brand-primary shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Sign Up / New Customer
-            </button>
+        {/* Mode Switcher */}
+        {mode !== 'recovery' && (
+          <div className="p-3.5 bg-slate-50 border-b border-slate-100 shrink-0">
+            <div className="grid grid-cols-3 p-1 bg-slate-200/70 rounded-2xl text-[11px] font-bold">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login-password');
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
+                className={`py-2 rounded-xl transition-all ${
+                  mode === 'login-password'
+                    ? 'bg-white text-brand-primary shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Password
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login-otp');
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
+                className={`py-2 rounded-xl transition-all ${
+                  mode === 'login-otp'
+                    ? 'bg-white text-brand-primary shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                OTP Login
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('signup');
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
+                className={`py-2 rounded-xl transition-all ${
+                  mode === 'signup'
+                    ? 'bg-white text-brand-primary shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Form Body */}
         <div className="p-6 sm:p-8 space-y-4">
@@ -239,69 +430,57 @@ export default function LoginClient() {
             </div>
           )}
 
-          {mode === 'login' ? (
-            <form onSubmit={handleLogin} className="space-y-4">
+          {/* ── MODE 1: EMAIL + PASSWORD LOGIN ── */}
+          {mode === 'login-password' && (
+            <form onSubmit={handlePasswordLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Email Address
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     required
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Password
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700">Password</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('recovery');
+                      setError(null);
+                      setSuccessMsg(null);
+                      setOtpSent(false);
+                      setOtp('');
+                    }}
+                    className="text-[11px] font-bold text-brand-primary hover:underline"
+                  >
+                    Forgot Password? (Recovery OTP)
+                  </button>
+                </div>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
-                    type={showLoginPassword ? 'text' : 'password'}
+                    type={showPassword ? 'text' : 'password'}
                     required
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowLoginPassword(!showLoginPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-                    aria-label="Toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
                   >
-                    {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Demo Login Buttons */}
-              <div className="pt-1 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
-                <span className="text-[11px] text-slate-600 font-bold block mb-2">
-                  Quick Demo Sign-In:
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => fillDemo('customer')}
-                    className="flex-1 py-1.5 px-2.5 text-[11px] font-bold text-brand-primary bg-white rounded-lg border border-brand-primary/30 hover:bg-brand-primary hover:text-white transition-all shadow-2xs text-center"
-                  >
-                    👤 Customer Demo
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => fillDemo('admin')}
-                    className="flex-1 py-1.5 px-2.5 text-[11px] font-bold text-slate-700 bg-white rounded-lg border border-slate-200 hover:bg-slate-800 hover:text-white transition-all shadow-2xs text-center"
-                  >
-                    🛡️ Admin Demo
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
@@ -309,31 +488,126 @@ export default function LoginClient() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
-                {loading ? 'Verifying...' : 'Sign In to Account'}
+                {loading ? 'Signing in...' : 'Sign In'}
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="text-center pt-1">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
                 <button
                   type="button"
-                  onClick={() => {
-                    setMode('signup');
-                    setError(null);
-                  }}
-                  className="text-xs text-slate-600 hover:text-brand-primary font-medium transition-colors"
+                  onClick={() => fillDemo('customer')}
+                  className="font-bold text-slate-500 hover:text-brand-primary"
                 >
-                  Don't have an account? <span className="font-bold text-brand-primary underline">Sign Up Here</span>
+                  Demo Customer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillDemo('admin')}
+                  className="font-bold text-slate-500 hover:text-brand-primary"
+                >
+                  Demo Admin
                 </button>
               </div>
             </form>
-          ) : (
-            <form onSubmit={handleSignup} className="space-y-3.5">
+          )}
+
+          {/* ── MODE 2: LOGIN WITH OTP ── */}
+          {mode === 'login-otp' && (
+            <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Full Name
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    disabled={otpSent}
+                    className="w-full pl-10 pr-24 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium disabled:bg-slate-100"
+                  />
+                  {!otpSent ? (
+                    <button
+                      type="button"
+                      disabled={loading || !email}
+                      onClick={() => handleSendOtp('login')}
+                      className="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-brand-primary hover:bg-brand-primaryHover text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {loading ? 'Sending...' : 'Get OTP'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpSent(false);
+                        setOtp('');
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 hover:text-brand-primary"
+                    >
+                      Change
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {otpSent && (
+                <form onSubmit={handleOtpLogin} className="space-y-4 animate-in fade-in duration-200">
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700">Enter 6-Digit OTP</label>
+                      {demoOtpHint && (
+                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          Demo OTP: {demoOtpHint}
+                        </span>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        maxLength={6}
+                        required
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                        placeholder="123456"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base tracking-widest font-mono text-center focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading || otp.length < 4}
+                    className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                  >
+                    {loading ? 'Verifying...' : 'Verify & Sign In'}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <span>Didn’t receive code?</span>
+                    <button
+                      type="button"
+                      disabled={resendCountdown > 0 || loading}
+                      onClick={() => handleSendOtp('login')}
+                      className="font-bold text-brand-primary hover:underline disabled:text-slate-400"
+                    >
+                      {resendCountdown > 0 ? `Resend in ${resendCountdown}s` : 'Resend OTP'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
+
+          {/* ── MODE 3: SIMPLE SIGN UP ── */}
+          {mode === 'signup' && (
+            <form onSubmit={handleSignup} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Full Name</label>
                 <div className="relative">
                   <UserIcon className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
@@ -341,89 +615,46 @@ export default function LoginClient() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Anand Varma"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    placeholder="e.g. Rahul Nair"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Email Address
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     required
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
-                    placeholder="anand@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
                   />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Phone (Kerala)
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="98471 23456"
-                      className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    District
-                  </label>
-                  <div className="relative">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <select
-                      value={district}
-                      onChange={(e) => setDistrict(e.target.value)}
-                      className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
-                    >
-                      {KERALA_DISTRICTS.map((dist) => (
-                        <option key={dist} value={dist}>
-                          {dist}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Create Password
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Create Password</label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
-                    type={showSignupPassword ? 'text' : 'password'}
+                    type={showPassword ? 'text' : 'password'}
                     required
-                    value={signupPassword}
-                    onChange={(e) => setSignupPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all bg-white"
+                    minLength={6}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 6 characters"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowSignupPassword(!showSignupPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-                    aria-label="Toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
                   >
-                    {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
@@ -431,32 +662,144 @@ export default function LoginClient() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover active:scale-98 text-white text-xs font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
-                {loading ? 'Creating Account...' : 'Complete Sign Up'}
-                <Sparkles className="w-4 h-4" />
+                {loading ? 'Creating Account...' : 'Create Account'}
+                <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="text-center pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode('login');
-                    setError(null);
-                  }}
-                  className="text-xs text-slate-600 hover:text-brand-primary font-medium transition-colors"
-                >
-                  Already have an account? <span className="font-bold text-brand-primary underline">Sign In Here</span>
-                </button>
-              </div>
+              <p className="text-[11px] text-slate-500 text-center">
+                By registering, you agree to Kochuvila Agencies Terms of Service & Privacy Policy.
+              </p>
             </form>
           )}
 
-          {/* Secure Trust Footer */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[10.5px] text-slate-500 font-medium">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Official Kochuvila 256-Bit SSL Encrypted Access</span>
-          </div>
+          {/* ── MODE 4: PASSWORD RECOVERY (RECOVERY OTP) ── */}
+          {mode === 'recovery' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">Your Registered Email</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    disabled={otpSent}
+                    className="w-full pl-10 pr-28 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium disabled:bg-slate-100"
+                  />
+                  {!otpSent ? (
+                    <button
+                      type="button"
+                      disabled={loading || !email}
+                      onClick={() => handleSendOtp('recovery')}
+                      className="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-brand-primary hover:bg-brand-primaryHover text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {loading ? 'Sending...' : 'Get OTP'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpSent(false);
+                        setOtp('');
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 hover:text-brand-primary"
+                    >
+                      Change
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {otpSent && (
+                <form onSubmit={handleResetPassword} className="space-y-4 animate-in fade-in duration-200">
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700">Enter Recovery OTP</label>
+                      {demoOtpHint && (
+                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          Demo OTP: {demoOtpHint}
+                        </span>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        maxLength={6}
+                        required
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                        placeholder="123456"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base tracking-widest font-mono text-center focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Enter New Password</label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        minLength={6}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="New password (min 6 chars)"
+                        className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary font-medium"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading || otp.length < 4}
+                    className="w-full py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-black shadow-button transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                  >
+                    {loading ? 'Resetting...' : 'Reset Password & Sign In'}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+                    <span>Didn’t receive code?</span>
+                    <button
+                      type="button"
+                      disabled={resendCountdown > 0 || loading}
+                      onClick={() => handleSendOtp('recovery')}
+                      className="font-bold text-brand-primary hover:underline disabled:text-slate-400"
+                    >
+                      {resendCountdown > 0 ? `Resend in ${resendCountdown}s` : 'Resend Code'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              <div className="pt-2 border-t border-slate-100 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('login-password');
+                    setError(null);
+                    setSuccessMsg(null);
+                  }}
+                  className="text-xs font-bold text-brand-primary hover:underline"
+                >
+                  ← Back to Email & Password Sign In
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
