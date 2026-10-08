@@ -17,6 +17,12 @@ import {
   MapPin,
   Sparkles,
   Truck,
+  ShieldCheck,
+  CreditCard,
+  Zap,
+  CheckCircle2,
+  Building2,
+  ChevronRight,
 } from 'lucide-react';
 
 // ─── 1. CATEGORY NAVIGATION DATA ───────────────────────────────────────────
@@ -204,6 +210,7 @@ const ENTERTAINMENT_QUAD = [
 
 export default function HeroBanner() {
   const [countdown, setCountdown] = useState({ hours: 5, minutes: 42, seconds: 18 });
+  const [activeTab, setActiveTab] = useState<'both' | 'appliances' | 'furniture'>('both');
 
   // Flash deal countdown timer
   useEffect(() => {
@@ -225,10 +232,10 @@ export default function HeroBanner() {
   const formatTwoDigits = (num: number) => String(num).padStart(2, '0');
 
   return (
-    <div className="bg-[#EAEDED]/80 pt-2 sm:pt-4 pb-6 sm:pb-8 space-y-3.5 sm:space-y-4">
+    <div className="bg-[#F0F2F5] pt-2 sm:pt-4 pb-8 sm:pb-12 space-y-4 sm:space-y-6">
       
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 1: FLIPKART STYLE CATEGORY QUICK NAVIGATION BAR (AT TOP)
+          PART 1: FLIPKART / AMAZON CATEGORY NAVIGATION RIBBON (TOP)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm px-3 sm:px-5 py-3.5">
@@ -266,7 +273,157 @@ export default function HeroBanner() {
       </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 2: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
+          PART 2: UNIQUE DUAL-FLAGSHIP HERO PAVILION (KERALA MEGA SHOWROOM)
+         ──────────────────────────────────────────────────────────────────────── */}
+      <section aria-label="Mega Showroom Flagship Pavilions" className="max-w-7xl mx-auto px-2 sm:px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          
+          {/* ── LEFT PAVILION: SMART HOME APPLIANCES REALM (7 COLS ON DESKTOP) ── */}
+          <div className="lg:col-span-7 rounded-3xl bg-gradient-to-br from-[#061833] via-[#0B2545] to-[#014F86] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl border border-blue-900/40 flex flex-col justify-between group">
+            {/* Ambient Background Glow */}
+            <div className="absolute -right-20 -top-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute right-0 bottom-0 w-64 h-64 bg-cyan-400/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="relative z-10">
+              {/* Header Badge */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/30 border border-blue-400/40 text-[10px] sm:text-xs font-black uppercase tracking-wider text-cyan-300 backdrop-blur-md">
+                  <Zap className="w-3.5 h-3.5 fill-cyan-400 text-cyan-400" />
+                  Official Kerala Brand Partner
+                </span>
+                <span className="text-[11px] font-bold text-slate-300 hidden sm:inline-block">
+                  Sony • LG • Samsung • Daikin • Bosch • Faber
+                </span>
+              </div>
+
+              {/* Title & Headline */}
+              <h1 className="text-2xl sm:text-4xl md:text-[40px] font-black font-display tracking-tight text-white leading-tight">
+                Smart Home Appliances <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-white">
+                  Festival Deals Up to 45% Off
+                </span>
+              </h1>
+
+              <p className="text-xs sm:text-sm text-slate-200 mt-2 max-w-lg leading-relaxed">
+                4K Smart Google TVs, 5-Star Split Inverter ACs &amp; Frost-Free Refrigerators with official manufacturer brand warranties and door-step installation.
+              </p>
+
+              {/* Quick Feature Tags */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                <Link
+                  href="/products?category=appliances&subcategory=air-conditioners"
+                  className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition-all backdrop-blur-sm"
+                >
+                  ❄️ Split Inverter ACs
+                </Link>
+                <Link
+                  href="/products?category=appliances&subcategory=televisions"
+                  className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition-all backdrop-blur-sm"
+                >
+                  📺 Smart 4K TVs
+                </Link>
+                <Link
+                  href="/products?category=appliances&subcategory=refrigerators"
+                  className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition-all backdrop-blur-sm"
+                >
+                  🧊 Inverter Fridges
+                </Link>
+                <Link
+                  href="/products?category=appliances&subcategory=washing-machines"
+                  className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition-all backdrop-blur-sm"
+                >
+                  🧺 Front Load Washers
+                </Link>
+              </div>
+            </div>
+
+            {/* Showcase Visual & CTA */}
+            <div className="relative z-10 mt-6 sm:mt-8 pt-4 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-400/30 flex items-center justify-center shrink-0 text-cyan-300">
+                  <Truck className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-black text-white">Kerala 24-48 Hr Express Delivery</p>
+                  <p className="text-[11px] text-slate-300">Safe doorstep delivery &amp; unboxing across 14 districts</p>
+                </div>
+              </div>
+
+              <Link
+                href="/products?category=appliances"
+                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 text-xs sm:text-sm font-black shadow-lg transition-all inline-flex items-center justify-center gap-2 shrink-0 group-hover:scale-102"
+              >
+                <span>Shop Appliances</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* ── RIGHT PAVILION: HANDCRAFTED MALABAR TEAKWOOD (5 COLS ON DESKTOP) ── */}
+          <div className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-[#2D1B0F] via-[#3D2514] to-[#5C3A21] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl border border-amber-900/40 flex flex-col justify-between group">
+            {/* Ambient Background Warm Glow */}
+            <div className="absolute -right-16 -top-16 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10">
+              {/* Header Badge */}
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/30 border border-amber-400/40 text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-300 backdrop-blur-md">
+                  🪵 100% Seasoned Malabar Hardwood
+                </span>
+              </div>
+
+              {/* Title & Headline */}
+              <h2 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white leading-tight">
+                Handcrafted Teak Living &amp; Bedroom Sets
+              </h2>
+
+              <p className="text-xs sm:text-sm text-amber-100/90 mt-2 leading-relaxed">
+                Kiln-dried pure Kerala teakwood sofas, hydraulic storage beds, and solid wood 6-seater dining tables crafted for generations.
+              </p>
+
+              {/* Teakwood Quick Badges */}
+              <div className="grid grid-cols-2 gap-2 mt-4 text-xs font-bold text-amber-200">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Lifetime Structural Warranty</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Custom Cushioning Available</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>0% Interest Easy EMI</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>Direct Artisan Showroom</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Showcase Visual & CTA */}
+            <div className="relative z-10 mt-6 sm:mt-8 pt-4 border-t border-amber-500/20 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-black text-amber-300">25,000 Sq.Ft Flagship Showroom</p>
+                <p className="text-[11px] text-amber-200/80">Experience solid wood touch &amp; feel in person</p>
+              </div>
+
+              <Link
+                href="/products?category=furniture"
+                className="px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-black shadow-lg transition-all inline-flex items-center gap-2 shrink-0 group-hover:scale-102"
+              >
+                <span>Explore Teak</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ────────────────────────────────────────────────────────────────────────
+          PART 3: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Featured Categories & Deals" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
