@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
   Tv,
   Refrigerator,
   Wind,
@@ -19,12 +17,9 @@ import {
   MapPin,
   Sparkles,
   Truck,
-  ShieldCheck,
-  CreditCard,
-  Percent,
 } from 'lucide-react';
 
-// ─── 1. CATEGORY NAVIGATION DATA (PLACED UNDER HERO SLIDER) ─────────────────
+// ─── 1. CATEGORY NAVIGATION DATA ───────────────────────────────────────────
 interface CategoryItem {
   id: string;
   name: string;
@@ -125,70 +120,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
 ];
 
-// ─── 2. HERO SLIDER DATA ───────────────────────────────────────────────────
-interface HeroBannerSlide {
-  id: number;
-  image: string;
-  badge: string;
-  title: string;
-  subtitle: string;
-  ctaText: string;
-  href: string;
-  hasCustomArt?: boolean;
-}
-
-const HERO_BANNERS: HeroBannerSlide[] = [
-  {
-    id: 1,
-    image: '/banners/banner1.jpg',
-    badge: 'KERALA FESTIVE CELEBRATION',
-    title: 'Up to 45% Off on LG & Samsung',
-    subtitle: 'Genuine brand warranty & express doorstep delivery across Kerala',
-    ctaText: 'Shop Festive Offers',
-    href: '/products?category=appliances',
-    hasCustomArt: true,
-  },
-  {
-    id: 2,
-    image: '/banners/banner2.jpg',
-    badge: '100% SEASONED MALABAR HARDWOOD',
-    title: 'Handcrafted Teak Living & Bedroom Sets',
-    subtitle: 'Kiln-dried pure teakwood furniture crafted with lifetime structural durability',
-    ctaText: 'Explore Teakwood Collection',
-    href: '/products?category=furniture',
-    hasCustomArt: true,
-  },
-  {
-    id: 3,
-    image: '/banners/banner3.jpg',
-    badge: 'INVERTER COOLING FESTIVAL',
-    title: 'Daikin & Voltas 5-Star Split ACs',
-    subtitle: 'Beat the Kerala heat with 100% copper inverter cooling & free installation kit',
-    ctaText: 'Explore Inverter Split ACs',
-    href: '/products?category=appliances&subcategory=air-conditioners',
-    hasCustomArt: true,
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1600&q=80',
-    badge: 'MODERN KITCHEN UPGRADE',
-    title: 'Faber Auto-Clean Chimneys & Glass Stoves',
-    subtitle: 'High suction motion-gesture chimneys with lifetime warranty on motor',
-    ctaText: 'Shop Kitchen Appliances',
-    href: '/products?category=appliances&subcategory=kitchen-appliances',
-  },
-  {
-    id: 5,
-    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1600&q=80',
-    badge: 'HOME CINEMA EXPERIENCE',
-    title: 'Massive 55" & 65" 4K Google TVs',
-    subtitle: 'Sony Bravia & Samsung Crystal 4K UHD with free wall-mount installation',
-    ctaText: 'Explore Smart Televisions',
-    href: '/products?category=appliances&subcategory=televisions',
-  },
-];
-
-// ─── 3. AMAZON QUAD CARDS DATA ─────────────────────────────────────────────
+// ─── 2. AMAZON QUAD CARDS DATA ─────────────────────────────────────────────
 const APPLIANCE_QUAD = [
   {
     name: 'Split Inverter ACs',
@@ -271,30 +203,7 @@ const ENTERTAINMENT_QUAD = [
 ];
 
 export default function HeroBanner() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [countdown, setCountdown] = useState({ hours: 5, minutes: 42, seconds: 18 });
-  const touchStartX = useRef<number | null>(null);
-
-  const SLIDE_DURATION = 5000;
-  const totalSlides = HERO_BANNERS.length;
-
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-  }, [totalSlides]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
-
-  // Auto slide interval
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      nextSlide();
-    }, SLIDE_DURATION);
-    return () => clearInterval(interval);
-  }, [isPaused, nextSlide]);
 
   // Flash deal countdown timer
   useEffect(() => {
@@ -313,148 +222,13 @@ export default function HeroBanner() {
     return () => clearInterval(timer);
   }, []);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prevSlide();
-      if (e.key === 'ArrowRight') nextSlide();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [prevSlide, nextSlide]);
-
-  // Touch Swipe handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-    if (diff > 50) nextSlide();
-    if (diff < -50) prevSlide();
-    touchStartX.current = null;
-  };
-
   const formatTwoDigits = (num: number) => String(num).padStart(2, '0');
 
   return (
-    <div className="bg-[#EAEDED]/80 pb-6 sm:pb-10 space-y-3 sm:space-y-4">
+    <div className="bg-[#EAEDED]/80 pt-2 sm:pt-4 pb-6 sm:pb-8 space-y-3.5 sm:space-y-4">
       
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 1: MAIN HERO BANNER CAROUSEL (CLEAN, ARTWORK-PRESERVING)
-         ──────────────────────────────────────────────────────────────────────── */}
-      <section aria-label="Featured Promotions" className="w-full relative overflow-hidden bg-slate-900">
-        <div
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          className="relative w-full h-[240px] xs:h-[300px] sm:h-[380px] md:h-[450px] lg:h-[500px] group select-none overflow-hidden"
-        >
-          {/* Banner Slides */}
-          {HERO_BANNERS.map((slide, idx) => {
-            const isActive = idx === currentSlide;
-            return (
-              <Link
-                key={slide.id}
-                href={slide.href}
-                className={`absolute inset-0 block transition-opacity duration-700 ease-in-out ${
-                  isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-                }`}
-                tabIndex={isActive ? 0 : -1}
-                aria-hidden={!isActive}
-              >
-                {/* Full-bleed Banner Graphic */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover object-center select-none"
-                  draggable={false}
-                />
-
-                {/* If the banner is a photo without embedded typography, render an elegant clean badge card */}
-                {!slide.hasCustomArt ? (
-                  <div className="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-950/30 to-transparent flex items-center px-6 sm:px-12 md:px-16">
-                    <div className="max-w-xl text-white">
-                      <span className="inline-block px-3 py-1 rounded-full bg-brand-primary text-[10px] sm:text-xs font-black uppercase tracking-wider mb-2">
-                        {slide.badge}
-                      </span>
-                      <h2 className="text-2xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
-                        {slide.title}
-                      </h2>
-                      <p className="text-xs sm:text-sm md:text-base text-slate-200 mt-2 leading-relaxed drop-shadow-sm max-w-lg">
-                        {slide.subtitle}
-                      </p>
-                      <div className="mt-4">
-                        <span className="px-5 py-2.5 sm:px-6 sm:py-3 bg-brand-primary hover:bg-brand-primaryHover text-white rounded-xl text-xs sm:text-sm font-black shadow-button transition-all inline-flex items-center gap-2">
-                          <span>{slide.ctaText}</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  /* Floating minimal CTA badge in bottom-left for custom graphic posters */
-                  <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-8 z-20 hidden xs:flex items-center gap-2.5 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20 text-white shadow-xl hover:bg-black/80 transition-colors">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                    <span className="text-xs font-black tracking-tight">{slide.ctaText}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-brand-lightBlue shrink-0" />
-                  </div>
-                )}
-              </Link>
-            );
-          })}
-
-          {/* Left Arrow Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              prevSlide();
-            }}
-            aria-label="Previous Slide"
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-xl border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-
-          {/* Right Arrow Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              nextSlide();
-            }}
-            aria-label="Next Slide"
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-xl border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-
-          {/* Slider Indicators */}
-          <div className="absolute bottom-3 right-4 sm:bottom-5 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
-            {HERO_BANNERS.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentSlide(idx);
-                }}
-                aria-label={`Go to slide ${idx + 1}`}
-                className={`transition-all duration-300 rounded-full ${
-                  idx === currentSlide
-                    ? 'w-6 sm:w-7 h-2 bg-brand-primary shadow-xs'
-                    : 'w-2 h-2 bg-white/60 hover:bg-white'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ────────────────────────────────────────────────────────────────────────
-          PART 2: CATEGORY QUICK NAVIGATION BAR (DIRECTLY UNDER HERO SLIDER)
+          PART 1: FLIPKART STYLE CATEGORY QUICK NAVIGATION BAR (AT TOP)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm px-3 sm:px-5 py-3.5">
@@ -492,7 +266,7 @@ export default function HeroBanner() {
       </section>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 3: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
+          PART 2: AMAZON QUAD CARDS & FLASH DEAL (4-COLUMN BENTO GRID)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Featured Categories & Deals" className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
