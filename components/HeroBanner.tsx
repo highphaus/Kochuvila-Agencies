@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Truck,
   ChevronLeft,
   ChevronRight,
   Tv,
@@ -19,11 +18,14 @@ import {
   Star,
   MapPin,
   Sparkles,
-  Zap,
+  Truck,
+  ShieldCheck,
+  CreditCard,
+  Percent,
 } from 'lucide-react';
 
 // ─── 1. CATEGORY NAVIGATION DATA (PLACED UNDER HERO SLIDER) ─────────────────
-interface CategoryBubble {
+interface CategoryItem {
   id: string;
   name: string;
   subtitle: string;
@@ -31,24 +33,27 @@ interface CategoryBubble {
   icon: React.ReactNode;
   badge?: string;
   badgeColor?: string;
+  iconBg: string;
 }
 
-const CATEGORY_ITEMS: CategoryBubble[] = [
+const CATEGORY_ITEMS: CategoryItem[] = [
   {
     id: 'top-offers',
     name: 'Top Offers',
     subtitle: 'Up to 55% Off',
     href: '/products?isDeal=true',
-    icon: <Flame className="w-5 h-5 text-amber-500" />,
+    icon: <Flame className="w-5 h-5 text-rose-500" />,
     badge: 'HOT',
-    badgeColor: 'bg-gradient-to-r from-amber-500 to-rose-500 text-white',
+    badgeColor: 'bg-gradient-to-r from-red-500 to-amber-500 text-white shadow-xs',
+    iconBg: 'bg-rose-50 border-rose-200 group-hover:bg-rose-100',
   },
   {
     id: 'tvs',
     name: 'Smart 4K TVs',
     subtitle: 'Sony • LG • Samsung',
     href: '/products?category=appliances&subcategory=televisions',
-    icon: <Tv className="w-5 h-5 text-brand-primary" />,
+    icon: <Tv className="w-5 h-5 text-blue-600" />,
+    iconBg: 'bg-blue-50 border-blue-200 group-hover:bg-blue-100',
   },
   {
     id: 'fridges',
@@ -56,6 +61,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: 'Inverter & Frost-Free',
     href: '/products?category=appliances&subcategory=refrigerators',
     icon: <Refrigerator className="w-5 h-5 text-cyan-600" />,
+    iconBg: 'bg-cyan-50 border-cyan-200 group-hover:bg-cyan-100',
   },
   {
     id: 'washers',
@@ -63,6 +69,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: 'Front & Top Load',
     href: '/products?category=appliances&subcategory=washing-machines',
     icon: <WashingMachine className="w-5 h-5 text-indigo-600" />,
+    iconBg: 'bg-indigo-50 border-indigo-200 group-hover:bg-indigo-100',
   },
   {
     id: 'acs',
@@ -71,7 +78,8 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     href: '/products?category=appliances&subcategory=air-conditioners',
     icon: <Wind className="w-5 h-5 text-sky-500" />,
     badge: 'COOL',
-    badgeColor: 'bg-sky-500 text-white',
+    badgeColor: 'bg-sky-500 text-white shadow-xs',
+    iconBg: 'bg-sky-50 border-sky-200 group-hover:bg-sky-100',
   },
   {
     id: 'sofas',
@@ -80,7 +88,8 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     href: '/products?category=furniture&subcategory=sofas',
     icon: <Armchair className="w-5 h-5 text-amber-700" />,
     badge: 'TEAK',
-    badgeColor: 'bg-amber-100 text-amber-800 border border-amber-300',
+    badgeColor: 'bg-amber-600 text-white shadow-xs',
+    iconBg: 'bg-amber-50 border-amber-200 group-hover:bg-amber-100',
   },
   {
     id: 'beds',
@@ -88,6 +97,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: 'Hydraulic Storage',
     href: '/products?category=furniture&subcategory=beds',
     icon: <BedDouble className="w-5 h-5 text-emerald-600" />,
+    iconBg: 'bg-emerald-50 border-emerald-200 group-hover:bg-emerald-100',
   },
   {
     id: 'dining',
@@ -95,6 +105,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: 'Solid Wood 6-Seater',
     href: '/products?category=furniture&subcategory=dining',
     icon: <Utensils className="w-5 h-5 text-orange-600" />,
+    iconBg: 'bg-orange-50 border-orange-200 group-hover:bg-orange-100',
   },
   {
     id: 'kitchen',
@@ -102,6 +113,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: 'Auto-Clean & Stoves',
     href: '/products?category=appliances&subcategory=kitchen-appliances',
     icon: <Sparkles className="w-5 h-5 text-purple-600" />,
+    iconBg: 'bg-purple-50 border-purple-200 group-hover:bg-purple-100',
   },
   {
     id: 'showroom',
@@ -109,6 +121,7 @@ const CATEGORY_ITEMS: CategoryBubble[] = [
     subtitle: '25,000 Sq.Ft Experience',
     href: '/contact',
     icon: <MapPin className="w-5 h-5 text-rose-600" />,
+    iconBg: 'bg-rose-50 border-rose-200 group-hover:bg-rose-100',
   },
 ];
 
@@ -121,59 +134,57 @@ interface HeroBannerSlide {
   subtitle: string;
   ctaText: string;
   href: string;
-  bankOffer: string;
+  hasCustomArt?: boolean;
 }
 
 const HERO_BANNERS: HeroBannerSlide[] = [
   {
     id: 1,
     image: '/banners/banner1.jpg',
-    badge: 'KERALA PREMIER APPLIANCE FESTIVAL',
-    title: 'Up to 45% Off on LG, Samsung & Sony',
-    subtitle: '4K Smart TVs, Inverter Refrigerators & Front Load Washers with Official Brand Warranty',
-    ctaText: 'Shop Festive Appliance Offers',
+    badge: 'KERALA FESTIVE CELEBRATION',
+    title: 'Up to 45% Off on LG & Samsung',
+    subtitle: 'Genuine brand warranty & express doorstep delivery across Kerala',
+    ctaText: 'Shop Festive Offers',
     href: '/products?category=appliances',
-    bankOffer: 'Instant 10% Off on Federal Bank & HDFC Cards',
+    hasCustomArt: true,
   },
   {
     id: 2,
     image: '/banners/banner2.jpg',
     badge: '100% SEASONED MALABAR HARDWOOD',
     title: 'Handcrafted Teak Living & Bedroom Sets',
-    subtitle: 'Kiln-Dried Kerala Teak Sofas, Hydraulic Storage Beds & Dining Sets with Lifetime Guarantee',
+    subtitle: 'Kiln-dried pure teakwood furniture crafted with lifetime structural durability',
     ctaText: 'Explore Teakwood Collection',
     href: '/products?category=furniture',
-    bankOffer: '0% Interest EMI Available up to 24 Months',
+    hasCustomArt: true,
   },
   {
     id: 3,
     image: '/banners/banner3.jpg',
-    badge: 'TROPICAL INVERTER COOLING FESTIVAL',
-    title: 'Beat the Kerala Heat • 5-Star Energy Savers',
-    subtitle: '100% Pure Copper Split Inverter ACs from Daikin, Voltas & LG with Free Site Inspection',
+    badge: 'INVERTER COOLING FESTIVAL',
+    title: 'Daikin & Voltas 5-Star Split ACs',
+    subtitle: 'Beat the Kerala heat with 100% copper inverter cooling & free installation kit',
     ctaText: 'Explore Inverter Split ACs',
     href: '/products?category=appliances&subcategory=air-conditioners',
-    bankOffer: 'Free Standard Copper Pipe & Installation Kit',
+    hasCustomArt: true,
   },
   {
     id: 4,
     image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1600&q=80',
-    badge: 'MODERN KITCHEN & DINING UPGRADE',
+    badge: 'MODERN KITCHEN UPGRADE',
     title: 'Faber Auto-Clean Chimneys & Glass Stoves',
-    subtitle: 'Transform your cooking experience with motion-gesture chimneys, 750W mixers & water geysers',
+    subtitle: 'High suction motion-gesture chimneys with lifetime warranty on motor',
     ctaText: 'Shop Kitchen Appliances',
     href: '/products?category=appliances&subcategory=kitchen-appliances',
-    bankOffer: 'Extra ₹1,500 Off with Coupon FESTIVAL5',
   },
   {
     id: 5,
     image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1600&q=80',
-    badge: 'CINEMA EXPERIENCE AT HOME',
-    title: 'Massive 55" & 65" 4K Smart Google TVs',
-    subtitle: 'Dolby Atmos surround sound, vivid crystal displays & free table mount across Kerala',
+    badge: 'HOME CINEMA EXPERIENCE',
+    title: 'Massive 55" & 65" 4K Google TVs',
+    subtitle: 'Sony Bravia & Samsung Crystal 4K UHD with free wall-mount installation',
     ctaText: 'Explore Smart Televisions',
     href: '/products?category=appliances&subcategory=televisions',
-    bankOffer: 'Free Extended 2-Year Panel Warranty Included',
   },
 ];
 
@@ -329,10 +340,10 @@ export default function HeroBanner() {
   const formatTwoDigits = (num: number) => String(num).padStart(2, '0');
 
   return (
-    <div className="bg-[#EAEDED]/70 pb-6 sm:pb-10 space-y-3.5 sm:space-y-5">
+    <div className="bg-[#EAEDED]/80 pb-6 sm:pb-10 space-y-3 sm:space-y-4">
       
       {/* ────────────────────────────────────────────────────────────────────────
-          PART 1: MAIN PROMOTIONAL HERO BANNER CAROUSEL (TOP)
+          PART 1: MAIN HERO BANNER CAROUSEL (CLEAN, ARTWORK-PRESERVING)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Featured Promotions" className="w-full relative overflow-hidden bg-slate-900">
         <div
@@ -340,7 +351,7 @@ export default function HeroBanner() {
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="relative w-full h-[250px] xs:h-[300px] sm:h-[380px] md:h-[440px] lg:h-[480px] group select-none overflow-hidden"
+          className="relative w-full h-[240px] xs:h-[300px] sm:h-[380px] md:h-[450px] lg:h-[500px] group select-none overflow-hidden"
         >
           {/* Banner Slides */}
           {HERO_BANNERS.map((slide, idx) => {
@@ -355,7 +366,7 @@ export default function HeroBanner() {
                 tabIndex={isActive ? 0 : -1}
                 aria-hidden={!isActive}
               >
-                {/* Full Banner Graphic */}
+                {/* Full-bleed Banner Graphic */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={slide.image}
@@ -364,43 +375,35 @@ export default function HeroBanner() {
                   draggable={false}
                 />
 
-                {/* Left Scrim for Text Readability without Muddying the Image */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/40 to-transparent pointer-events-none" />
-
-                {/* Subtle Bottom Vignette */}
-                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-950/50 to-transparent pointer-events-none" />
-
-                {/* Content Overlay */}
-                <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 md:px-16 max-w-2xl text-white">
-                  <div className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-bold text-brand-lightBlue mb-2.5 sm:mb-3.5 w-fit shadow-md">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="font-black uppercase tracking-wider text-[10px] sm:text-[11px]">
-                      {slide.badge}
-                    </span>
+                {/* If the banner is a photo without embedded typography, render an elegant clean badge card */}
+                {!slide.hasCustomArt ? (
+                  <div className="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-950/30 to-transparent flex items-center px-6 sm:px-12 md:px-16">
+                    <div className="max-w-xl text-white">
+                      <span className="inline-block px-3 py-1 rounded-full bg-brand-primary text-[10px] sm:text-xs font-black uppercase tracking-wider mb-2">
+                        {slide.badge}
+                      </span>
+                      <h2 className="text-2xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
+                        {slide.title}
+                      </h2>
+                      <p className="text-xs sm:text-sm md:text-base text-slate-200 mt-2 leading-relaxed drop-shadow-sm max-w-lg">
+                        {slide.subtitle}
+                      </p>
+                      <div className="mt-4">
+                        <span className="px-5 py-2.5 sm:px-6 sm:py-3 bg-brand-primary hover:bg-brand-primaryHover text-white rounded-xl text-xs sm:text-sm font-black shadow-button transition-all inline-flex items-center gap-2">
+                          <span>{slide.ctaText}</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
-
-                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
-                    {slide.title}
-                  </h1>
-
-                  <p className="text-xs sm:text-sm md:text-base text-slate-200 mt-2 leading-relaxed drop-shadow-sm max-w-xl">
-                    {slide.subtitle}
-                  </p>
-
-                  {/* Bank Offer Badge */}
-                  <div className="mt-3 inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/40 text-amber-200 px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold backdrop-blur-xs w-fit">
-                    <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    <span>{slide.bankOffer}</span>
+                ) : (
+                  /* Floating minimal CTA badge in bottom-left for custom graphic posters */
+                  <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-8 z-20 hidden xs:flex items-center gap-2.5 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20 text-white shadow-xl hover:bg-black/80 transition-colors">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                    <span className="text-xs font-black tracking-tight">{slide.ctaText}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-brand-lightBlue shrink-0" />
                   </div>
-
-                  {/* CTA Button */}
-                  <div className="mt-4 sm:mt-5 flex items-center gap-3">
-                    <span className="px-5 py-2.5 sm:px-6 sm:py-3 bg-brand-primary hover:bg-brand-primaryHover text-white rounded-xl text-xs sm:text-sm font-black shadow-button transition-all inline-flex items-center gap-2">
-                      <span>{slide.ctaText}</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
+                )}
               </Link>
             );
           })}
@@ -412,9 +415,9 @@ export default function HeroBanner() {
               prevSlide();
             }}
             aria-label="Previous Slide"
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-xl border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Right Arrow Button */}
@@ -424,13 +427,13 @@ export default function HeroBanner() {
               nextSlide();
             }}
             aria-label="Next Slide"
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-xl border border-black/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Slider Indicators */}
-          <div className="absolute bottom-3 right-4 sm:bottom-5 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+          <div className="absolute bottom-3 right-4 sm:bottom-5 sm:right-8 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
             {HERO_BANNERS.map((_, idx) => (
               <button
                 key={idx}
@@ -454,30 +457,32 @@ export default function HeroBanner() {
           PART 2: CATEGORY QUICK NAVIGATION BAR (DIRECTLY UNDER HERO SLIDER)
          ──────────────────────────────────────────────────────────────────────── */}
       <section aria-label="Product Categories" className="max-w-7xl mx-auto px-2 sm:px-4">
-        <div className="bg-white rounded-2xl border border-brand-border/80 shadow-xs px-3 sm:px-5 py-3">
-          <div className="flex items-center justify-between gap-2 sm:gap-4 overflow-x-auto scrollbar-none">
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm px-3 sm:px-5 py-3.5">
+          <div className="flex items-center justify-between gap-2.5 sm:gap-4 overflow-x-auto scrollbar-none">
             {CATEGORY_ITEMS.map((cat) => (
               <Link
                 key={cat.id}
                 href={cat.href}
-                className="group flex flex-col items-center min-w-[76px] sm:min-w-[96px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 transition-all shrink-0"
+                className="group flex flex-col items-center min-w-[78px] sm:min-w-[98px] text-center px-1 sm:px-2 py-1 rounded-xl hover:bg-slate-50 transition-all shrink-0"
               >
-                <div className="relative mb-1 sm:mb-1.5">
-                  <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-brand-lightBlueSoft/60 border border-brand-border group-hover:border-brand-primary group-hover:bg-white group-hover:shadow-card flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+                <div className="relative mb-1.5 sm:mb-2">
+                  <div
+                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${cat.iconBg}`}
+                  >
                     {cat.icon}
                   </div>
                   {cat.badge && (
                     <span
-                      className={`absolute -top-1.5 -right-2 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-2xs tracking-tighter ${cat.badgeColor}`}
+                      className={`absolute -top-1.5 -right-2 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tight ${cat.badgeColor}`}
                     >
                       {cat.badge}
                     </span>
                   )}
                 </div>
-                <span className="text-[11.5px] sm:text-xs font-bold text-slate-800 group-hover:text-brand-primary transition-colors leading-tight line-clamp-1">
+                <span className="text-[12px] sm:text-[12.5px] font-bold text-slate-800 group-hover:text-brand-primary transition-colors leading-tight line-clamp-1">
                   {cat.name}
                 </span>
-                <span className="text-[9.5px] sm:text-[10px] text-slate-500 font-medium hidden sm:block truncate max-w-[90px]">
+                <span className="text-[10px] text-slate-500 font-medium hidden sm:block truncate max-w-[92px] mt-0.5">
                   {cat.subtitle}
                 </span>
               </Link>
@@ -493,7 +498,7 @@ export default function HeroBanner() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           
           {/* ── CARD 1: APPLIANCES FESTIVAL (Amazon Style) ── */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md border border-slate-200/90 transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
@@ -543,7 +548,7 @@ export default function HeroBanner() {
           </div>
 
           {/* ── CARD 2: MALABAR TEAKWOOD (Amazon Style) ── */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md border border-slate-200/90 transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
@@ -593,7 +598,7 @@ export default function HeroBanner() {
           </div>
 
           {/* ── CARD 3: 4K SMART TVS & AUDIO (Amazon Style) ── */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md border border-slate-200/90 transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
@@ -643,7 +648,7 @@ export default function HeroBanner() {
           </div>
 
           {/* ── CARD 4: LIGHTNING FLASH DEAL (Deal of the Day) ── */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-cardHover border border-brand-border transition-all flex flex-col justify-between group relative overflow-hidden">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md border border-slate-200/90 transition-all flex flex-col justify-between group relative overflow-hidden">
             <div>
               <div className="flex items-center justify-between gap-1 mb-2">
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black tracking-wider uppercase">
