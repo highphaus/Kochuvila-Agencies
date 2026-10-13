@@ -18,7 +18,7 @@ export default async function OrderSuccessPage({ searchParams }: OrderSuccessPro
   const orderNumber = searchParams.orderNumber || 'KCH-2026-CONFIRMED';
   const order = await fetchOrderById(orderNumber);
 
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447000000';
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447023456';
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
     `Hello Kochuvila Agencies, I have just placed order ${orderNumber}. Please share the dispatch and delivery updates.`
   )}`;

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRight,
   Sparkles,
@@ -45,23 +46,24 @@ export default function ShopByWorld() {
               Explore Our Worlds
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
-              Choose your department: Global smart electronics with official brand warranties or authentic handcrafted solid teakwood furniture made to last generations.
+              Smart electronics with brand warranties. Handcrafted solid teakwood furniture built to last.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {/* World 1: Home Appliances */}
-          <div className="group relative rounded-3xl overflow-hidden border border-brand-border bg-[#0B1528] shadow-card hover:shadow-cardHover transition-all duration-500 flex flex-col justify-between min-h-[420px] sm:min-h-[450px]">
+          <div className="group relative rounded-3xl overflow-hidden border border-brand-border bg-[#111111] shadow-card hover:shadow-cardHover transition-all duration-500 flex flex-col justify-between min-h-[420px] sm:min-h-[450px]">
             {/* Background Photography with Zoom Effect */}
             <div className="absolute inset-0 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80"
                 alt="Modern Smart Home Appliances"
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-65 group-hover:scale-106 transition-all duration-700"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover opacity-70 group-hover:opacity-80 group-hover:scale-106 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/55 to-transparent" />
             </div>
 
             {/* Top Badge & Discount Pill */}
@@ -129,16 +131,17 @@ export default function ShopByWorld() {
           </div>
 
           {/* World 2: Furniture */}
-          <div className="group relative rounded-3xl overflow-hidden border border-brand-border bg-[#0B1528] shadow-card hover:shadow-cardHover transition-all duration-500 flex flex-col justify-between min-h-[420px] sm:min-h-[450px]">
+          <div className="group relative rounded-3xl overflow-hidden border border-brand-border bg-[#111111] shadow-card hover:shadow-cardHover transition-all duration-500 flex flex-col justify-between min-h-[420px] sm:min-h-[450px]">
             {/* Background Photography with Zoom Effect */}
             <div className="absolute inset-0 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
                 alt="Handcrafted Solid Wood Furniture"
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-65 group-hover:scale-106 transition-all duration-700"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover opacity-70 group-hover:opacity-80 group-hover:scale-106 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/55 to-transparent" />
             </div>
 
             {/* Top Badge & Quality Pill */}

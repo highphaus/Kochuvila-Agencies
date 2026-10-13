@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Heart, ShoppingCart, Trash2, ArrowRight, Truck, Star, Sparkles } from 'lucide-react';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useCartStore } from '@/store/cartStore';
@@ -102,11 +103,12 @@ export default function WishlistClient() {
                   href={`/product/${product.slug}`}
                   className="block relative aspect-square w-full bg-white p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
-                    className="object-contain w-full h-full max-h-48 group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                   />
                   {product.discountPercentage > 0 && (
                     <span className="absolute top-3 left-3 bg-brand-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">

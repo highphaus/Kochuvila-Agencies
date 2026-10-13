@@ -29,7 +29,7 @@ export function generateWhatsAppEnquiryLink(product: {
   slug: string;
   sku?: string;
 }): string {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447000000';
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447023456';
   const url = typeof window !== 'undefined' ? `${window.location.origin}/product/${product.slug}` : `https://kochuvilaagencies.com/product/${product.slug}`;
   
   const text = `Hello Kochuvila Agencies,\n\nI am interested in:\n*${product.name}*\nPrice: ${formatINR(product.price)}${product.sku ? `\nSKU: ${product.sku}` : ''}\n\nProduct Link: ${url}\n\nPlease let me know the availability, current offers, and delivery details.`;
@@ -38,7 +38,7 @@ export function generateWhatsAppEnquiryLink(product: {
 }
 
 export function generateGeneralWhatsAppLink(): string {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447000000';
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447023456';
   const text = `Hello Kochuvila Agencies, I would like to inquire about appliances and furniture available at your showroom.`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }

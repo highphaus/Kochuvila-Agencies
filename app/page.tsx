@@ -52,25 +52,39 @@ export default async function HomePage() {
       <DealsSection deals={deals} />
 
       {/* SECTION 8 — THE KOCHUVILA STANDARD: MALABAR TEAK & COASTAL APPLIANCE BENTO */}
-      <KeralaHeritageBento />
+      <div className="cv-auto">
+        <KeralaHeritageBento />
+      </div>
 
       {/* SECTION 9 — TRUST: 5 PILLARS OF EXCELLENCE */}
-      <TrustSection />
+      <div className="cv-auto">
+        <TrustSection />
+      </div>
 
       {/* SECTION 10 — BRANDS: OFFICIAL RETAIL PARTNERS */}
-      <BrandShowcase brands={brands} />
+      <div className="cv-auto">
+        <BrandShowcase brands={brands} />
+      </div>
 
       {/* SECTION 11 — KERALA CUSTOMER TRUST & REAL HOMES GALLERY */}
-      <KeralaCustomerTrust />
+      <div className="cv-auto">
+        <KeralaCustomerTrust />
+      </div>
 
       {/* SECTION 12 — STORE EXPERIENCE: VISIT OUR 25,000 SQ.FT SHOWROOM */}
-      <ShowroomExperience />
+      <div className="cv-auto">
+        <ShowroomExperience />
+      </div>
 
       {/* SECTION 13 — FREQUENTLY ASKED QUESTIONS */}
-      <FAQSection />
+      <div className="cv-auto">
+        <FAQSection />
+      </div>
 
       {/* SECTION 14 — FINAL CLOSING CTA */}
-      <FinalCTA />
+      <div className="cv-auto">
+        <FinalCTA />
+      </div>
     </div>
   );
 }

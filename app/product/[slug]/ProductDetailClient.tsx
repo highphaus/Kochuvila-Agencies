@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Heart,
@@ -154,11 +155,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
           )}
 
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={product.images[selectedImageIndex] || product.images[0]}
             alt={product.name}
-            className="w-full h-full object-contain max-h-[460px] transition-transform duration-500 group-hover:scale-105"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 550px"
+            className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 
@@ -175,8 +178,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     : 'border-slate-200 hover:border-slate-400'
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-contain" />
+                <Image
+                  src={img}
+                  alt={`Thumbnail ${idx + 1}`}
+                  fill
+                  sizes="80px"
+                  className="object-contain p-1"
+                />
               </button>
             ))}
           </div>

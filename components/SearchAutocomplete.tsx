@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Search,
@@ -39,10 +40,19 @@ export default function SearchAutocomplete({
 }: SearchAutocompleteProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Debounce search query to prevent main thread lock on rapid typing
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 120);
+    return () => clearTimeout(handler);
+  }, [query]);
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -100,9 +110,9 @@ export default function SearchAutocomplete({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter matching results in real time
+  // Filter matching results in real time with debouncing
   const searchResults = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = debouncedQuery.trim().toLowerCase();
     if (!q) {
       return { products: [], categories: [], brands: [], totalMatches: 0 };
     }
@@ -350,11 +360,12 @@ export default function SearchAutocomplete({
                         className="flex items-center gap-3 py-2.5 px-2 hover:bg-brand-lightBlueSoft/60 rounded-xl transition-colors group"
                       >
                         {/* Thumbnail */}
-                        <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 p-1 flex-shrink-0 flex items-center justify-center">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                        <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 p-1 flex-shrink-0 flex items-center justify-center relative">
+                          <Image
                             src={prod.images[0]}
                             alt={prod.name}
+                            width={48}
+                            height={48}
                             className="w-full h-full object-contain"
                           />
                         </div>

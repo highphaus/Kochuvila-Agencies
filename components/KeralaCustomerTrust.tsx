@@ -120,7 +120,7 @@ export default function KeralaCustomerTrust() {
             Loved By Over 25,000+ Kerala Families
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">
-            Real experiences from homeowners across Kerala who choose Kochuvila Agencies for genuine brand electronics and authentic solid teakwood furniture.
+            Real experiences from homeowners who choose Kochuvila Agencies for genuine brand electronics and authentic solid teakwood furniture.
           </p>
 
           {/* Google 4.9 Rating Badge */}

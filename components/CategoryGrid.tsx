@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Category } from '@/types';
 
@@ -12,10 +13,12 @@ interface CategoryGridProps {
 export default function CategoryGrid({ categories }: CategoryGridProps) {
   const [activeTab, setActiveTab] = useState<'all' | 'appliances' | 'furniture'>('all');
 
-  const displayedCategories = categories.filter((c) => {
-    if (activeTab === 'all') return true;
-    return c.type === activeTab;
-  });
+  const displayedCategories = useMemo(() => {
+    return categories.filter((c) => {
+      if (activeTab === 'all') return true;
+      return c.type === activeTab;
+    });
+  }, [categories, activeTab]);
 
   return (
     <section className="py-8 sm:py-12 bg-[#F5F7F9]">
@@ -78,12 +81,12 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
               href={`/products?category=${cat.type}&subcategory=${cat.slug}`}
               className="group bg-white rounded-2xl p-3.5 border border-brand-border hover:border-brand-primary transition-all duration-200 flex flex-col items-center text-center shadow-card hover:shadow-cardHover"
             >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-[#F5F7F9] p-2 flex items-center justify-center mb-2.5 overflow-hidden border border-brand-border/60">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-[#F5F7F9] p-2 flex items-center justify-center mb-2.5 overflow-hidden border border-brand-border/60 relative">
+                <Image
                   src={cat.image}
                   alt={cat.name}
-                  loading="lazy"
+                  width={96}
+                  height={96}
                   className="w-full h-full object-contain group-hover:scale-108 transition-transform duration-300"
                 />
               </div>

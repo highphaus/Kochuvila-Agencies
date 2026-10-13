@@ -541,7 +541,7 @@ export default function AccountClient() {
                   </a>
 
                   <a
-                    href="https://wa.me/919447000000"
+                    href="https://wa.me/919447023456"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 rounded-2xl border border-brand-border bg-[#F5F7F9] hover:bg-emerald-50 transition-all flex items-center gap-3 text-xs"

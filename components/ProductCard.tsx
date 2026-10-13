@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Heart, ShoppingCart, Star, MessageCircle, Truck, Zap, Scale } from 'lucide-react';
+import Image from 'next/image';
+import { Heart, ShoppingCart, Star, MessageCircle, Truck, Zap, Scale, Check } from 'lucide-react';
 import { Product } from '@/types';
 import { formatINR, calculateEMI, generateWhatsAppEnquiryLink } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -13,21 +14,24 @@ interface ProductCardProps {
   product: Product;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+const ProductCard = React.memo(function ProductCard({ product }: ProductCardProps) {
+  const [justAdded, setJustAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist(product._id));
+  const isInWishlist = useWishlistStore((state) => state.items.some((item) => item._id === product._id));
   const addToCompare = useCompareStore((state) => state.addToCompare);
   const removeFromCompare = useCompareStore((state) => state.removeFromCompare);
-  const inCompare = useCompareStore((state) => state.isInCompare(product._id));
+  const inCompare = useCompareStore((state) => state.items.some((item) => item._id === product._id));
 
-  const emi = calculateEMI(product.price, 6);
-  const whatsappUrl = generateWhatsAppEnquiryLink(product);
+  const emi = useMemo(() => calculateEMI(product.price, 6), [product.price]);
+  const whatsappUrl = useMemo(() => generateWhatsAppEnquiryLink(product), [product]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product, 1);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1600);
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
@@ -96,12 +100,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         href={`/product/${product.slug}`}
         className="block relative aspect-square w-full bg-white overflow-hidden p-5 flex items-center justify-center cursor-pointer border-b border-slate-100"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={product.images[0] || 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80'}
           alt={product.name}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
           loading="lazy"
-          className="object-contain w-full h-full max-h-48 group-hover:scale-105 transition-transform duration-500"
+          className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
         />
       </Link>
 
@@ -134,49 +139,61 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Link>
 
           {/* Rating & Kerala Delivery info */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-0.5 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-              <span>{product.rating.toFixed(1)}</span>
-              <Star className="w-2.5 h-2.5 fill-white" />
+          <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-1 bg-amber-50 text-amber-700 font-bold px-1.5 py-0.5 rounded border border-amber-200">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span>{product.rating}</span>
             </div>
-            {product.reviewCount > 0 && (
-              <span className="text-[11px] text-slate-400">
-                ({product.reviewCount})
-              </span>
-            )}
-            <span className="text-[10px] text-slate-500 ml-auto flex items-center gap-1 font-medium">
-              <Truck className="w-3 h-3 text-brand-primary" />
-              Kerala Delivery
+            <span className="text-slate-400 text-[11px]">({product.reviewCount})</span>
+            <span className="text-slate-300">•</span>
+            <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-0.5">
+              <Truck className="w-3 h-3" />
+              Free Kerala Delivery
             </span>
           </div>
         </div>
 
-        {/* Pricing */}
-        <div className="pt-2.5 border-t border-slate-100">
-          <div className="flex items-baseline gap-2 mb-0.5">
-            <span className="text-base sm:text-lg font-black text-black">
-              {formatINR(product.price)}
-            </span>
-            {product.mrp > product.price && (
-              <span className="text-xs text-slate-400 line-through font-medium">
-                {formatINR(product.mrp)}
+        {/* Price & Actions */}
+        <div className="space-y-2 pt-2 border-t border-slate-100">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-base sm:text-lg font-black text-black">
+                {formatINR(product.price)}
               </span>
+              {product.mrp > product.price && (
+                <span className="text-xs text-slate-400 line-through">
+                  {formatINR(product.mrp)}
+                </span>
+              )}
+            </div>
+            {emi > 0 && (
+              <p className="text-[10px] text-slate-500 mt-0.5">
+                From <span className="font-bold text-slate-700">{formatINR(emi)}/mo</span> with No Cost EMI
+              </p>
             )}
           </div>
 
-          {/* EMI Indicator */}
-          <p className="text-[11px] text-slate-500 font-medium mb-3">
-            0% EMI from <strong className="text-brand-deepBlue font-bold">{formatINR(emi)}/mo</strong>
-          </p>
-
-          {/* Action buttons: Add to Cart & WhatsApp Enquiry */}
-          <div className="grid grid-cols-5 gap-2">
+          {/* Buttons: Add to Cart & WhatsApp */}
+          <div className="grid grid-cols-4 gap-1.5 pt-1">
             <button
               onClick={handleAddToCart}
-              className="col-span-4 flex items-center justify-center gap-1.5 bg-brand-primary hover:bg-brand-deepBlue text-white py-2.5 px-3 rounded-xl text-xs font-bold transition-all shadow-button active:scale-95"
+              className={`col-span-3 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all shadow-button active:scale-95 ${
+                justAdded
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-brand-primary hover:bg-brand-primaryHover text-white'
+              }`}
             >
-              <ShoppingCart className="w-3.5 h-3.5" />
-              <span>Add to Cart</span>
+              {justAdded ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Added!</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Add to Cart</span>
+                </>
+              )}
             </button>
 
             <a
@@ -185,7 +202,8 @@ export default function ProductCard({ product }: ProductCardProps) {
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               title="Enquire on WhatsApp"
-              className="col-span-1 flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-xl transition-all border border-[#25D366]/30"
+              aria-label={`Enquire about ${product.name} on WhatsApp`}
+              className="col-span-1 flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-xl transition-all border border-[#25D366]/30 active:scale-95"
             >
               <MessageCircle className="w-4 h-4" />
             </a>
@@ -194,4 +212,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
     </div>
   );
-}
+});
+
+export default ProductCard;

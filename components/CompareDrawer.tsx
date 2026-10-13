@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { X, Scale, ArrowRight } from 'lucide-react';
 import { useCompareStore } from '@/store/compareStore';
@@ -34,10 +35,11 @@ export default function CompareDrawer() {
                 key={item._id}
                 className="relative w-10 h-10 rounded-xl bg-slate-50 border border-brand-border p-1 shrink-0 group"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={item.images[0]}
                   alt={item.name}
+                  width={36}
+                  height={36}
                   className="w-full h-full object-contain"
                 />
                 <button

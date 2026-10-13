@@ -26,10 +26,10 @@ export default function KeralaHeritageBento() {
             <span>The Kochuvila Standard</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
-            Why Kerala Homes Choose Kochuvila
+            Why Homes Choose Kochuvila
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">
-            For decades, Kerala families have relied on our combination of genuine brand electronics and generational hardwood craftsmanship.
+            For decades, families have relied on our combination of genuine brand electronics and generational hardwood craftsmanship.
           </p>
         </div>
 

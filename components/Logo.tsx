@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface LogoProps {
   className?: string;
@@ -9,12 +10,14 @@ interface LogoProps {
 export default function Logo({ className = '', isLight = false }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-2.5 sm:gap-3 group flex-shrink-0 ${className}`}>
-      {/* Prominent Logo Graphic - Large and Sharp without expanding header height */}
-      <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      {/* Prominent Logo Graphic - Optimized with next/image */}
+      <div className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300 relative">
+        <Image
           src="/Logo/Kochuvila Logo.png"
           alt="Kochuvila Agencies Logo"
+          width={56}
+          height={56}
+          priority
           className="w-full h-full object-contain filter drop-shadow-xs select-none"
         />
       </div>

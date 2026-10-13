@@ -12,8 +12,8 @@ export default function MobileBottomNav() {
   const cartCount = useCartStore((state) => state.getItemCount());
   const wishlistCount = useWishlistStore((state) => state.getCount());
 
-  // Hide on admin routes or checkout to keep checkout distraction-free
-  if (pathname.startsWith('/admin') || pathname.startsWith('/checkout')) {
+  // Hide on admin routes, checkout, or single product pages (which have dedicated sticky purchase bars)
+  if (pathname.startsWith('/admin') || pathname.startsWith('/checkout') || pathname.startsWith('/product/')) {
     return null;
   }
 

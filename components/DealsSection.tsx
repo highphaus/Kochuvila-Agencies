@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Sparkles, Clock, Flame, Zap, ShieldCheck, ShoppingCart, MessageCircle } from 'lucide-react';
 import { Product } from '@/types';
 import { formatINR, generateWhatsAppEnquiryLink } from '@/lib/utils';
@@ -12,10 +13,8 @@ interface DealsSectionProps {
   deals: Product[];
 }
 
-export default function DealsSection({ deals }: DealsSectionProps) {
-  const [activeTab, setActiveTab] = useState<'all' | 'appliances' | 'furniture'>('all');
+function DealCountdown() {
   const [timeLeft, setTimeLeft] = useState({ hours: 9, minutes: 34, seconds: 12 });
-  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,19 +28,33 @@ export default function DealsSection({ deals }: DealsSectionProps) {
     return () => clearInterval(timer);
   }, []);
 
+  return (
+    <span className="font-mono font-bold text-white bg-black/30 px-1.5 py-0.5 rounded text-[11px]" suppressHydrationWarning>
+      {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m :{' '}
+      {String(timeLeft.seconds).padStart(2, '0')}s
+    </span>
+  );
+}
+
+export default function DealsSection({ deals }: DealsSectionProps) {
+  const [activeTab, setActiveTab] = useState<'all' | 'appliances' | 'furniture'>('all');
+  const addItem = useCartStore((state) => state.addItem);
+
+  const spotlightDeal = deals?.[0];
+  const otherDeals = useMemo(() => deals?.slice(1) || [], [deals]);
+
+  const filteredDeals = useMemo(() => {
+    return otherDeals.filter((p) => {
+      if (activeTab === 'all') return true;
+      if (activeTab === 'appliances')
+        return p.category?.toLowerCase().includes('appliance') || p.category?.toLowerCase() === 'appliances';
+      if (activeTab === 'furniture')
+        return p.category?.toLowerCase().includes('furniture') || p.category?.toLowerCase() === 'furniture';
+      return true;
+    });
+  }, [otherDeals, activeTab]);
+
   if (!deals || deals.length === 0) return null;
-
-  const spotlightDeal = deals[0];
-  const otherDeals = deals.slice(1);
-
-  const filteredDeals = otherDeals.filter((p) => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'appliances')
-      return p.category?.toLowerCase().includes('appliance') || p.category?.toLowerCase() === 'appliances';
-    if (activeTab === 'furniture')
-      return p.category?.toLowerCase().includes('furniture') || p.category?.toLowerCase() === 'furniture';
-    return true;
-  });
 
   return (
     <section className="py-12 sm:py-16 bg-gradient-to-b from-[#017ED0] via-[#0168AC] to-[#05172E] text-white relative overflow-hidden">
@@ -59,16 +72,12 @@ export default function DealsSection({ deals }: DealsSectionProps) {
               <span className="text-white/40">•</span>
               <span className="text-white flex items-center gap-1.5 font-semibold">
                 <Clock className="w-3.5 h-3.5 text-brand-lightBlue" />
-                Ends in{' '}
-                <span className="font-mono font-bold text-white bg-black/30 px-1.5 py-0.5 rounded text-[11px]">
-                  {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m :{' '}
-                  {String(timeLeft.seconds).padStart(2, '0')}s
-                </span>
+                Ends in <DealCountdown />
               </span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white font-display uppercase tracking-tight">
-              Kochuvila Deals & Flash Offers
+              Kochuvila Deals &amp; Flash Offers
             </h2>
             <p className="text-xs sm:text-sm text-brand-lightBlue font-medium max-w-xl">
               Verified manufacturer price drops, seasonal exchange bonuses, and 0% interest EMI options across all Kerala districts.
@@ -80,30 +89,30 @@ export default function DealsSection({ deals }: DealsSectionProps) {
             <div className="flex items-center gap-1.5 bg-black/20 p-1 rounded-xl border border-white/15 backdrop-blur-md">
               <button
                 onClick={() => setActiveTab('all')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   activeTab === 'all'
-                    ? 'bg-white text-brand-deepBlue shadow-sm'
-                    : 'text-white/80 hover:text-white'
+                    ? 'bg-white text-brand-deepBlue shadow-xs'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 All Deals
               </button>
               <button
                 onClick={() => setActiveTab('appliances')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   activeTab === 'appliances'
-                    ? 'bg-white text-brand-deepBlue shadow-sm'
-                    : 'text-white/80 hover:text-white'
+                    ? 'bg-white text-brand-deepBlue shadow-xs'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 Appliances
               </button>
               <button
                 onClick={() => setActiveTab('furniture')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   activeTab === 'furniture'
-                    ? 'bg-white text-brand-deepBlue shadow-sm'
-                    : 'text-white/80 hover:text-white'
+                    ? 'bg-white text-brand-deepBlue shadow-xs'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 Furniture
@@ -112,25 +121,24 @@ export default function DealsSection({ deals }: DealsSectionProps) {
 
             <Link
               href="/products?isDeal=true"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-black hover:bg-brand-lightBlueSoft font-bold text-xs sm:text-sm transition-all shadow-md group"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition-all backdrop-blur-md"
             >
-              <span>All Deals</span>
-              <ArrowRight className="w-3.5 h-3.5 text-brand-deepBlue group-hover:translate-x-1 transition-transform" />
+              <span>View All</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
 
-        {/* Featured Deal Spotlight & Fast Deals Layout */}
+        {/* Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Spotlight Left Card (4 cols) */}
+          {/* Spotlight Hero Deal (Large Feature) */}
           {spotlightDeal && (
-            <div className="lg:col-span-4 bg-white/95 text-black rounded-3xl p-6 border border-white/30 shadow-elevated relative overflow-hidden flex flex-col justify-between group">
+            <div className="lg:col-span-5 bg-white text-slate-900 rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/20 relative overflow-hidden group">
               <div className="space-y-4">
-                {/* Top Spotlight Tag */}
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-primary text-white text-[11px] font-black uppercase tracking-wider shadow-xs">
-                    <Zap className="w-3 h-3 fill-white" />
-                    Deal of the Day
+                  <span className="inline-flex items-center gap-1.5 bg-amber-500 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+                    <Zap className="w-3.5 h-3.5 fill-white" />
+                    Deal of the Week
                   </span>
 
                   <span className="text-xs font-black text-brand-deepBlue">
@@ -140,11 +148,12 @@ export default function DealsSection({ deals }: DealsSectionProps) {
 
                 {/* Product Image */}
                 <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 relative border border-slate-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={spotlightDeal.images?.[0] || 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80'}
                     alt={spotlightDeal.name}
-                    className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 420px"
+                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-2 left-2">
                     <span className="px-2 py-0.5 rounded bg-brand-deepBlue text-white text-[10px] font-bold">
@@ -165,66 +174,59 @@ export default function DealsSection({ deals }: DealsSectionProps) {
                   </p>
                 </div>
 
-                {/* Urgency Progress Bar */}
-                <div className="p-3 bg-brand-lightBlueSoft rounded-xl border border-brand-lightBlue/60 space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] font-bold">
-                    <span className="text-brand-deepBlue flex items-center gap-1">
-                      <Flame className="w-3.5 h-3.5 text-brand-primary fill-brand-primary" />
-                      Limited Stock Available
-                    </span>
-                    <span className="text-red-600 font-extrabold">Only 4 left!</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-brand-primary to-red-500 rounded-full w-[82%]" />
-                  </div>
-                </div>
-
-                {/* Price Display */}
-                <div className="flex items-baseline justify-between pt-1">
+                {/* Pricing & Key Benefits */}
+                <div className="pt-2 border-t border-slate-100 flex items-baseline justify-between">
                   <div>
-                    <span className="text-2xl font-black text-black">
-                      {formatINR(spotlightDeal.price)}
-                    </span>
-                    <span className="text-xs text-slate-400 line-through ml-2">
-                      {formatINR(spotlightDeal.mrp)}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black text-slate-900">
+                        {formatINR(spotlightDeal.price)}
+                      </span>
+                      {spotlightDeal.mrp > spotlightDeal.price && (
+                        <span className="text-xs text-slate-400 line-through">
+                          {formatINR(spotlightDeal.mrp)}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-emerald-600 font-bold block mt-0.5">
+                      Save {formatINR(spotlightDeal.mrp - spotlightDeal.price)} with festival bonus
                     </span>
                   </div>
-                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    Save {formatINR(spotlightDeal.mrp - spotlightDeal.price)}
-                  </span>
+
+                  <div className="text-right">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">Warranty</span>
+                    <span className="text-xs font-bold text-slate-700">Official Brand Care</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 pt-4 mt-4 border-t border-slate-100">
-                <button
-                  onClick={() => addItem(spotlightDeal, 1)}
-                  className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-brand-primary hover:bg-brand-primaryHover text-white rounded-xl text-xs font-bold transition-all shadow-button"
-                >
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  <span>Add to Cart</span>
-                </button>
+                {/* Action Buttons */}
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  <button
+                    onClick={() => addItem(spotlightDeal, 1)}
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs font-bold shadow-button transition-all active:scale-98"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    <span>Add to Cart</span>
+                  </button>
 
-                <a
-                  href={generateWhatsAppEnquiryLink(spotlightDeal)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span>WhatsApp</span>
-                </a>
+                  <a
+                    href={generateWhatsAppEnquiryLink(spotlightDeal)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-xs"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Deal</span>
+                  </a>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Right Product Grid (8 cols) */}
-          <div className="lg:col-span-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-              {filteredDeals.slice(0, 6).map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
+          {/* Grid of Other Deals */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {filteredDeals.slice(0, 6).map((deal) => (
+              <ProductCard key={deal._id} product={deal} />
+            ))}
           </div>
         </div>
       </div>

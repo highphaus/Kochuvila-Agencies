@@ -24,8 +24,10 @@ import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useAuthStore } from '@/store/authStore';
 import { formatINR } from '@/lib/utils';
+import dynamic from 'next/dynamic';
 import Logo from './Logo';
 import SearchAutocomplete from './SearchAutocomplete';
+
 import AuthModal from './AuthModal';
 
 export default function Navbar() {
@@ -424,11 +426,13 @@ export default function Navbar() {
       )}
 
       {/* Interactive Login & Sign Up Modal */}
-      <AuthModal
-        isOpen={authModalOpen}
-        initialMode={authMode}
-        onClose={() => setAuthModalOpen(false)}
-      />
+      {authModalOpen && (
+        <AuthModal
+          isOpen={authModalOpen}
+          initialMode={authMode}
+          onClose={() => setAuthModalOpen(false)}
+        />
+      )}
     </header>
   );
 }

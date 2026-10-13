@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Trash2, ShoppingCart, Star, CheckCircle2, XCircle, ArrowRight, ShieldCheck, Truck, Scale } from 'lucide-react';
 import { useCompareStore } from '@/store/compareStore';
 import { useCartStore } from '@/store/cartStore';
@@ -100,12 +101,13 @@ export default function CompareClient() {
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
 
-                        <div className="w-36 h-36 mx-auto mb-3 bg-white rounded-2xl p-3 border border-brand-border/60 flex items-center justify-center overflow-hidden">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                        <div className="w-36 h-36 mx-auto mb-3 bg-white rounded-2xl p-3 border border-brand-border/60 flex items-center justify-center overflow-hidden relative">
+                          <Image
                             src={prod.images[0]}
                             alt={prod.name}
-                            className="object-contain w-full h-full"
+                            fill
+                            sizes="144px"
+                            className="object-contain p-2"
                           />
                         </div>
 

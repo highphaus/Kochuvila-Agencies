@@ -12,7 +12,14 @@ interface ProductPageProps {
   params: { slug: string };
 }
 
-export const revalidate = 0;
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const { SAMPLE_PRODUCTS } = await import('@/lib/data/sample-data');
+  return SAMPLE_PRODUCTS.slice(0, 12).map((p) => ({
+    slug: p.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const product = await fetchProductBySlug(params.slug);

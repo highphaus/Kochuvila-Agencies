@@ -23,7 +23,7 @@ export default async function TrackOrderPage({ searchParams }: TrackOrderProps) 
   const query = searchParams.orderNumber?.trim();
   const order = query ? await fetchOrderById(query) : null;
 
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447000000';
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447023456';
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
     `Hello Kochuvila Agencies, I am inquiring about the delivery timeline of order: ${query || ''}`
   )}`;
@@ -88,11 +88,11 @@ export default async function TrackOrderPage({ searchParams }: TrackOrderProps) 
               Please double check the order number from your receipt or contact our showroom helpline for manual verification.
             </p>
             <a
-              href="tel:+919447000000"
+              href="tel:+919447023456"
               className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:underline"
             >
               <Phone className="w-4 h-4" />
-              Call Showroom Helpline: +91 94470 00000
+              Call Showroom Helpline: +91 94470 23456
             </a>
           </div>
         )}
