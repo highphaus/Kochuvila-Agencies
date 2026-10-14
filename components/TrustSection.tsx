@@ -1,53 +1,47 @@
 import React from 'react';
-import { ShieldCheck, Award, Headphones, CreditCard, Store } from 'lucide-react';
+import { ShieldCheck, Lock, Headphones } from 'lucide-react';
 
 export default function TrustSection() {
   const pillars = [
     {
       icon: ShieldCheck,
-      title: 'GENUINE PRODUCTS',
-      description: '100% authentic appliances & furniture sourced directly from authorized manufacturers.',
+      title: 'Quality Products',
+      description: 'Guaranteed & genuine products',
     },
     {
-      icon: Award,
-      title: 'BRAND WARRANTY',
-      description: 'Official manufacturer brand warranty backed by certified service engineers across Kerala.',
+      icon: Lock,
+      title: 'Secure Shopping',
+      description: 'Your data is always safe',
     },
     {
       icon: Headphones,
-      title: 'EXPERT ASSISTANCE',
-      description: 'Consult our showroom team for sizing, feature comparisons, and live demonstrations.',
-    },
-    {
-      icon: CreditCard,
-      title: 'EASY ORDERING',
-      description: 'Seamless online ordering, zero-cost EMI options, and flexible Cash on Delivery.',
-    },
-    {
-      icon: Store,
-      title: 'STORE SUPPORT',
-      description: 'Visit our flagship physical showroom for after-sales assistance, exchange, and guidance.',
+      title: 'Dedicated Support',
+      description: "We're here to help",
     },
   ];
 
   return (
-    /* SECTION 7 — TRUST: Clean trust section (White background, Blue icons, Black headings, Grey text) */
-    <section className="py-8 sm:py-10 bg-white border-b border-brand-border">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
+    <section className="py-10 sm:py-14 bg-[#FDFDFD] border-b border-[#E2EBF2]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center sm:text-left">
           {pillars.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div key={idx} className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 p-2">
-                <div className="w-12 h-12 rounded-2xl bg-brand-lightBlueSoft flex items-center justify-center text-brand-primary border border-brand-lightBlue/60">
-                  <Icon className="w-6 h-6 text-brand-primary" />
+              <div
+                key={idx}
+                className="flex items-center gap-4 sm:gap-5 p-4 rounded-xl border border-[#E2EBF2] bg-[#EBF6FC]/40 hover:bg-[#EBF6FC]/70 transition-all shadow-xs"
+              >
+                <div className="w-12 h-12 rounded-full border border-[#9FD8F1] bg-[#EBF6FC] flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-[#0097F3]" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-black text-black uppercase tracking-wider">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                  {item.description}
-                </p>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-[#000000] font-display">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-[#64748B] mt-0.5 font-normal">
+                    {item.description}
+                  </p>
+                </div>
               </div>
             );
           })}

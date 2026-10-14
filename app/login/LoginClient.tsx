@@ -21,12 +21,12 @@ import { useAuthStore } from '@/store/authStore';
 
 type Step = 'identify' | 'verify-otp' | 'password-login';
 
-export default function LoginClient() {
+export default function LoginClient({ isRegisterMode = false }: { isRegisterMode?: boolean }) {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   // Flow State
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup'>(isRegisterMode ? 'signup' : 'signin');
   const [step, setStep] = useState<Step>('identify');
 
   // Input states
@@ -442,7 +442,9 @@ export default function LoginClient() {
                 {otpDigits.map((digit, idx) => (
                   <input
                     key={idx}
-                    ref={(el) => (otpInputRefs.current[idx] = el)}
+                    ref={(el) => {
+                      otpInputRefs.current[idx] = el;
+                    }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}

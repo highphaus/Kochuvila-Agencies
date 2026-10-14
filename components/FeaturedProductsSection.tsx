@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Filter } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import ProductCard from './ProductCard';
 
@@ -11,96 +11,86 @@ interface FeaturedProductsSectionProps {
 }
 
 export default function FeaturedProductsSection({ products }: FeaturedProductsSectionProps) {
-  const [activeTab, setActiveTab] = useState<'all' | 'appliances' | 'furniture'>('all');
+  const [activeTab, setActiveTab] = useState<'best_sellers' | 'new_arrivals' | 'top_rated'>('best_sellers');
 
   const filteredProducts = products.filter((p) => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'appliances')
-      return p.category?.toLowerCase().includes('appliance') || p.category?.toLowerCase() === 'appliances';
-    if (activeTab === 'furniture')
-      return p.category?.toLowerCase().includes('furniture') || p.category?.toLowerCase() === 'furniture';
+    if (activeTab === 'best_sellers') return p.isFeatured || p.rating >= 4.7;
+    if (activeTab === 'new_arrivals') return p.stock > 0;
+    if (activeTab === 'top_rated') return p.rating >= 4.8;
     return true;
-  });
+  }).slice(0, 5);
+
+  const displayList = filteredProducts.length >= 4 ? filteredProducts : products.slice(0, 5);
 
   return (
-    <section className="py-10 sm:py-14 bg-white border-b border-brand-border">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-10 sm:py-14 bg-[#FDFDFD] border-b border-[#E2EBF2]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header & Tabs */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-primary mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-              <span>Handpicked Collections</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
-              Featured For Your Home
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4 border-b border-[#E2EBF2] pb-4">
+          <div className="flex flex-wrap items-center gap-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000] font-display">
+              Featured Products
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-lg">
-              Popular picks for everyday living. Genuine brand electronics and handcrafted solid teakwood furniture.
-            </p>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-1.5 bg-[#F5F7F9] p-1 rounded-xl border border-brand-border">
+            {/* Tabs: Best Sellers | New Arrivals | Top Rated in 0097f3 */}
+            <div className="flex items-center gap-4 text-xs sm:text-sm font-semibold">
               <button
-                onClick={() => setActiveTab('all')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  activeTab === 'all'
-                    ? 'bg-brand-primary text-white shadow-xs'
-                    : 'text-slate-600 hover:text-black'
+                onClick={() => setActiveTab('best_sellers')}
+                className={`py-1 transition-colors relative ${
+                  activeTab === 'best_sellers'
+                    ? 'text-[#0097F3] font-bold'
+                    : 'text-[#64748B] hover:text-[#000000]'
                 }`}
               >
-                All Featured
+                Best Sellers
+                {activeTab === 'best_sellers' && (
+                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                )}
               </button>
               <button
-                onClick={() => setActiveTab('appliances')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  activeTab === 'appliances'
-                    ? 'bg-brand-primary text-white shadow-xs'
-                    : 'text-slate-600 hover:text-black'
+                onClick={() => setActiveTab('new_arrivals')}
+                className={`py-1 transition-colors relative ${
+                  activeTab === 'new_arrivals'
+                    ? 'text-[#0097F3] font-bold'
+                    : 'text-[#64748B] hover:text-[#000000]'
                 }`}
               >
-                Appliances
+                New Arrivals
+                {activeTab === 'new_arrivals' && (
+                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                )}
               </button>
               <button
-                onClick={() => setActiveTab('furniture')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  activeTab === 'furniture'
-                    ? 'bg-brand-primary text-white shadow-xs'
-                    : 'text-slate-600 hover:text-black'
+                onClick={() => setActiveTab('top_rated')}
+                className={`py-1 transition-colors relative ${
+                  activeTab === 'top_rated'
+                    ? 'text-[#0097F3] font-bold'
+                    : 'text-[#64748B] hover:text-[#000000]'
                 }`}
               >
-                Furniture
+                Top Rated
+                {activeTab === 'top_rated' && (
+                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                )}
               </button>
             </div>
-
-            <Link
-              href="/products"
-              className="hidden sm:inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-primary hover:text-brand-deepBlue hover:underline group"
-            >
-              <span>Explore All Products</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-            </Link>
           </div>
-        </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {(filteredProducts.length > 0 ? filteredProducts : products).map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-
-        {/* Mobile View All CTA */}
-        <div className="mt-8 text-center sm:hidden">
+          {/* View All > link */}
           <Link
             href="/products"
-            className="inline-flex items-center justify-center gap-2 w-full py-3 bg-[#F5F7F9] text-brand-deepBlue border border-brand-border font-bold text-xs rounded-xl"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#0097F3] hover:text-[#017ED0] hover:underline"
           >
-            <span>Explore All Products</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>View All</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+        </div>
+
+        {/* 5-Column Responsive Product Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+          {displayList.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
         </div>
       </div>
     </section>

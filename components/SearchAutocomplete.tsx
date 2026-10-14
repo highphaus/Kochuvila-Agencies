@@ -22,6 +22,7 @@ import { Product } from '@/types';
 interface SearchAutocompleteProps {
   isMobile?: boolean;
   onCloseMobile?: () => void;
+  autoFocus?: boolean;
 }
 
 const TRENDING_SEARCHES = [
@@ -37,6 +38,7 @@ const TRENDING_SEARCHES = [
 export default function SearchAutocomplete({
   isMobile = false,
   onCloseMobile,
+  autoFocus = false,
 }: SearchAutocompleteProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -171,6 +173,7 @@ export default function SearchAutocomplete({
         <input
           ref={inputRef}
           type="text"
+          autoFocus={autoFocus}
           value={query}
           onFocus={() => setIsOpen(true)}
           onChange={(e) => {

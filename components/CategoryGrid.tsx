@@ -1,100 +1,97 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Category } from '@/types';
 
 interface CategoryGridProps {
-  categories: Category[];
+  categories?: Category[];
 }
 
 export default function CategoryGrid({ categories }: CategoryGridProps) {
-  const [activeTab, setActiveTab] = useState<'all' | 'appliances' | 'furniture'>('all');
-
-  const displayedCategories = useMemo(() => {
-    return categories.filter((c) => {
-      if (activeTab === 'all') return true;
-      return c.type === activeTab;
-    });
-  }, [categories, activeTab]);
+  // Predefined curated categories matching the reference layout
+  const primaryCategories = [
+    {
+      name: 'Furniture',
+      slug: 'furniture',
+      href: '/furniture',
+      image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+      name: 'Refrigerators',
+      slug: 'refrigerators',
+      href: '/appliances/refrigerators',
+      image: 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+      name: 'Washing Machines',
+      slug: 'washing-machines',
+      href: '/appliances/washing-machines',
+      image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+      name: 'TV & Entertainment',
+      slug: 'televisions',
+      href: '/appliances/televisions',
+      image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+      name: 'Kitchen Appliances',
+      slug: 'kitchen-appliances',
+      href: '/appliances/kitchen-appliances',
+      image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+      name: 'Air Conditioners',
+      slug: 'air-conditioners',
+      href: '/appliances/air-conditioners',
+      image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
+    },
+  ];
 
   return (
-    <section className="py-8 sm:py-12 bg-[#F5F7F9]">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+    <section id="shop-by-category" className="py-10 sm:py-14 bg-[#FDFDFD] border-b border-[#E2EBF2] scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section Heading */}
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-primary mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-              <span>Curated Collections</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-black font-display uppercase tracking-tight">
-              Shop By Categories
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000] font-display">
+              Shop by Category
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-              Genuine home electronics and handcrafted teakwood furniture designed for Kerala households.
+            <p className="text-xs sm:text-sm text-[#64748B] mt-1">
+              Explore our wide selection of certified appliances and living essentials.
             </p>
           </div>
-
-          {/* Interactive Filter Tabs */}
-          <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-brand-border shadow-xs self-start md:self-auto">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'all'
-                  ? 'bg-brand-primary text-white shadow-xs'
-                  : 'text-slate-600 hover:text-black'
-              }`}
-            >
-              All Categories
-            </button>
-            <button
-              onClick={() => setActiveTab('appliances')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'appliances'
-                  ? 'bg-brand-primary text-white shadow-xs'
-                  : 'text-slate-600 hover:text-black'
-              }`}
-            >
-              Appliances
-            </button>
-            <button
-              onClick={() => setActiveTab('furniture')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'furniture'
-                  ? 'bg-brand-primary text-white shadow-xs'
-                  : 'text-slate-600 hover:text-black'
-              }`}
-            >
-              Furniture
-            </button>
-          </div>
+          <Link
+            href="/products"
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-[#0097F3] hover:text-[#017ED0] hover:underline"
+          >
+            <span>All Categories</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
-          {displayedCategories.map((cat) => (
+        {/* 6 Horizontal Category Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4.5">
+          {primaryCategories.map((item) => (
             <Link
-              key={cat._id}
-              href={`/products?category=${cat.type}&subcategory=${cat.slug}`}
-              className="group bg-white rounded-2xl p-3.5 border border-brand-border hover:border-brand-primary transition-all duration-200 flex flex-col items-center text-center shadow-card hover:shadow-cardHover"
+              key={item.name}
+              href={item.href}
+              className="group bg-[#EBF6FC]/50 hover:bg-white rounded-2xl p-4 border border-[#E2EBF2] hover:border-[#0097F3] transition-all duration-200 flex flex-col items-center text-center shadow-xs hover:shadow-md hover:-translate-y-0.5"
             >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-[#F5F7F9] p-2 flex items-center justify-center mb-2.5 overflow-hidden border border-brand-border/60 relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-white p-2.5 flex items-center justify-center mb-3 overflow-hidden border border-[#9FD8F1]/50 relative shadow-2xs">
                 <Image
-                  src={cat.image}
-                  alt={cat.name}
+                  src={item.image}
+                  alt={item.name}
                   width={96}
                   height={96}
                   className="w-full h-full object-contain group-hover:scale-108 transition-transform duration-300"
                 />
               </div>
-              <span className="font-bold text-xs sm:text-sm text-black group-hover:text-brand-primary transition-colors line-clamp-1">
-                {cat.name}
-              </span>
-              <span className="mt-1 text-[11px] font-semibold text-brand-primary inline-flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                Explore <ArrowRight className="w-3 h-3" />
+              <span className="font-semibold text-xs sm:text-[13px] text-[#000000] group-hover:text-[#0097F3] transition-colors line-clamp-1">
+                {item.name}
               </span>
             </Link>
           ))}

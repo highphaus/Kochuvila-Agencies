@@ -127,12 +127,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               onClick={() => toggleWishlist(product)}
               className={`p-3 rounded-full backdrop-blur-md transition-all shadow-md ${
                 isInWishlist
-                  ? 'bg-red-50 text-red-600'
+                  ? 'bg-[#EBF6FC] text-[#0097F3]'
                   : 'bg-white/80 text-slate-500 hover:text-brand-primary hover:bg-white'
               }`}
               title="Add to Wishlist"
             >
-              <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-red-600' : ''}`} />
+              <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-[#0097F3] text-[#0097F3]' : ''}`} />
             </button>
 
             <button

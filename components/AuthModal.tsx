@@ -467,7 +467,9 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                 {otpDigits.map((digit, idx) => (
                   <input
                     key={idx}
-                    ref={(el) => (otpInputRefs.current[idx] = el)}
+                    ref={(el) => {
+                      otpInputRefs.current[idx] = el;
+                    }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}

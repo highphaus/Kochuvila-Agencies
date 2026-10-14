@@ -4,222 +4,161 @@ import {
   MapPin,
   Phone,
   Mail,
-  Clock,
   ShieldCheck,
   Truck,
   CreditCard,
-  MessageSquare,
-  Award,
+  Headphones,
 } from 'lucide-react';
-import { generateGeneralWhatsAppLink } from '@/lib/utils';
 import Logo from './Logo';
 
 export default function Footer() {
-  const whatsappUrl = generateGeneralWhatsAppLink();
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#051329] text-slate-300 pt-16 pb-8 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Trust banner */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-12 mb-12 border-b border-slate-800/80 text-slate-200">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-brand-primary/20 rounded-xl text-brand-lightBlue">
-              <Truck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-sm">Kerala-Wide Delivery</h4>
-              <p className="text-xs text-slate-400 mt-1">
-                Safe doorstep handling for major appliances and heavy furniture.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-brand-primary/20 rounded-xl text-brand-lightBlue">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-sm">100% Genuine Brands</h4>
-              <p className="text-xs text-slate-400 mt-1">
-                Official manufacturer brand warranties with authorized local service.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-brand-primary/20 rounded-xl text-brand-lightBlue">
-              <CreditCard className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-sm">Flexible Payments & EMI</h4>
-              <p className="text-xs text-slate-400 mt-1">
-                Zero-cost EMI plans, online UPI, cards, and Cash on Delivery.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-brand-primary/20 rounded-xl text-brand-lightBlue">
-              <Award className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-sm">Showroom Experience</h4>
-              <p className="text-xs text-slate-400 mt-1">
-                Visit our physical showroom at Kochuvila Junction for live demos.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer main links grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand info */}
-          <div className="lg:col-span-2 space-y-4">
+    <footer className="bg-[#06121E] text-[#94A3B8] pt-14 pb-8 border-t border-[#102A45]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Main Footer Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-[#102A45]">
+          {/* Col 1: Brand Info (4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
             <Logo isLight />
-            <p className="text-xs text-slate-400 leading-relaxed pr-6 mt-3">
-              Kochuvila Agencies is Kerala's trusted retail destination for world-class
-              refrigerators, washing machines, 4K smart TVs, air conditioners, and solid
-              teakwood & modern ergonomic furniture. Experience transparent pricing, verified
-              warranties, and dedicated doorstep delivery.
+            <p className="text-xs text-[#94A3B8] leading-relaxed max-w-sm pt-2">
+              Kochuvila Home &amp; Living is Kerala’s premier destination for genuine home appliances
+              and handcrafted furniture. Discover comfort, elegance, and durability built for everyday living.
             </p>
-            <div className="pt-2 flex items-center gap-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-lg text-xs font-bold transition-all shadow-md"
-              >
-                <MessageSquare className="w-4 h-4" />
-                Chat on WhatsApp
-              </a>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition-all border border-slate-700"
-              >
-                <MapPin className="w-4 h-4 text-brand-lightBlue" />
-                Get Directions
-              </Link>
+            <div className="pt-2 text-xs text-[#CBD5E1] space-y-1.5">
+              <p className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#9FD8F1]" />
+                <span>100% Genuine Manufacturer Warranties</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Truck className="w-4 h-4 text-[#9FD8F1]" />
+                <span>Safe Doorstep Delivery across Kerala</span>
+              </p>
             </div>
           </div>
 
-          {/* Appliances links */}
-          <div>
-            <h5 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-primary pl-2">
-              Appliances
-            </h5>
-            <ul className="space-y-2.5 text-xs text-slate-400">
+          {/* Col 2: Quick Links (2.5 cols) */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              Quick Links
+            </h4>
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/products?category=appliances&subcategory=refrigerators" className="hover:text-brand-lightBlue transition-colors">
-                  Side-by-Side & Double Door Fridges
+                <Link href="/" className="hover:text-[#9FD8F1] transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=appliances&subcategory=washing-machines" className="hover:text-brand-lightBlue transition-colors">
-                  Front & Top Load Washing Machines
+                <Link href="/appliances" className="hover:text-[#9FD8F1] transition-colors">
+                  Appliances
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=appliances&subcategory=televisions" className="hover:text-brand-lightBlue transition-colors">
-                  4K Ultra HD & OLED Smart TVs
+                <Link href="/furniture" className="hover:text-[#9FD8F1] transition-colors">
+                  Furniture
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=appliances&subcategory=air-conditioners" className="hover:text-brand-lightBlue transition-colors">
-                  Inverter Split Air Conditioners
+                <Link href="/brands" className="hover:text-[#9FD8F1] transition-colors">
+                  Our Brands
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=appliances&subcategory=kitchen-appliances" className="hover:text-brand-lightBlue transition-colors">
-                  Mixer Grinders & Microwaves
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Furniture links */}
-          <div>
-            <h5 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-primary pl-2">
-              Furniture
-            </h5>
-            <ul className="space-y-2.5 text-xs text-slate-400">
-              <li>
-                <Link href="/products?category=furniture&subcategory=sofas" className="hover:text-brand-lightBlue transition-colors">
-                  Solid Wood & Sectional Sofas
+                <Link href="/about" className="hover:text-[#9FD8F1] transition-colors">
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=furniture&subcategory=beds" className="hover:text-brand-lightBlue transition-colors">
-                  King & Queen Beds with Storage
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?category=furniture&subcategory=dining" className="hover:text-brand-lightBlue transition-colors">
-                  6-Seater & 4-Seater Dining Sets
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?category=furniture&subcategory=wardrobes" className="hover:text-brand-lightBlue transition-colors">
-                  Engineered & Solid Wood Wardrobes
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?isDeal=true" className="text-brand-lightBlue hover:text-white font-bold transition-colors">
-                  Special Clearance & Offers
+                <Link href="/contact" className="hover:text-[#9FD8F1] transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Showroom Location & Timings */}
-          <div>
-            <h5 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-primary pl-2">
-              Showroom Visit
-            </h5>
-            <ul className="space-y-3 text-xs text-slate-400">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-brand-lightBlue flex-shrink-0 mt-0.5" />
-                <span>
-                  Kochuvila Junction, Main Road, Kerala, India
+          {/* Col 3: Customer Service (2.5 cols) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              Customer Service
+            </h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link href="/faq" className="hover:text-[#9FD8F1] transition-colors">
+                  Frequently Asked Questions (FAQs)
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping-policy" className="hover:text-[#9FD8F1] transition-colors">
+                  Shipping &amp; Delivery Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/return-policy" className="hover:text-[#9FD8F1] transition-colors">
+                  Returns &amp; Exchanges
+                </Link>
+              </li>
+              <li>
+                <Link href="/track-order" className="hover:text-[#9FD8F1] transition-colors">
+                  Track Your Order
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-[#9FD8F1] transition-colors">
+                  Dedicated Customer Support
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-[#9FD8F1] transition-colors">
+                  Privacy Policy &amp; Terms
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Get In Touch (3 cols) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
+              Get In Touch
+            </h4>
+            <div className="space-y-2.5 text-xs text-[#94A3B8]">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-[#9FD8F1] shrink-0 mt-0.5" />
+                <span>KK Building, Kazhakuttam, Trivandrum, Kerala - 695582</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-[#9FD8F1] shrink-0" />
+                <a href="mailto:highphaus@gmail.com" className="hover:text-[#9FD8F1] transition-colors">
+                  highphaus@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-[#9FD8F1] shrink-0" />
+                <a href="tel:+919876543210" className="hover:text-[#9FD8F1] transition-colors font-medium">
+                  +91 98765 43210
+                </a>
+              </div>
+              <div className="pt-2">
+                <span className="inline-block bg-[#102A45] text-[#9FD8F1] text-[11px] px-3 py-1 rounded-full font-medium">
+                  Mon – Sat: 9:30 AM – 8:30 PM
                 </span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-brand-lightBlue flex-shrink-0" />
-                <span>Mon - Sat: 9:30 AM - 8:30 PM</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-brand-lightBlue flex-shrink-0" />
-                <span>Sun: 10:00 AM - 7:00 PM</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-brand-lightBlue flex-shrink-0" />
-                <a href="tel:+919447023456" className="hover:text-white">
-                  +91 94470 23456
-                </a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-brand-lightBlue flex-shrink-0" />
-                <a href="mailto:contact@kochuvilaagencies.com" className="hover:text-white">
-                  contact@kochuvilaagencies.com
-                </a>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-slate-800/80 text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>
-            © {new Date().getFullYear()} Kochuvila Agencies. All rights reserved. Trusted Retailers in Kerala.
-          </p>
-          <div className="flex items-center gap-4">
-            <Link href="/track-order" className="hover:text-brand-lightBlue">
-              Track Order
+        {/* Bottom Copyright */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#64748B] gap-3">
+          <p>All rights reserved © Kochuvila {currentYear}</p>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy-policy" className="hover:text-[#9FD8F1] transition-colors">
+              Privacy Policy
             </Link>
-            <Link href="/contact" className="hover:text-brand-lightBlue">
-              Contact Us
+            <Link href="/terms" className="hover:text-[#9FD8F1] transition-colors">
+              Terms &amp; Conditions
             </Link>
-            <Link href="/admin" className="text-brand-lightBlue hover:text-white font-semibold">
-              Admin Portal
+            <Link href="/contact" className="hover:text-[#9FD8F1] transition-colors">
+              Store Locator
             </Link>
           </div>
         </div>

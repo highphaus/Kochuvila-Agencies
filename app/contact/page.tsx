@@ -6,12 +6,11 @@ import {
   Clock,
   Phone,
   Mail,
-  MessageCircle,
-  Navigation,
   Send,
   CheckCircle2,
   Sparkles,
   Loader2,
+  MessageCircle,
 } from 'lucide-react';
 import { generateGeneralWhatsAppLink } from '@/lib/utils';
 
@@ -21,9 +20,8 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formValues, setFormValues] = useState({
     name: '',
-    phone: '',
     email: '',
-    inquiryType: 'appliances',
+    phone: '',
     message: '',
   });
 
@@ -44,7 +42,7 @@ export default function ContactPage() {
       });
       clearTimeout(timeoutId);
     } catch {
-      // Offline fallback: still succeed gracefully for UX
+      // Graceful offline fallback
     } finally {
       setIsSubmitting(false);
       setFormSubmitted(true);
@@ -52,252 +50,221 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-[#f8fbfe] min-h-screen py-10 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">
-            Visit & Contact Us
+    <div className="bg-[#FDFDFD] min-h-screen py-10 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header matching Reference Sheet */}
+        <div className="text-center max-w-xl mx-auto mb-10 sm:mb-14 space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#0097F3]">
+            Get in Touch
           </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-brand-dark font-display mt-1">
-            Kochuvila Agencies Showroom
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#1A1A1A] font-display">
+            We're Here to Help You
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-2">
-            Have questions about an appliance model, custom teakwood furniture, delivery timelines, or bulk orders? We're here to assist you.
+          <p className="text-xs sm:text-sm text-[#666666]">
+            Have a question about appliances, furniture, warranties, or delivery? Reach out to our
+            team directly.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Showroom Information Cards */}
+        {/* 2-Column Contact Composition */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column (5 cols): Verified Details & Info */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-card space-y-6">
-              <h2 className="text-lg font-bold text-brand-dark border-b border-brand-border pb-3">
-                Showroom Location & Contact
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E2EBF2] shadow-xs space-y-6">
+              <h2 className="text-lg font-bold text-[#1A1A1A] font-display border-b border-[#E2EBF2] pb-3">
+                Showroom Information
               </h2>
 
-              <div className="space-y-5 text-xs sm:text-sm text-slate-700">
+              <div className="space-y-4 text-xs sm:text-sm text-[#333333]">
                 <div className="flex items-start gap-3.5">
-                  <div className="p-2.5 bg-blue-50 text-brand-primary rounded-xl flex-shrink-0">
+                  <div className="p-2.5 rounded-xl bg-[#EBF6FC] text-[#0097F3] shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900">Showroom Address</h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                      Kochuvila Agencies, Main Road, Kochuvila Junction,
-                      Kerala 695001, India.
-                    </p>
-                    <p className="text-[11px] text-slate-400 mt-1">
-                      (Opposite Main Bus Stand, Ample Customer Parking Available)
+                    <h4 className="font-bold text-[#1A1A1A]">Showroom Address</h4>
+                    <p className="text-xs text-[#666666] mt-0.5 leading-relaxed">
+                      KK Building, Kazhakuttam, Trivandrum, Kerala - 695582
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="p-2.5 bg-blue-50 text-brand-primary rounded-xl flex-shrink-0">
-                    <Clock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900">Visiting Hours</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">
-                      Monday to Saturday: 9:30 AM – 8:30 PM
-                    </p>
-                    <p className="text-xs text-slate-600">
-                      Sunday: 10:00 AM – 7:00 PM
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="p-2.5 bg-blue-50 text-brand-primary rounded-xl flex-shrink-0">
-                    <Phone className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900">Retail Helpline</h4>
-                    <a
-                      href="tel:+919447023456"
-                      className="text-xs text-brand-primary font-bold hover:underline"
-                    >
-                      +91 94470 23456
-                    </a>
-                    <p className="text-[11px] text-slate-400">Available 9:00 AM - 9:00 PM</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="p-2.5 bg-blue-50 text-brand-primary rounded-xl flex-shrink-0">
+                  <div className="p-2.5 rounded-xl bg-[#EBF6FC] text-[#0097F3] shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900">Email Inquiries</h4>
+                    <h4 className="font-bold text-[#1A1A1A]">Email Us</h4>
                     <a
-                      href="mailto:contact@kochuvilaagencies.com"
-                      className="text-xs text-brand-primary font-bold hover:underline"
+                      href="mailto:highphaus@gmail.com"
+                      className="text-xs text-[#0097F3] hover:underline mt-0.5 block font-medium"
                     >
-                      contact@kochuvilaagencies.com
+                      highphaus@gmail.com
                     </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3.5">
+                  <div className="p-2.5 rounded-xl bg-[#EBF6FC] text-[#0097F3] shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1A1A1A]">Call Our Team</h4>
+                    <a
+                      href="tel:+919876543210"
+                      className="text-xs text-[#0097F3] hover:underline mt-0.5 block font-medium"
+                    >
+                      +91 98765 43210
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3.5">
+                  <div className="p-2.5 rounded-xl bg-[#EBF6FC] text-[#0097F3] shrink-0">
+                    <Clock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1A1A1A]">Working Hours</h4>
+                    <p className="text-xs text-[#666666] mt-0.5">
+                      Monday to Saturday: 9:30 AM – 8:30 PM
+                    </p>
+                    <p className="text-[11px] text-[#888888]">Sunday: 10:00 AM – 6:00 PM</p>
                   </div>
                 </div>
               </div>
 
-              {/* Direct WhatsApp CTA */}
-              <div className="pt-2">
+              {/* Instant WhatsApp Action */}
+              <div className="pt-2 border-t border-[#E2EBF2]">
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl text-xs sm:text-sm font-bold shadow-button transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] text-white text-xs font-bold hover:bg-[#20ba5a] transition-all shadow-xs"
                 >
-                  <MessageCircle className="w-5 h-5" />
-                  Chat Directly on WhatsApp
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Chat with Showroom on WhatsApp</span>
                 </a>
               </div>
             </div>
 
-            {/* Parking & Showroom amenities */}
-            <div className="bg-brand-dark text-white rounded-3xl p-6 space-y-3">
-              <h3 className="font-bold text-sm text-brand-sky">
-                Showroom Amenities
-              </h3>
-              <ul className="text-xs text-slate-300 space-y-1.5">
-                <li>• Free customer car parking inside premises</li>
-                <li>• Air-conditioned multi-floor display</li>
-                <li>• Live testing stations for audio, TVs & fridges</li>
-                <li>• Teak wood finish samples & catalog customizer</li>
-              </ul>
+            {/* Map Preview Container */}
+            <div className="bg-white rounded-2xl p-4 border border-[#E2EBF2] shadow-xs">
+              <div className="relative rounded-xl overflow-hidden aspect-[16/9] bg-[#E2EBF2]/40 border border-[#E2EBF2] flex items-center justify-center text-center p-4">
+                <iframe
+                  title="Kochuvila Agencies Location Kazhakuttam"
+                  src="https://maps.google.com/maps?q=Kazhakuttam,%20Trivandrum,%20Kerala&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full border-0 absolute inset-0"
+                  loading="lazy"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Interactive Inquiry Form */}
+          {/* Right Column (7 cols): Contact Form */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-brand-border shadow-card">
-              <div className="border-b border-brand-border pb-4 mb-6">
-                <h2 className="text-lg sm:text-xl font-black text-brand-dark font-display">
-                  Send a Message to Our Retail Team
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  Fill in your details and model requirements. We will respond with availability and current offer prices.
-                </p>
-              </div>
-
+            <div className="bg-white rounded-2xl p-6 sm:p-10 border border-[#E2EBF2] shadow-xs">
               {formSubmitted ? (
                 <div className="py-12 text-center space-y-4">
-                  <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-10 h-10" />
+                  <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    Message Sent Successfully!
+                  <h3 className="text-2xl font-bold text-[#1A1A1A] font-display">
+                    Thank You! Message Received.
                   </h3>
-                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                    Thank you, {formValues.name || 'valued customer'}. Our showroom representative will contact you via phone or WhatsApp shortly.
+                  <p className="text-xs sm:text-sm text-[#666666] max-w-md mx-auto">
+                    Our customer care team at Kazhakuttam will review your inquiry and get in touch
+                    shortly via phone or email.
                   </p>
                   <button
-                    onClick={() => setFormSubmitted(false)}
-                    className="px-6 py-2 bg-slate-100 text-slate-800 text-xs font-semibold rounded-xl hover:bg-slate-200 transition-colors"
+                    onClick={() => {
+                      setFormSubmitted(false);
+                      setFormValues({ name: '', email: '', phone: '', message: '' });
+                    }}
+                    className="mt-4 px-6 py-2.5 rounded-lg bg-[#0097F3] text-white text-xs font-semibold hover:bg-[#017ED0] transition-all"
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Your Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Suresh Nair"
-                        value={formValues.name}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, name: e.target.value })
-                        }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-                      />
-                    </div>
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-bold text-[#1A1A1A] font-display">
+                      Send Us a Message
+                    </h2>
+                    <p className="text-xs text-[#666666]">
+                      Fill out the form below and our product consultants will respond promptly.
+                    </p>
+                  </div>
 
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Phone Number (WhatsApp preferred) *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="e.g. +91 98470 12345"
-                        value={formValues.phone}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, phone: e.target.value })
-                        }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+                      Your Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Rahul Nair"
+                      value={formValues.name}
+                      onChange={(e) => setFormValues({ ...formValues, name: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2EBF2] focus:border-[#0097F3] focus:ring-1 focus:ring-[#0097F3] text-xs text-[#1A1A1A] placeholder:text-[#999999] outline-hidden transition-all bg-[#F8FBFE]"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Email Address (Optional)
+                      <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+                        Email Address *
                       </label>
                       <input
                         type="email"
-                        placeholder="name@example.com"
+                        required
+                        placeholder="e.g. rahul@example.com"
                         value={formValues.email}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, email: e.target.value })
-                        }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                        onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2EBF2] focus:border-[#0097F3] focus:ring-1 focus:ring-[#0097F3] text-xs text-[#1A1A1A] placeholder:text-[#999999] outline-hidden transition-all bg-[#F8FBFE]"
                       />
                     </div>
-
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Department / Interest *
+                      <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+                        Phone Number
                       </label>
-                      <select
-                        value={formValues.inquiryType}
-                        onChange={(e) =>
-                          setFormValues({ ...formValues, inquiryType: e.target.value })
-                        }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 bg-white"
-                      >
-                        <option value="appliances">Home Appliances (Fridges, Washers, TVs)</option>
-                        <option value="furniture">Furniture (Sofas, Dining, Beds, Wardrobes)</option>
-                        <option value="corporate">Bulk / Wedding / Builder Order</option>
-                        <option value="service">Warranty & Installation Service</option>
-                      </select>
+                      <input
+                        type="tel"
+                        placeholder="e.g. +91 98765 43210"
+                        value={formValues.phone}
+                        onChange={(e) => setFormValues({ ...formValues, phone: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2EBF2] focus:border-[#0097F3] focus:ring-1 focus:ring-[#0097F3] text-xs text-[#1A1A1A] placeholder:text-[#999999] outline-hidden transition-all bg-[#F8FBFE]"
+                      />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
-                      Your Message or Model Requirement *
+                    <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+                      Your Message *
                     </label>
                     <textarea
-                      rows={4}
                       required
-                      placeholder="Please let us know which appliance model or furniture dimension you are interested in..."
+                      rows={5}
+                      placeholder="Tell us what product or assistance you are looking for..."
                       value={formValues.message}
-                      onChange={(e) =>
-                        setFormValues({ ...formValues, message: e.target.value })
-                      }
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      onChange={(e) => setFormValues({ ...formValues, message: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2EBF2] focus:border-[#0097F3] focus:ring-1 focus:ring-[#0097F3] text-xs text-[#1A1A1A] placeholder:text-[#999999] outline-hidden transition-all bg-[#F8FBFE] resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-brand-primary hover:bg-brand-primaryHover disabled:opacity-75 text-white text-xs sm:text-sm font-bold rounded-xl shadow-button transition-all active:scale-98"
+                    className="w-full py-3.5 px-6 rounded-lg bg-[#0097F3] hover:bg-[#017ED0] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Sending Inquiry...</span>
+                        <span>Sending Message...</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>Submit Inquiry</span>
+                        <span>Send Message</span>
                       </>
                     )}
                   </button>

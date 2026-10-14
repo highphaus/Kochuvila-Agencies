@@ -1,28 +1,19 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import HeroBanner from '@/components/HeroBanner';
-import ShopByWorld from '@/components/ShopByWorld';
-import CategoryGrid from '@/components/CategoryGrid';
-import HomeStylistFinder from '@/components/HomeStylistFinder';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
-import ShopByRoom from '@/components/ShopByRoom';
-import DealsSection from '@/components/DealsSection';
-import KeralaHeritageBento from '@/components/KeralaHeritageBento';
-import TrustSection from '@/components/TrustSection';
+import PromoBanners from '@/components/PromoBanners';
 import BrandShowcase from '@/components/BrandShowcase';
-import KeralaCustomerTrust from '@/components/KeralaCustomerTrust';
 import ShowroomExperience from '@/components/ShowroomExperience';
 import FAQSection from '@/components/FAQSection';
-import FinalCTA from '@/components/FinalCTA';
 import { fetchProducts, fetchCategories, fetchBrands } from '@/lib/api';
 import { SAMPLE_PRODUCTS, SAMPLE_CATEGORIES, SAMPLE_BRANDS } from '@/lib/data/sample-data';
 import { Product, Category, Brand } from '@/types';
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>(() =>
-    SAMPLE_PRODUCTS.filter((p) => p.isFeatured).slice(0, 8)
-  );
-  const [deals, setDeals] = useState<Product[]>(() =>
-    SAMPLE_PRODUCTS.filter((p) => p.isDeal).slice(0, 8)
+    SAMPLE_PRODUCTS.filter((p) => p.isFeatured).slice(0, 10)
   );
   const [categories, setCategories] = useState<Category[]>(SAMPLE_CATEGORIES);
   const [brands, setBrands] = useState<Brand[]>(SAMPLE_BRANDS);
@@ -30,15 +21,13 @@ export default function HomePage() {
   useEffect(() => {
     let isMounted = true;
     Promise.all([
-      fetchProducts({ isFeatured: true, limit: 8 }),
-      fetchProducts({ isDeal: true, limit: 8 }),
+      fetchProducts({ isFeatured: true, limit: 12 }),
       fetchCategories(),
       fetchBrands(),
     ])
-      .then(([featuredData, dealsData, catData, brandData]) => {
+      .then(([featuredData, catData, brandData]) => {
         if (!isMounted) return;
         if (featuredData?.products?.length) setFeaturedProducts(featuredData.products);
-        if (dealsData?.products?.length) setDeals(dealsData.products);
         if (catData?.length) setCategories(catData);
         if (brandData?.length) setBrands(brandData);
       })
@@ -52,62 +41,26 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F5F7F9]">
-      {/* SECTION 1 — HERO BANNER WITH INTEGRATED CATEGORY NAV UNDER SLIDER */}
+    <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
+      {/* 1. HERO SECTION matching user's visual reference (Hero Canvas + Trust Bar + 5 Curated Category Cards) */}
       <HeroBanner />
 
-      {/* SECTION 2 — SHOP BY WORLD: DUAL FLAGSHIP DEPARTMENTS */}
-      <ShopByWorld />
-
-      {/* SECTION 3 — SHOP BY CATEGORY: APPLIANCES & FURNITURE */}
-      <CategoryGrid categories={categories} />
-
-      {/* SECTION 4 — INTERACTIVE SMART HOME STYLIST & BUDGET FINDER */}
-      <HomeStylistFinder />
-
-      {/* SECTION 5 — FEATURED PRODUCTS: CURATED PICKS */}
+      {/* 2. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
       <FeaturedProductsSection products={featuredProducts} />
 
-      {/* SECTION 6 — SHOP BY ROOM: LIFESTYLE INSPIRATION */}
-      <ShopByRoom />
+      {/* 3. PROMOTIONAL EDITORIAL BANNERS (Comfort for Every Corner & Trusted Home Appliances) */}
+      <PromoBanners />
 
-      {/* SECTION 7 — DEALS: FLASH OFFERS & SPOTLIGHT DEAL OF THE DAY */}
-      <DealsSection deals={deals} />
-
-      {/* SECTION 8 — THE KOCHUVILA STANDARD: MALABAR TEAK & COASTAL APPLIANCE BENTO */}
-      <div className="cv-auto">
-        <KeralaHeritageBento />
-      </div>
-
-      {/* SECTION 9 — TRUST: 5 PILLARS OF EXCELLENCE */}
-      <div className="cv-auto">
-        <TrustSection />
-      </div>
-
-      {/* SECTION 10 — AUTHORIZED BRAND PARTNERS */}
-      <div className="cv-auto">
+      {/* 4. BRAND PARTNERS (Authorized dealer showcase) */}
+      <div className="bg-[#FDFDFD]">
         <BrandShowcase brands={brands} />
       </div>
 
-      {/* SECTION 11 — KERALA CUSTOMER TRUST & REAL HOMES */}
-      <div className="cv-auto">
-        <KeralaCustomerTrust />
-      </div>
+      {/* 5. PHYSICAL SHOWROOM EXPERIENCE IN TRIVANDRUM */}
+      <ShowroomExperience />
 
-      {/* SECTION 12 — PHYSICAL SHOWROOM EXPERIENCE */}
-      <div className="cv-auto">
-        <ShowroomExperience />
-      </div>
-
-      {/* SECTION 13 — FREQUENTLY ASKED QUESTIONS */}
-      <div className="cv-auto">
-        <FAQSection />
-      </div>
-
-      {/* SECTION 14 — FINAL CONFIDENCE CTA */}
-      <div className="cv-auto">
-        <FinalCTA />
-      </div>
+      {/* 6. FREQUENTLY ASKED QUESTIONS */}
+      <FAQSection />
     </div>
   );
 }

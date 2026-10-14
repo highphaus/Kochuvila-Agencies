@@ -79,30 +79,30 @@ export default function ProductDetailPage() {
     <div className="bg-[#f8fbfe] min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-xs text-slate-500 mb-6 flex-wrap">
-          <Link href="/" className="hover:text-brand-primary">
+        <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap scrollbar-none py-1">
+          <Link href="/" className="hover:text-brand-primary shrink-0 whitespace-nowrap text-slate-500">
             Home
           </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link href="/products" className="hover:text-brand-primary">
+          <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
+          <Link href="/products" className="hover:text-brand-primary shrink-0 whitespace-nowrap text-slate-500">
             Catalog
           </Link>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
           <Link
             href={`/products?category=${product.category}`}
-            className="hover:text-brand-primary capitalize"
+            className="hover:text-brand-primary capitalize shrink-0 whitespace-nowrap text-slate-700"
           >
             {product.category}
           </Link>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
           <Link
             href={`/products?category=${product.category}&subcategory=${product.subcategory}`}
-            className="hover:text-brand-primary capitalize"
+            className="hover:text-brand-primary capitalize shrink-0 whitespace-nowrap text-slate-700"
           >
             {product.subcategory.replace('-', ' ')}
           </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-slate-800 font-semibold truncate max-w-xs sm:max-w-sm">
+          <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />
+          <span className="text-brand-dark font-semibold shrink-0 whitespace-nowrap">
             {product.name}
           </span>
         </nav>
