@@ -75,15 +75,6 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
               </button>
             </div>
           </div>
-
-          {/* View All > link */}
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#0097F3] hover:text-[#017ED0] hover:underline"
-          >
-            <span>View All</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
 
         {/* 5-Column Responsive Product Grid */}
@@ -91,6 +82,22 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
           {displayList.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
+        </div>
+
+        {/* Explore More Products Showcase Button */}
+        <div className="mt-8 sm:mt-12 pt-4 flex flex-col items-center justify-center text-center space-y-3">
+          <Link
+            href="/products"
+            className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-[#0097F3]/25 hover:shadow-xl hover:shadow-[#0097F3]/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+          >
+            <span>Explore More Products</span>
+            <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 group-hover:bg-white/30 transition-all duration-200">
+              <ArrowRight className="w-3.5 h-3.5 text-white" />
+            </div>
+          </Link>
+          <p className="text-xs text-[#64748B] font-medium max-w-md">
+            Browse our complete collection of 500+ premium home appliances &amp; handcrafted teak furniture with official Kerala warranty.
+          </p>
         </div>
       </div>
     </section>

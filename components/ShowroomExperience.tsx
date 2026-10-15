@@ -69,7 +69,7 @@ export default function ShowroomExperience() {
                 <span className="text-xs font-black uppercase tracking-wider text-slate-700 block">
                   Showroom Experience Zones:
                 </span>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                   {showroomZones.map((zone, idx) => (
                     <button
                       key={idx}

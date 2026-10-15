@@ -117,7 +117,7 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
           <div className="grid grid-cols-4 gap-1.5">
             <button
               onClick={handleAddToCart}
-              className={`col-span-3 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-bold transition-all shadow-xs active:scale-95 ${
+              className={`col-span-3 flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1.5 sm:px-2.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all shadow-xs active:scale-95 truncate ${
                 justAdded
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[#0097F3] hover:bg-[#017ED0] text-white'
@@ -125,13 +125,13 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
             >
               {justAdded ? (
                 <>
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Added!</span>
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">Added!</span>
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  <span>Add to Cart</span>
+                  <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">Add to Cart</span>
                 </>
               )}
             </button>

@@ -23,7 +23,7 @@ export default function Footer() {
           <div className="lg:col-span-4 space-y-4">
             <Logo isLight />
             <p className="text-xs text-[#94A3B8] leading-relaxed max-w-sm pt-2">
-              Kochuvila Home &amp; Living is Kerala’s premier destination for genuine home appliances
+              Kochuvila Agencies is Kerala’s premier destination for genuine home appliances
               and handcrafted furniture. Discover comfort, elegance, and durability built for everyday living.
             </p>
             <div className="pt-2 text-xs text-[#CBD5E1] space-y-1.5">

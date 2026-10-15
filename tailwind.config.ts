@@ -44,8 +44,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-        display: ["'Playfair Display'", "Georgia", "serif"],
+        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+        display: ["'Plus Jakarta Sans'", "sans-serif"],
+        editorial: ["'Playfair Display'", "Georgia", "serif"],
         serif: ["'Playfair Display'", "Georgia", "serif"],
       },
       boxShadow: {

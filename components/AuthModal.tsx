@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import {
   X,
   Mail,
@@ -15,6 +16,7 @@ import {
   KeyRound,
   RotateCcw,
   Edit2,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 
@@ -288,56 +290,76 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
   const modalContent = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity animate-fade-in"
     >
       <div
-        className="w-full max-w-[400px] bg-white rounded-3xl p-7 sm:p-8 border border-slate-200/80 shadow-2xl relative"
+        className="w-full max-w-[440px] bg-white rounded-3xl p-5 sm:p-8 border border-slate-100 shadow-2xl relative overflow-hidden my-auto max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top Brand Accent Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#0097F3] via-[#017ED0] to-[#0097F3] absolute top-0 left-0 right-0" />
+
+        {/* Ambient Glow */}
+        <div className="absolute -top-20 -right-20 w-44 h-44 bg-[#0097F3]/10 rounded-full blur-3xl pointer-events-none" />
+
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-10 cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Brand Header */}
-        <div className="text-center mb-6">
-          <span className="text-lg font-black font-display tracking-tight text-slate-900 inline-block mb-1">
-            KOCHUVILA<span className="text-brand-primary">.</span>
-          </span>
-          <h2 className="text-xl font-bold font-display text-slate-900 tracking-tight">
+        {/* Brand Header with Logo */}
+        <div className="text-center mb-6 pt-1">
+          <div className="inline-flex items-center justify-center gap-2.5 mb-2.5">
+            <div className="w-10 h-10 flex items-center justify-center select-none">
+              <Image
+                src="/Logo/Kochuvila Logo.png"
+                alt="Kochuvila Agencies"
+                width={40}
+                height={40}
+                className="w-full h-full object-contain select-none"
+              />
+            </div>
+            <div className="text-left">
+              <span className="text-base font-bold font-display tracking-tight text-[#000000] block leading-tight">
+                Kochuvila Agencies
+              </span>
+            </div>
+          </div>
+
+          <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight">
             {step === 'verify-otp'
-              ? 'Enter verification code'
+              ? 'Security Verification'
               : mode === 'signin'
-              ? 'Sign In with OTP'
-              : 'Create Account with OTP'}
+              ? 'Welcome Back'
+              : 'Create Your Account'}
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
             {step === 'verify-otp'
-              ? 'We sent a 6-digit code to your email'
+              ? 'Enter the 6-digit verification code sent to your email'
               : mode === 'signin'
-              ? 'Fast, password-free login straight to your inbox'
-              : 'Register in seconds with email verification'}
+              ? 'Sign in to access your orders, wishlist and exclusive offers'
+              : 'Join Kerala’s premier destination for home & lifestyle'}
           </p>
         </div>
 
-        {/* Minimal Tab Switcher */}
+        {/* Segmented Tab Switcher */}
         {step === 'identify' && (
-          <div className="flex p-1 bg-slate-100 rounded-2xl mb-5">
+          <div className="flex p-1 bg-slate-100 rounded-2xl mb-5 border border-slate-200/60">
             <button
               type="button"
               onClick={() => {
                 setMode('signin');
                 resetMessages();
               }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 cursor-pointer ${
                 mode === 'signin'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-[#06121E] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Sign In
@@ -348,10 +370,10 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                 setMode('signup');
                 resetMessages();
               }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 cursor-pointer ${
                 mode === 'signup'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-900'
+                  ? 'bg-[#06121E] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Sign Up
@@ -361,25 +383,25 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
 
         {/* Feedback Messages */}
         {error && (
-          <div className="mb-4 p-2.5 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-xs font-semibold flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="mb-4 p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{success}</span>
           </div>
         )}
 
         {/* ── STEP 1: ENTER EMAIL / PHONE ── */}
         {step === 'identify' && (
-          <form onSubmit={handleRequestOtp} className="space-y-3.5">
+          <form onSubmit={handleRequestOtp} className="space-y-4">
             {mode === 'signup' && (
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Full Name
                 </label>
                 <div className="relative">
@@ -390,14 +412,14 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Rahul Menon"
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all font-medium"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 hover:bg-slate-50/80 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0097F3]/30 focus:border-[#0097F3] transition-all font-medium text-slate-900"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
@@ -408,7 +430,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all font-medium"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 hover:bg-slate-50/80 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0097F3]/30 focus:border-[#0097F3] transition-all font-medium text-slate-900"
                 />
               </div>
             </div>
@@ -416,21 +438,21 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 mt-1 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-3.5 mt-2 rounded-xl bg-[#06121E] hover:bg-[#0097F3] text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer active:scale-98 group"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              <span>{mode === 'signin' ? 'Send Login OTP' : 'Send Registration OTP'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>{mode === 'signin' ? 'Send Instant Login OTP' : 'Send Registration OTP'}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <div className="pt-1 text-center">
+            <div className="pt-2 text-center border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => {
                   setStep('password-login');
                   resetMessages();
                 }}
-                className="text-xs text-slate-500 hover:text-slate-900 font-semibold"
+                className="text-xs text-slate-600 hover:text-[#0097F3] font-semibold transition-colors cursor-pointer"
               >
                 Or sign in with Password
               </button>
@@ -441,9 +463,9 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
         {/* ── STEP 2: 6-DIGIT OTP VERIFICATION ── */}
         {step === 'verify-otp' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
-              <div className="flex items-center gap-1.5 truncate">
-                <Mail className="w-3.5 h-3.5 text-brand-primary shrink-0" />
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+              <div className="flex items-center gap-2 truncate">
+                <Mail className="w-4 h-4 text-[#0097F3] shrink-0" />
                 <span className="font-semibold text-slate-800 truncate">{email}</span>
               </div>
               <button
@@ -452,14 +474,14 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   setStep('identify');
                   resetMessages();
                 }}
-                className="inline-flex items-center gap-1 text-[11px] text-brand-primary hover:underline font-bold shrink-0 ml-2"
+                className="inline-flex items-center gap-1 text-[11px] text-[#0097F3] hover:underline font-bold shrink-0 ml-2 cursor-pointer"
               >
                 <Edit2 className="w-3 h-3" />
                 <span>Edit</span>
               </button>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <label className="block text-center text-xs font-semibold text-slate-700">
                 Enter 6-Digit Code
               </label>
@@ -476,7 +498,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                     value={digit}
                     onChange={(e) => handleDigitChange(idx, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(idx, e)}
-                    className="w-10 sm:w-11 h-12 text-center text-lg font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary focus:bg-white transition-all shadow-2xs"
+                    className="w-8 sm:w-11 h-11 sm:h-12 text-center text-base sm:text-lg font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0097F3]/40 focus:border-[#0097F3] focus:bg-white transition-all shadow-2xs"
                   />
                 ))}
               </div>
@@ -486,14 +508,14 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
               type="button"
               onClick={() => handleVerifyOtp()}
               disabled={loading || otpDigits.join('').length < 6}
-              className="w-full py-2.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              className="w-full py-3.5 rounded-xl bg-[#06121E] hover:bg-[#0097F3] text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               <span>{mode === 'signup' ? 'Verify & Create Account' : 'Verify & Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
-            <div className="flex items-center justify-between text-xs pt-0.5">
+            <div className="flex items-center justify-between text-xs pt-1">
               {resendTimer > 0 ? (
                 <span className="text-slate-400 font-medium">
                   Resend in <strong className="text-slate-700 font-mono">0:{String(resendTimer).padStart(2, '0')}</strong>
@@ -503,7 +525,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   type="button"
                   onClick={handleRequestOtp}
                   disabled={loading}
-                  className="text-brand-primary hover:underline font-bold inline-flex items-center gap-1 cursor-pointer"
+                  className="text-[#0097F3] hover:underline font-bold inline-flex items-center gap-1 cursor-pointer"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>Resend Code</span>
@@ -516,7 +538,7 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   setStep('identify');
                   resetMessages();
                 }}
-                className="text-slate-500 hover:text-slate-900 font-semibold"
+                className="text-slate-500 hover:text-slate-900 font-semibold cursor-pointer"
               >
                 Change Email
               </button>
@@ -526,10 +548,10 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
 
         {/* ── STEP 3: PASSWORD LOGIN ── */}
         {step === 'password-login' && (
-          <form onSubmit={handlePasswordLogin} className="space-y-3.5">
+          <form onSubmit={handlePasswordLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Email
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Email Address
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -539,13 +561,13 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary font-medium"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 hover:bg-slate-50/80 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0097F3]/30 focus:border-[#0097F3] transition-all font-medium text-slate-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -556,12 +578,12 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary font-medium"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-50 hover:bg-slate-50/80 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0097F3]/30 focus:border-[#0097F3] transition-all font-medium text-slate-900"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -571,27 +593,33 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose }: Au
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 mt-1 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-3.5 mt-2 rounded-xl bg-[#06121E] hover:bg-[#0097F3] text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer active:scale-98 group"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               <span>Sign In with Password</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <div className="pt-1 text-center">
+            <div className="pt-2 text-center border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => {
                   setStep('identify');
                   resetMessages();
                 }}
-                className="text-xs text-brand-primary hover:underline font-bold"
+                className="text-xs text-[#0097F3] hover:underline font-bold cursor-pointer"
               >
                 &larr; Switch back to OTP Sign In
               </button>
             </div>
           </form>
         )}
+
+        {/* Security & Warranty Trust Footer */}
+        <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>100% Secure • Official Kerala Warranty &amp; Delivery</span>
+        </div>
       </div>
     </div>
   );

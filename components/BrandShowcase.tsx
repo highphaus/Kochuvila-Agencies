@@ -8,11 +8,14 @@ interface BrandShowcaseProps {
 }
 
 export default function BrandShowcase({ brands }: BrandShowcaseProps) {
+  // Show only top 8 curated brands on the home page
+  const displayedBrands = brands.slice(0, 8);
+
   return (
     /* SECTION 8 — BRANDS: SHOP BY BRAND */
-    <section className="py-8 sm:py-10 bg-white border-b border-brand-border">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
+    <section className="py-8 sm:py-12 bg-white border-b border-brand-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-primary mb-2">
               <Award className="w-3.5 h-3.5 text-brand-primary" />
@@ -27,16 +30,17 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
           </div>
 
           <Link
-            href="/products"
+            href="/brands"
             className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-primary hover:text-brand-deepBlue hover:underline group"
           >
-            <span>Explore All Brands</span>
+            <span>Explore All Brands ({brands.length})</span>
             <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
+        {/* Top Brands Grid (8 brands) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-          {brands.map((b) => {
+          {displayedBrands.map((b) => {
             const specialties: Record<string, string> = {
               Samsung: '4K QLED TVs & Double Door Fridges',
               LG: 'Direct Drive Washers & French Door Fridges',
@@ -77,6 +81,17 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
               </Link>
             );
           })}
+        </div>
+
+        {/* Explore More Brands Action Button */}
+        <div className="mt-8 sm:mt-10 text-center">
+          <Link
+            href="/brands"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#06121E] hover:bg-[#0097F3] text-white text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 shadow-md hover:shadow-lg active:scale-98 group cursor-pointer"
+          >
+            <span>Explore More Brands</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>
