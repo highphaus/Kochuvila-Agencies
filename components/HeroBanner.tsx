@@ -17,38 +17,66 @@ const CATEGORY_CARDS: CategoryCard[] = [
   {
     id: 'living-room',
     title: 'Living Room',
-    subtitle: 'Sofas, Tables, TV Units & More',
+    subtitle: 'Sofas, Tables, TV Units & Recliners',
     imageSrc: '/banners/hero-living.jpg',
     link: '/furniture?category=living-room',
   },
   {
     id: 'bedroom',
     title: 'Bedroom',
-    subtitle: 'Beds, Wardrobes, Mattresses & More',
+    subtitle: 'Teak Beds, Wardrobes & Mattresses',
     imageSrc: '/banners/promo-furniture.jpg',
     link: '/furniture?category=bedroom',
   },
   {
     id: 'kitchen-appliances',
     title: 'Kitchen Appliances',
-    subtitle: 'Fridges, Ovens, Microwaves & More',
+    subtitle: 'Fridges, Ovens, Microwaves & Hobs',
     imageSrc: '/banners/promo-appliances.jpg',
     link: '/appliances?category=kitchen-appliances',
   },
   {
     id: 'laundry-appliances',
     title: 'Laundry Appliances',
-    subtitle: 'Washers, Dryers & More',
+    subtitle: 'Front Load, Top Load Washers & Dryers',
     imageSrc: '/banners/card-laundry.jpg',
     link: '/appliances?category=washing-machines',
   },
   {
+    id: 'entertainment-tvs',
+    title: 'Smart TVs & Cinema',
+    subtitle: 'OLED 4K, QLED & Dolby Soundbars',
+    imageSrc: '/banners/hero-entertainment.jpg',
+    link: '/appliances?category=tvs',
+  },
+  {
+    id: 'dining-room',
+    title: 'Dining & Kitchen',
+    subtitle: 'Solid Teak Dining Sets & Cabinets',
+    imageSrc: '/banners/portrait-dining.jpg',
+    link: '/furniture?category=dining',
+  },
+  {
+    id: 'air-conditioning',
+    title: 'Cooling & ACs',
+    subtitle: '5-Star Inverter Split ACs & Fans',
+    imageSrc: '/banners/portrait-appliances.jpg',
+    link: '/appliances?category=air-conditioners',
+  },
+  {
     id: 'home-decor',
     title: 'Home Decor',
-    subtitle: 'Rugs, Lights, Wall Art & More',
+    subtitle: 'Rugs, Designer Lights, Wall Art & More',
     imageSrc: '/banners/card-decor.jpg',
     link: '/furniture?category=decor',
   },
+];
+
+// Tripled cards for seamless infinite bi-directional carousel loop
+const LOOPED_CATEGORY_CARDS = [
+  ...CATEGORY_CARDS.map((c) => ({ ...c, uniqueId: `set1-${c.id}` })),
+  ...CATEGORY_CARDS.map((c) => ({ ...c, uniqueId: `set2-${c.id}` })),
+  ...CATEGORY_CARDS.map((c) => ({ ...c, uniqueId: `set3-${c.id}` })),
 ];
 
 interface HeroSlide {
@@ -165,7 +193,7 @@ export default function HeroBanner() {
     setCurrentIndex((prev) => prev - 1);
   }, []);
 
-  // Continuous auto-scroll loop every 4.5 seconds
+  // Continuous auto-scroll loop every 4.5 seconds for main hero
   React.useEffect(() => {
     const timer = setInterval(() => {
       setIsTransitioning(true);
@@ -173,6 +201,65 @@ export default function HeroBanner() {
     }, 4500);
     return () => clearInterval(timer);
   }, []);
+
+  // Category Carousel auto-scroll & loop controls
+  const categoryTrackRef = React.useRef<HTMLDivElement>(null);
+  const [isCategoryHovered, setIsCategoryHovered] = React.useState(false);
+
+  // Position at middle set on initial mount for seamless bi-directional infinite loop
+  React.useEffect(() => {
+    const el = categoryTrackRef.current;
+    if (!el) return;
+    const initScroll = () => {
+      const setWidth = el.scrollWidth / 3;
+      el.scrollLeft = setWidth;
+    };
+    const timer = setTimeout(initScroll, 80);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Continuous auto-scroll loop every 3.2 seconds for Explore by Category
+  React.useEffect(() => {
+    if (isCategoryHovered) return;
+    const interval = setInterval(() => {
+      const el = categoryTrackRef.current;
+      if (!el) return;
+      const firstCard = el.querySelector<HTMLElement>('[data-category-card]');
+      const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 300;
+      el.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    }, 3200);
+
+    return () => clearInterval(interval);
+  }, [isCategoryHovered]);
+
+  const handleCategoryScroll = () => {
+    const el = categoryTrackRef.current;
+    if (!el) return;
+    const setWidth = el.scrollWidth / 3;
+    if (setWidth <= 0) return;
+
+    if (el.scrollLeft >= setWidth * 2) {
+      el.scrollLeft -= setWidth;
+    } else if (el.scrollLeft <= 10) {
+      el.scrollLeft += setWidth;
+    }
+  };
+
+  const handleCategoryNext = () => {
+    const el = categoryTrackRef.current;
+    if (!el) return;
+    const firstCard = el.querySelector<HTMLElement>('[data-category-card]');
+    const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 300;
+    el.scrollBy({ left: cardWidth, behavior: 'smooth' });
+  };
+
+  const handleCategoryPrev = () => {
+    const el = categoryTrackRef.current;
+    if (!el) return;
+    const firstCard = el.querySelector<HTMLElement>('[data-category-card]');
+    const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 300;
+    el.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+  };
 
   // Re-enable smooth transition right after an instant jump
   React.useEffect(() => {
@@ -381,39 +468,70 @@ export default function HeroBanner() {
       </div>
 
       {/* 
-        3. 5 Curated Category Cards in a sleek HORIZONTAL track after that:
-        - Living Room, Bedroom, Kitchen Appliances, Laundry Appliances, Home Decor
+        3. Curated Category Cards - Smooth Auto-Scrolling Carousel with Seamless Infinite Loop:
       */}
-      <div className="border-t border-[#E2EBF2] bg-[#FDFDFD] py-5 sm:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
+      <div 
+        className="border-t border-[#E2EBF2] bg-[#FDFDFD] py-6 sm:py-9 relative overflow-hidden"
+        onMouseEnter={() => setIsCategoryHovered(true)}
+        onMouseLeave={() => setIsCategoryHovered(false)}
+      >
+        <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#0097F3]">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#0097F3] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#0097F3]" />
                 Curated Spaces
               </span>
-              <h3 className="text-base sm:text-xl font-bold text-[#000000] font-display">
+              <h3 className="text-lg sm:text-2xl font-bold text-[#000000] font-display">
                 Explore by Category
               </h3>
             </div>
-            <span className="text-[11px] text-slate-400 font-medium sm:hidden flex items-center gap-1">
-              Swipe horizontal →
-            </span>
+
+            {/* Carousel Navigation Arrow Controls */}
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline-block text-[11px] font-semibold text-slate-400 mr-2">
+                {isCategoryHovered ? 'Paused on hover' : 'Auto-scrolling'}
+              </span>
+
+              <button
+                type="button"
+                onClick={handleCategoryPrev}
+                aria-label="Previous Category"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white hover:bg-[#0097F3] hover:text-white text-[#1A1A1A] border border-[#E2EBF2] hover:border-[#0097F3] shadow-xs flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={handleCategoryNext}
+                aria-label="Next Category"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white hover:bg-[#0097F3] hover:text-white text-[#1A1A1A] border border-[#E2EBF2] hover:border-[#0097F3] shadow-xs flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          {/* Horizontal Scrolling Track on mobile / 5-col grid on desktop */}
-          <div className="flex lg:grid lg:grid-cols-5 gap-3.5 sm:gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none snap-x snap-mandatory">
-            {CATEGORY_CARDS.map((card) => (
+          {/* Seamless Infinite Auto-Scrolling Carousel Track */}
+          <div
+            ref={categoryTrackRef}
+            onScroll={handleCategoryScroll}
+            className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x snap-mandatory will-change-scroll select-none"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            {LOOPED_CATEGORY_CARDS.map((card) => (
               <Link
-                key={card.id}
+                key={card.uniqueId}
                 href={card.link}
-                className="group relative rounded-2xl overflow-hidden aspect-[4/3] w-[65vw] sm:w-[40vw] md:w-[30vw] lg:w-auto shrink-0 snap-start shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block cursor-pointer border border-[#E2EBF2] hover:border-[#0097F3]"
+                data-category-card
+                className="group relative rounded-2xl overflow-hidden aspect-[4/3] w-[260px] sm:w-[280px] md:w-[300px] lg:w-[320px] shrink-0 snap-start shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block cursor-pointer border border-[#E2EBF2] hover:border-[#0097F3]"
               >
                 {/* Background Category Image */}
                 <Image
                   src={card.imageSrc}
                   alt={card.title}
                   fill
-                  sizes="(max-width: 640px) 65vw, (max-width: 1024px) 33vw, 20vw"
+                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 300px, 320px"
                   className="object-cover object-center group-hover:scale-106 transition-transform duration-700 select-none"
                 />
 
@@ -424,9 +542,9 @@ export default function HeroBanner() {
                 <div className="absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-end">
                   <div className="flex items-end justify-between gap-2">
                     <div className="min-w-0 pr-1">
-                      <h3 className="text-xs sm:text-sm md:text-base font-bold text-white font-display leading-tight truncate drop-shadow-xs">
+                      <h4 className="text-xs sm:text-sm md:text-base font-bold text-white font-display leading-tight truncate drop-shadow-xs">
                         {card.title}
-                      </h3>
+                      </h4>
                       <p className="text-[10px] sm:text-[11px] text-slate-300 font-medium truncate mt-0.5">
                         {card.subtitle}
                       </p>

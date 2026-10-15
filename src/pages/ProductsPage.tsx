@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { Filter, Search, ChevronRight, SlidersHorizontal, Grid, List, Check } from 'lucide-react';
+import { Filter, Search, ChevronRight, SlidersHorizontal, Grid, List, Check, X, ChevronDown } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
 import { fetchProducts, fetchCategories, fetchBrands } from '@/lib/api';
@@ -17,6 +17,7 @@ interface ProductsPageProps {
 
 export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { sub } = useParams<{ sub?: string }>();
 
   const currentDepartment = defaultDepartment || searchParams.get('category') || undefined;
@@ -37,6 +38,11 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
   const [brands, setBrands] = useState<Brand[]>(SAMPLE_BRANDS);
   const [loading, setLoading] = useState<boolean>(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(true);
+  const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(true);
+  const [isBrandOpen, setIsBrandOpen] = useState<boolean>(true);
+  const [isPriceOpen, setIsPriceOpen] = useState<boolean>(true);
+  const [isFeaturesOpen, setIsFeaturesOpen] = useState<boolean>(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -141,10 +147,13 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
 
   return (
     <div className="bg-[#FDFDFD] min-h-screen pb-16">
-      {/* Category Header Banner matching Panels 2 & 3 in Reference Image */}
-      <section className="relative bg-[#EBF6FC]/60 border-b border-[#9FD8F1]/40 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 relative z-10">
+      {/* Category Header Banner with crisp, sharp, non-cloudy imagery */}
+      <section className="relative bg-gradient-to-r from-[#F0F7FC] via-[#F8FBFE] to-white border-b border-[#E2EBF2] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 relative z-10">
           <div className="max-w-md space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EBF6FC] text-[#0097F3] text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-[#0097F3]/25">
+              <span>Kochuvila Catalog</span>
+            </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-[#1A1A1A] font-display">
               {bannerTitle}
             </h1>
@@ -154,7 +163,7 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
           </div>
         </div>
 
-        {/* Right side banner background photography */}
+        {/* Right side banner background photography - crystal clear & vivid, NO cloudy wash */}
         <div className="absolute right-0 top-0 bottom-0 w-2/5 sm:w-1/2 overflow-hidden pointer-events-none hidden sm:block">
           <Image
             src={bannerImage}
@@ -162,9 +171,10 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
             fill
             priority
             sizes="50vw"
-            className="object-cover object-center"
+            className="object-cover object-center brightness-[1.02] contrast-[1.03]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#EBF6FC] via-[#EBF6FC]/70 to-transparent" />
+          {/* Subtle edge-only soft fade on the boundary so text is easily readable without making photo foggy */}
+          <div className="absolute inset-y-0 left-0 w-24 sm:w-36 bg-gradient-to-r from-[#F0F7FC] to-transparent pointer-events-none" />
         </div>
       </section>
 
@@ -208,163 +218,254 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
 
         {/* Main 2-Column Catalog Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Filter Sidebar matching Reference Layout (3.2 cols) */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-6 bg-white rounded-2xl p-5 border border-[#E2EBF2] shadow-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E2EBF2]">
-              <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A] flex items-center gap-1.5">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#0097F3]" />
-                Filter
-              </span>
-              {hasActiveFilters && (
-                <Link
-                  href={defaultDepartment ? `/${defaultDepartment}` : '/products'}
-                  className="text-xs text-[#0097F3] hover:underline font-semibold"
+          {/* Left Filter Sidebar - Opens and Closes when clicked */}
+          {isFilterOpen && (
+            <aside className="hidden lg:block lg:col-span-3 space-y-5 bg-white rounded-2xl p-5 border border-[#E2EBF2] shadow-xs">
+              <div className="flex items-center justify-between pb-3 border-b border-[#E2EBF2]">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#0097F3]" />
+                  <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A]">
+                    Filters
+                  </span>
+                  <span className="text-[10px] font-bold bg-[#EBF6FC] text-[#0097F3] px-2 py-0.5 rounded-full">
+                    Open
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hasActiveFilters && (
+                    <Link
+                      href={defaultDepartment ? `/${defaultDepartment}` : '/products'}
+                      className="text-xs text-[#0097F3] hover:underline font-semibold"
+                    >
+                      Reset
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsFilterOpen(false)}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-[#666666] hover:text-[#E11D48] hover:bg-red-50 transition-colors cursor-pointer border border-transparent hover:border-red-200"
+                    title="Close Filter Sidebar"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Close</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Category / Subcategories Checklist with Collapsible Accordion */}
+              <div className="space-y-2.5">
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                  className="w-full flex items-center justify-between text-left group cursor-pointer"
                 >
-                  Reset
-                </Link>
-              )}
-            </div>
-
-            {/* Category / Subcategories Checklist */}
-            <div className="space-y-2.5">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A]">
-                Category
-              </h4>
-              <div className="space-y-1.5 text-xs text-[#444444]">
-                {filterCategories.map((cat) => {
-                  const isChecked = currentSubcategory === cat.slug;
-                  return (
-                    <Link
-                      key={cat._id}
-                      href={buildUrl({ subcategory: isChecked ? undefined : cat.slug, page: 1 })}
-                      className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
-                    >
-                      <span
-                        className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
-                          isChecked
-                            ? 'bg-[#0097F3] border-[#0097F3] text-white'
-                            : 'border-[#CCCCCC] bg-white'
-                        }`}
-                      >
-                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                      </span>
-                      <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
-                        {cat.name}
-                      </span>
-                    </Link>
-                  );
-                })}
+                  <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors">
+                    Category
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-[#666666] group-hover:text-[#0097F3] transition-transform duration-200 ${
+                      isCategoryOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isCategoryOpen && (
+                  <div className="space-y-1.5 text-xs text-[#444444] pt-1">
+                    {filterCategories.map((cat) => {
+                      const isChecked = currentSubcategory === cat.slug;
+                      return (
+                        <Link
+                          key={cat._id}
+                          href={buildUrl({ subcategory: isChecked ? undefined : cat.slug, page: 1 })}
+                          className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
+                        >
+                          <span
+                            className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
+                              isChecked
+                                ? 'bg-[#0097F3] border-[#0097F3] text-white'
+                                : 'border-[#CCCCCC] bg-white'
+                            }`}
+                          >
+                            {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                          </span>
+                          <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
+                            {cat.name}
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Brand Checklist */}
-            <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A]">
-                Brand
-              </h4>
-              <div className="space-y-1.5 text-xs text-[#444444] max-h-48 overflow-y-auto pr-1">
-                {filterBrands.map((b) => {
-                  const isChecked = brand?.toLowerCase() === b.name.toLowerCase();
-                  return (
-                    <Link
-                      key={b._id}
-                      href={buildUrl({ brand: isChecked ? undefined : b.name, page: 1 })}
-                      className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
-                    >
-                      <span
-                        className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
-                          isChecked
-                            ? 'bg-[#0097F3] border-[#0097F3] text-white'
-                            : 'border-[#CCCCCC] bg-white'
-                        }`}
-                      >
-                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                      </span>
-                      <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
-                        {b.name}
-                      </span>
-                    </Link>
-                  );
-                })}
+              {/* Brand Checklist with Collapsible Accordion */}
+              <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
+                <button
+                  type="button"
+                  onClick={() => setIsBrandOpen(!isBrandOpen)}
+                  className="w-full flex items-center justify-between text-left group cursor-pointer"
+                >
+                  <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors">
+                    Brand
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-[#666666] group-hover:text-[#0097F3] transition-transform duration-200 ${
+                      isBrandOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isBrandOpen && (
+                  <div className="space-y-1.5 text-xs text-[#444444] max-h-48 overflow-y-auto pr-1 pt-1">
+                    {filterBrands.map((b) => {
+                      const isChecked = brand?.toLowerCase() === b.name.toLowerCase();
+                      return (
+                        <Link
+                          key={b._id}
+                          href={buildUrl({ brand: isChecked ? undefined : b.name, page: 1 })}
+                          className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
+                        >
+                          <span
+                            className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
+                              isChecked
+                                ? 'bg-[#0097F3] border-[#0097F3] text-white'
+                                : 'border-[#CCCCCC] bg-white'
+                            }`}
+                          >
+                            {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                          </span>
+                          <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
+                            {b.name}
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Price Range Filter */}
-            <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A]">
-                Price Range
-              </h4>
-              <div className="space-y-1.5 text-xs text-[#444444]">
-                {priceRanges.map((range) => {
-                  const isChecked = minPrice === range.min && maxPrice === range.max;
-                  return (
-                    <Link
-                      key={range.label}
-                      href={buildUrl({
-                        minPrice: isChecked ? undefined : range.min,
-                        maxPrice: isChecked ? undefined : range.max,
-                        page: 1,
-                      })}
-                      className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
-                    >
-                      <span
-                        className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
-                          isChecked
-                            ? 'bg-[#0097F3] border-[#0097F3] text-white'
-                            : 'border-[#CCCCCC] bg-white'
-                        }`}
-                      >
-                        {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                      </span>
-                      <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
-                        {range.label}
-                      </span>
-                    </Link>
-                  );
-                })}
+              {/* Price Range Filter with Collapsible Accordion */}
+              <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
+                <button
+                  type="button"
+                  onClick={() => setIsPriceOpen(!isPriceOpen)}
+                  className="w-full flex items-center justify-between text-left group cursor-pointer"
+                >
+                  <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors">
+                    Price Range
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-[#666666] group-hover:text-[#0097F3] transition-transform duration-200 ${
+                      isPriceOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isPriceOpen && (
+                  <div className="space-y-1.5 text-xs text-[#444444] pt-1">
+                    {priceRanges.map((range) => {
+                      const isChecked = minPrice === range.min && maxPrice === range.max;
+                      return (
+                        <Link
+                          key={range.label}
+                          href={buildUrl({
+                            minPrice: isChecked ? undefined : range.min,
+                            maxPrice: isChecked ? undefined : range.max,
+                            page: 1,
+                          })}
+                          className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 transition-colors"
+                        >
+                          <span
+                            className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${
+                              isChecked
+                                ? 'bg-[#0097F3] border-[#0097F3] text-white'
+                                : 'border-[#CCCCCC] bg-white'
+                            }`}
+                          >
+                            {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                          </span>
+                          <span className={isChecked ? 'font-semibold text-[#0097F3]' : ''}>
+                            {range.label}
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Department Specific Features Filter */}
-            <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A]">
-                {isAppliances ? 'Features' : 'Material'}
-              </h4>
-              <div className="space-y-1.5 text-xs text-[#444444]">
-                {(isAppliances
-                  ? ['Inverter Technology', 'Energy Efficient', 'Wi-Fi Enabled', 'Fast Cooling', 'Steam Wash']
-                  : ['Wood', 'Fabric', 'Metal', 'Leather', 'Glass']
-                ).map((feat) => (
-                  <label key={feat} className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 cursor-pointer">
-                    <span className="w-3.5 h-3.5 rounded border border-[#CCCCCC] bg-white"></span>
-                    <span>{feat}</span>
-                  </label>
-                ))}
+              {/* Department Specific Features Filter with Collapsible Accordion */}
+              <div className="space-y-2.5 pt-4 border-t border-[#E2EBF2]/60">
+                <button
+                  type="button"
+                  onClick={() => setIsFeaturesOpen(!isFeaturesOpen)}
+                  className="w-full flex items-center justify-between text-left group cursor-pointer"
+                >
+                  <span className="font-bold text-xs uppercase tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors">
+                    {isAppliances ? 'Features' : 'Material'}
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-[#666666] group-hover:text-[#0097F3] transition-transform duration-200 ${
+                      isFeaturesOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isFeaturesOpen && (
+                  <div className="space-y-1.5 text-xs text-[#444444] pt-1">
+                    {(isAppliances
+                      ? ['Inverter Technology', 'Energy Efficient', 'Wi-Fi Enabled', 'Fast Cooling', 'Steam Wash']
+                      : ['Wood', 'Fabric', 'Metal', 'Leather', 'Glass']
+                    ).map((feat) => (
+                      <label key={feat} className="flex items-center gap-2 py-1 px-1.5 rounded hover:bg-[#EBF6FC]/50 cursor-pointer">
+                        <span className="w-3.5 h-3.5 rounded border border-[#CCCCCC] bg-white"></span>
+                        <span>{feat}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          </aside>
+            </aside>
+          )}
 
-          {/* Right Product Grid Area (8.8 cols) */}
-          <div className="lg:col-span-9 space-y-6">
+          {/* Right Product Grid Area: 9 cols when filter is open, full 12 cols when closed */}
+          <div className={`${isFilterOpen ? 'lg:col-span-9' : 'lg:col-span-12'} space-y-6 transition-all duration-300`}>
             {/* Top Toolbar matching Reference Image */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-xl p-3.5 border border-[#E2EBF2] shadow-xs">
-              <span className="text-xs text-[#666666]">
-                Showing <strong className="text-[#1A1A1A]">{products.length}</strong> of{' '}
-                <strong className="text-[#1A1A1A]">{total}</strong> products
-              </span>
+              <div className="flex items-center gap-3">
+                {/* Desktop Filter Toggle Button: Open / Close */}
+                <button
+                  type="button"
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className={`hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 border cursor-pointer ${
+                    isFilterOpen
+                      ? 'bg-[#EBF6FC] text-[#0097F3] border-[#0097F3]/40 hover:bg-[#DDF1FB]'
+                      : 'bg-[#F8FBFE] text-[#1A1A1A] border-[#E2EBF2] hover:bg-[#EBF6FC] hover:border-[#0097F3]/40'
+                  }`}
+                  title={isFilterOpen ? 'Click to Close Filters' : 'Click to Open Filters'}
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#0097F3]" />
+                  <span>Filter:</span>
+                  <span
+                    className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded transition-colors ${
+                      isFilterOpen ? 'bg-[#0097F3] text-white' : 'bg-[#E2EBF2] text-[#444444]'
+                    }`}
+                  >
+                    {isFilterOpen ? 'Open • Click to Close' : 'Closed • Click to Open'}
+                  </span>
+                </button>
+
+                <span className="text-xs text-[#666666]">
+                  Showing <strong className="text-[#1A1A1A]">{products.length}</strong> of{' '}
+                  <strong className="text-[#1A1A1A]">{total}</strong> products
+                </span>
+              </div>
 
               <div className="flex items-center gap-4">
-                {/* Sort By Dropdown matching Reference Image */}
+                {/* Sort By Dropdown */}
                 <div className="flex items-center gap-2 text-xs">
                   <span className="text-[#666666] font-medium">Sort by:</span>
                   <select
                     value={sort}
                     onChange={(e) => {
-                      const params = new URLSearchParams(searchParams);
-                      params.set('sort', e.target.value);
-                      params.set('page', '1');
-                      const basePath = defaultDepartment ? `/${defaultDepartment}` : '/products';
-                      window.location.href = `${basePath}?${params.toString()}`;
+                      const newSort = e.target.value;
+                      navigate(buildUrl({ sort: newSort, page: 1 }));
                     }}
                     className="bg-[#EBF6FC]/30 border border-[#E2EBF2] text-xs font-semibold text-[#1A1A1A] rounded-lg px-2.5 py-1.5 outline-hidden cursor-pointer"
                   >
@@ -396,7 +497,7 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
               </div>
             </div>
 
-            {/* 3-Column Desktop Product Grid matching Reference Image */}
+            {/* Product Grid Area: 3 columns when filter is open, 4 columns when filter is closed */}
             {products.length === 0 ? (
               <div className="bg-white rounded-2xl border border-[#E2EBF2] p-12 text-center space-y-4">
                 <p className="text-base font-bold text-[#1A1A1A] font-display">No products match your criteria</p>
@@ -409,7 +510,15 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
                 </Link>
               </div>
             ) : (
-              <div className={`grid ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-1'} gap-4 sm:gap-6`}>
+              <div
+                className={`grid ${
+                  viewMode === 'grid'
+                    ? isFilterOpen
+                      ? 'grid-cols-2 md:grid-cols-3'
+                      : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+                    : 'grid-cols-1'
+                } gap-4 sm:gap-6`}
+              >
                 {products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}

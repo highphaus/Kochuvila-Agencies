@@ -206,9 +206,11 @@ export default function MobileFilterDrawer({
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded-full text-slate-400 hover:text-black"
+                  className="px-2.5 py-1 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1 text-xs font-bold"
+                  aria-label="Close filters"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
+                  <span>Close</span>
                 </button>
               </div>
             </div>

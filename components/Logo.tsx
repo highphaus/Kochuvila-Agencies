@@ -13,7 +13,7 @@ export default function Logo({ className = '', isLight = false }: LogoProps) {
       {/* Brand Icon / Monogram - Reduced compact size */}
       <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300 relative select-none">
         <Image
-          src="/Logo/Kochuvila Logo.png"
+          src="/Logo/kochuvila-logo.png"
           alt="Kochuvila Agencies"
           width={40}
           height={40}
