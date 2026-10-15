@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'react-router-dom';
-import { CheckCircle, Truck, MessageCircle } from 'lucide-react';
+import { CheckCircle, Truck } from 'lucide-react';
+import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { fetchOrderById } from '@/lib/api';
 import { formatINR } from '@/lib/utils';
 import { Order } from '@/types';
@@ -21,7 +22,7 @@ export default function OrderSuccessPage() {
     }
   }, [orderNumber]);
 
-  const phone = '919447023456';
+  const phone = '919745111141';
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
     `Hello Kochuvila Agencies, I have just placed order ${orderNumber}. Please share the dispatch and delivery updates.`
   )}`;
@@ -97,7 +98,7 @@ export default function OrderSuccessPage() {
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-bold rounded-xl shadow-button transition-all"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4 fill-current" />
               <span>Notify Showroom on WhatsApp</span>
             </a>
 

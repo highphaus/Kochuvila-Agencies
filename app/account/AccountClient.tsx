@@ -528,7 +528,7 @@ export default function AccountClient() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <a
-                    href="tel:+919447023456"
+                    href="tel:+919745111141"
                     className="p-5 rounded-2xl border border-brand-border bg-[#F5F7F9] hover:bg-brand-lightBlueSoft/40 transition-all flex items-center gap-3 text-xs"
                   >
                     <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center shrink-0">
@@ -536,12 +536,12 @@ export default function AccountClient() {
                     </div>
                     <div>
                       <span className="font-black text-black block">Call Showroom Helpline</span>
-                      <span className="text-slate-500 font-medium">+91 94470 23456 (9:30 AM - 8:30 PM)</span>
+                      <span className="text-slate-500 font-medium">+91 97451 11141 (8:30 AM - 9:00 PM)</span>
                     </div>
                   </a>
 
                   <a
-                    href="https://wa.me/919447023456"
+                    href="https://wa.me/919745111141"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-5 rounded-2xl border border-brand-border bg-[#F5F7F9] hover:bg-emerald-50 transition-all flex items-center gap-3 text-xs"

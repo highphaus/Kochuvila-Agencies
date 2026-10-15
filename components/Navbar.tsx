@@ -74,7 +74,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-[#FDFDFD] shadow-2xs transition-all duration-200 border-b border-[#E2EBF2]/60">
+      <header className="hidden md:block sticky top-0 z-50 bg-[#FDFDFD] shadow-2xs transition-all duration-200 border-b border-[#E2EBF2]/60">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10" ref={searchContainerRef}>
           {/* Main Single-Line Navbar Row across all devices */}
           <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-6">

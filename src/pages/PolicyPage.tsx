@@ -142,7 +142,7 @@ export default function PolicyPage({ type }: PolicyPageProps) {
           </div>
 
           <div className="pt-6 border-t border-[#E2EBF2] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#666666]">
-            <span>Need further assistance? Call +91 98765 43210</span>
+            <span>Need further assistance? Call +91 97451 11141</span>
             <Link
               href="/contact"
               className="inline-flex px-4 py-2 bg-[#0097F3] text-white rounded-lg font-semibold hover:bg-[#017ED0] transition-all"

@@ -5,7 +5,8 @@ import HeroBanner from '@/components/HeroBanner';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import PromoBanners from '@/components/PromoBanners';
 import BrandShowcase from '@/components/BrandShowcase';
-import ShowroomExperience from '@/components/ShowroomExperience';
+import FurnitureProductsSection from '@/components/FurnitureProductsSection';
+import AppliancesProductsSection from '@/components/AppliancesProductsSection';
 import FAQSection from '@/components/FAQSection';
 import { fetchProducts, fetchCategories, fetchBrands } from '@/lib/api';
 import { SAMPLE_PRODUCTS, SAMPLE_CATEGORIES, SAMPLE_BRANDS } from '@/lib/data/sample-data';
@@ -15,6 +16,12 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>(() =>
     SAMPLE_PRODUCTS.filter((p) => p.isFeatured).slice(0, 10)
   );
+  const [furnitureProducts, setFurnitureProducts] = useState<Product[]>(() =>
+    SAMPLE_PRODUCTS.filter((p) => p.category.toLowerCase() === 'furniture')
+  );
+  const [appliancesProducts, setAppliancesProducts] = useState<Product[]>(() =>
+    SAMPLE_PRODUCTS.filter((p) => p.category.toLowerCase() === 'appliances')
+  );
   const [categories, setCategories] = useState<Category[]>(SAMPLE_CATEGORIES);
   const [brands, setBrands] = useState<Brand[]>(SAMPLE_BRANDS);
 
@@ -22,12 +29,16 @@ export default function HomePage() {
     let isMounted = true;
     Promise.all([
       fetchProducts({ isFeatured: true, limit: 12 }),
+      fetchProducts({ category: 'furniture', limit: 20 }),
+      fetchProducts({ category: 'appliances', limit: 20 }),
       fetchCategories(),
       fetchBrands(),
     ])
-      .then(([featuredData, catData, brandData]) => {
+      .then(([featuredData, furnData, appData, catData, brandData]) => {
         if (!isMounted) return;
         if (featuredData?.products?.length) setFeaturedProducts(featuredData.products);
+        if (furnData?.products?.length) setFurnitureProducts(furnData.products);
+        if (appData?.products?.length) setAppliancesProducts(appData.products);
         if (catData?.length) setCategories(catData);
         if (brandData?.length) setBrands(brandData);
       })
@@ -42,7 +53,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
-      {/* 1. HERO SECTION matching user's visual reference (Hero Canvas + Trust Bar + 5 Curated Category Cards) */}
+      {/* 1. HERO SECTION (Hero Canvas + Trust Bar + Curated Category Cards) */}
       <HeroBanner />
 
       {/* 2. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
@@ -56,10 +67,13 @@ export default function HomePage() {
         <BrandShowcase brands={brands} />
       </div>
 
-      {/* 5. PHYSICAL SHOWROOM EXPERIENCE IN TRIVANDRUM */}
-      <ShowroomExperience />
+      {/* 5. HANDCRAFTED SOLID TEAK & HOME FURNITURE SECTION */}
+      <FurnitureProductsSection products={furnitureProducts} />
 
-      {/* 6. FREQUENTLY ASKED QUESTIONS */}
+      {/* 6. SMART HOME APPLIANCES & ELECTRONICS SECTION */}
+      <AppliancesProductsSection products={appliancesProducts} />
+
+      {/* 7. FREQUENTLY ASKED QUESTIONS */}
       <FAQSection />
     </div>
   );

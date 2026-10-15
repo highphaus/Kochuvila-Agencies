@@ -21,11 +21,11 @@ export default defineConfig({
   define: {
     'process.env': {
       NEXT_PUBLIC_API_URL: '/api',
-      NEXT_PUBLIC_WHATSAPP_NUMBER: '919447023456',
+      NEXT_PUBLIC_WHATSAPP_NUMBER: '919745111141',
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
     },
     'process.env.NEXT_PUBLIC_API_URL': JSON.stringify('/api'),
-    'process.env.NEXT_PUBLIC_WHATSAPP_NUMBER': JSON.stringify('919447023456'),
+    'process.env.NEXT_PUBLIC_WHATSAPP_NUMBER': JSON.stringify('919745111141'),
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
   },
   server: {

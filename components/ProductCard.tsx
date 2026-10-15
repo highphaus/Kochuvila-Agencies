@@ -3,7 +3,8 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ShoppingCart, Star, MessageCircle, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Check } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { Product } from '@/types';
 import { formatINR, generateWhatsAppEnquiryLink } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -34,6 +35,15 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
     e.stopPropagation();
     toggleWishlist(product);
   };
+
+  const fallbackImage = product.category === 'furniture' ? '/banners/portrait-furniture.jpg' : '/banners/portrait-appliances.jpg';
+  const [imgSrc, setImgSrc] = useState(product.images?.[0] || fallbackImage);
+
+  React.useEffect(() => {
+    if (product.images?.[0]) {
+      setImgSrc(product.images[0]);
+    }
+  }, [product.images]);
 
   return (
     <div className="group bg-white rounded-xl border border-[#E2EBF2] hover:border-[#0097F3] transition-all duration-300 flex flex-col overflow-hidden relative shadow-xs hover:shadow-md hover:-translate-y-0.5">
@@ -66,11 +76,12 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
         className="block relative aspect-square w-full bg-[#EBF6FC]/30 overflow-hidden p-4 flex items-center justify-center cursor-pointer border-b border-[#E2EBF2]"
       >
         <Image
-          src={product.images[0] || 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=600&q=80'}
+          src={imgSrc}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
           loading="lazy"
+          onError={() => setImgSrc(fallbackImage)}
           className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
         />
       </Link>
@@ -145,7 +156,7 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
               aria-label={`Enquire about ${product.name} on WhatsApp`}
               className="col-span-1 flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-lg transition-all border border-[#25D366]/30 active:scale-95"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4 fill-current" />
             </a>
           </div>
         </div>

@@ -153,7 +153,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
             name: mode === 'signup' && name.trim() ? name.trim() : cleanEmail.split('@')[0].toUpperCase(),
             email: cleanEmail,
             role: cleanEmail.includes('admin') ? ('admin' as const) : ('customer' as const),
-            phone: '+91 94470 12345',
+            phone: '+91 97451 11141',
           };
           setAuth(user, 'demo-jwt-token');
           setSuccess('Verified successfully! Redirecting...');
@@ -169,7 +169,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
           name: mode === 'signup' && name.trim() ? name.trim() : cleanEmail.split('@')[0].toUpperCase(),
           email: cleanEmail,
           role: cleanEmail.includes('admin') ? ('admin' as const) : ('customer' as const),
-          phone: '+91 94470 12345',
+          phone: '+91 97451 11141',
         };
         setAuth(user, 'demo-jwt-token');
         setSuccess('Verified successfully! Redirecting...');
@@ -249,7 +249,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
           name: email.split('@')[0] || 'Customer',
           email,
           role: email.includes('admin') ? ('admin' as const) : ('customer' as const),
-          phone: '+91 94470 23456',
+          phone: '+91 97451 11141',
         };
         setAuth(fallbackUser, 'demo-jwt-token');
         setSuccess('Signed in successfully!');
@@ -261,7 +261,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
         name: email.split('@')[0] || 'Customer',
         email,
         role: email.includes('admin') ? ('admin' as const) : ('customer' as const),
-        phone: '+91 94470 23456',
+        phone: '+91 97451 11141',
       };
       setAuth(fallbackUser, 'demo-jwt-token');
       setSuccess('Signed in successfully!');

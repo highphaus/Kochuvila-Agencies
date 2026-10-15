@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles, Clock, Flame, Zap, ShieldCheck, ShoppingCart, MessageCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, Clock, Flame, Zap, ShieldCheck, ShoppingCart } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { Product } from '@/types';
 import { formatINR, generateWhatsAppEnquiryLink } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -214,7 +215,7 @@ export default function DealsSection({ deals }: DealsSectionProps) {
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-xs"
                   >
-                    <MessageCircle className="w-4 h-4" />
+                    <WhatsAppIcon className="w-4 h-4 fill-current" />
                     <span>WhatsApp Deal</span>
                   </a>
                 </div>

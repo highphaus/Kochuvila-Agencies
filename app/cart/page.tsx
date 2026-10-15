@@ -13,12 +13,12 @@ import {
   Sparkles,
   Tag,
   CheckCircle2,
-  MessageCircle,
   Bookmark,
   Plus,
   RotateCcw,
   Check,
 } from 'lucide-react';
+import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { useCartStore } from '@/store/cartStore';
 import { formatINR } from '@/lib/utils';
 import { Product } from '@/types';
@@ -151,7 +151,7 @@ export default function CartPage() {
 
   // WhatsApp Order formatted text
   const generateWhatsAppCartLink = () => {
-    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919447023456';
+    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919745111141';
     let text = `Hello Kochuvila Agencies,\n\nI would like to place an order for the following items in my cart:\n\n`;
     items.forEach((item, idx) => {
       text += `${idx + 1}. *${item.product.name}*\n   Qty: ${item.quantity} | Price: ${formatINR(
@@ -611,8 +611,8 @@ export default function CartPage() {
                     rel="noopener noreferrer"
                     className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-sm transition-all"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    Order Entire Cart on WhatsApp
+                    <WhatsAppIcon className="w-4 h-4 fill-current" />
+                    <span>Order Entire Cart on WhatsApp</span>
                   </a>
                 )}
               </div>

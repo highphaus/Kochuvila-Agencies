@@ -78,7 +78,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 text-white">
                   <p className="font-bold text-sm">Flagship Showroom</p>
-                  <p className="text-xs text-white/80">KK Building, Kazhakuttam, Trivandrum</p>
+                  <p className="text-xs text-white/80">Near Pangode Junction, Pangode P.O., Trivandrum</p>
                 </div>
               </div>
             </div>
@@ -144,25 +144,27 @@ export default function AboutPage() {
                 Experience Kochuvila in Person
               </h3>
               <p className="text-xs sm:text-sm text-[#666666] max-w-lg">
-                Step into our expansive showroom in Kazhakuttam, Trivandrum to test appliances, feel
+                Step into our expansive showrooms in Pangode &amp; Kallara, Trivandrum to test appliances, feel
                 premium wood finishes, and consult our experienced product specialists.
               </p>
               <div className="flex flex-wrap gap-4 text-xs text-[#333333] pt-2">
                 <span className="flex items-center gap-1.5 font-medium">
-                  <MapPin className="w-4 h-4 text-[#0097F3]" /> KK Building, Kazhakuttam
+                  <MapPin className="w-4 h-4 text-[#0097F3]" /> Near Pangode Junction, Trivandrum (Branch: Kallara)
                 </span>
-                <span className="flex items-center gap-1.5 font-medium">
-                  <Phone className="w-4 h-4 text-[#0097F3]" /> +91 98765 43210
-                </span>
+                <a href="tel:+919745111141" className="flex items-center gap-1.5 font-medium hover:text-[#0097F3]">
+                  <Phone className="w-4 h-4 text-[#0097F3]" /> +91 97451 11141
+                </a>
               </div>
             </div>
-            <Link
-              href="/contact"
+            <a
+              href="https://share.google/q4d6GZbN1tKeH5T91"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#0097F3] text-white text-xs font-semibold hover:bg-[#017ED0] transition-all shrink-0"
             >
-              <span>Get Directions</span>
+              <span>Get Directions on Google</span>
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
         </div>
       </section>

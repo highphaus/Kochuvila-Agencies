@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Package, Phone, MessageCircle, MapPin, Calendar, CheckCircle2, Loader2 } from 'lucide-react';
+import { Search, Package, Phone, MapPin, Calendar, CheckCircle2, Loader2 } from 'lucide-react';
+import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { fetchOrderById } from '@/lib/api';
 import { formatINR } from '@/lib/utils';
 import { Order } from '@/types';
@@ -44,7 +45,7 @@ export default function TrackOrderPage() {
     }
   };
 
-  const phone = '919447023456';
+  const phone = '919745111141';
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
     `Hello Kochuvila Agencies, I am inquiring about the delivery timeline of order: ${query || ''}`
   )}`;
@@ -116,11 +117,11 @@ export default function TrackOrderPage() {
               Please double check the order number from your receipt or contact our showroom helpline for manual verification.
             </p>
             <a
-              href="tel:+919447023456"
+              href="tel:+919745111141"
               className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-primary hover:underline"
             >
               <Phone className="w-4 h-4" />
-              Call Showroom Helpline: +91 94470 23456
+              Call Showroom Helpline: +91 97451 11141
             </a>
           </div>
         )}
@@ -224,8 +225,8 @@ export default function TrackOrderPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl font-bold shadow-xs transition-colors whitespace-nowrap"
               >
-                <MessageCircle className="w-4 h-4" />
-                WhatsApp Showroom Support
+                <WhatsAppIcon className="w-4 h-4 fill-current" />
+                <span>WhatsApp Showroom Support</span>
               </a>
             </div>
           </div>

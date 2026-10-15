@@ -8,7 +8,6 @@ import {
   Heart,
   ShoppingCart,
   Zap,
-  MessageCircle,
   Truck,
   ShieldCheck,
   RotateCcw,
@@ -21,6 +20,7 @@ import {
   Phone,
   Scale,
 } from 'lucide-react';
+import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { Product } from '@/types';
 import { formatINR, calculateEMI, generateWhatsAppEnquiryLink } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
@@ -402,10 +402,10 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm shadow-button transition-all active:scale-98"
+            className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm shadow-button transition-all active:scale-98"
           >
-            <MessageCircle className="w-5 h-5" />
-            Enquire & Order Directly on WhatsApp
+            <WhatsAppIcon className="w-5 h-5 fill-current" />
+            Enquire &amp; Order Directly on WhatsApp
           </a>
         </div>
 

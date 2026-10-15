@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, Sparkles, MessageCircle } from 'lucide-react';
+import { HelpCircle, ChevronDown, Sparkles } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 import { generateGeneralWhatsAppLink } from '@/lib/utils';
 
 interface FAQItem {
@@ -11,12 +12,6 @@ interface FAQItem {
 }
 
 const FAQS: FAQItem[] = [
-  {
-    question: 'Do you deliver across all 14 districts in Kerala?',
-    answer:
-      'Yes, absolutely! Kochuvila Agencies operates a dedicated logistics fleet covering all 14 districts—from Thiruvananthapuram and Kollam up to Kozhikode and Kasaragod. Large appliances and solid teak furniture are safely transported in air-cushioned transit vehicles to prevent any scratch or transit damage.',
-    category: 'delivery',
-  },
   {
     question: 'Is in-home installation and demo free for TVs, ACs, and Washers?',
     answer:
@@ -44,7 +39,7 @@ const FAQS: FAQItem[] = [
   {
     question: 'Can I inspect the products at your showroom before buying?',
     answer:
-      'Yes! We warmly invite you to visit our 25,000+ sq.ft. showroom at Kochuvila Junction. You can test live audio-visual setups, sit on the teak living sofas, check storage capacities, and speak with our advisors before ordering in-person or online.',
+      'Yes! We warmly invite you to visit our flagship showroom near Pangode Junction, Trivandrum or our branch showroom at Kallara. You can test live audio-visual setups, sit on the teak living sofas, check storage capacities, and speak with our advisors before ordering in-person or online.',
     category: 'furniture',
   },
 ];
@@ -133,7 +128,7 @@ export default function FAQSection() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-sm flex-shrink-0 active:scale-98"
           >
-            <MessageCircle className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4 fill-current" />
             <span>Ask on WhatsApp</span>
           </a>
         </div>
