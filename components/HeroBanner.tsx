@@ -356,9 +356,9 @@ export default function HeroBanner() {
                   </div>
 
                   {/* Headline with crisp high contrast */}
-                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-[1.2] text-white drop-shadow-md">
-                    {slide.titlePart1}
-                    <span className="text-[#38BDF8] block sm:inline">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-white drop-shadow-md">
+                    {slide.titlePart1}{' '}
+                    <span className="text-[#38BDF8] inline">
                       {slide.titleAccent}
                     </span>
                   </h1>
@@ -369,10 +369,10 @@ export default function HeroBanner() {
                   </p>
 
                   {/* CTA Buttons */}
-                  <div className="pt-1 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
+                  <div className="pt-1.5 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
                     <Link
                       href={slide.primaryCta.href}
-                      className="inline-flex items-center justify-center px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 shadow-lg shadow-[#0097F3]/30 hover:scale-102 active:scale-98 group cursor-pointer"
+                      className="inline-flex items-center justify-center min-h-[44px] px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 shadow-lg shadow-[#0097F3]/30 hover:scale-102 active:scale-98 group cursor-pointer"
                     >
                       <span>{slide.primaryCta.label}</span>
                       <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
@@ -380,7 +380,7 @@ export default function HeroBanner() {
 
                     <Link
                       href={slide.secondaryCta.href}
-                      className="inline-flex items-center justify-center px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-black/35 hover:bg-black/55 text-white border border-white/30 backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wide transition-all duration-200 active:scale-98 cursor-pointer shadow-xs"
+                      className="inline-flex items-center justify-center min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-black/40 hover:bg-black/60 text-white border border-white/35 backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wide transition-all duration-200 active:scale-98 cursor-pointer shadow-xs"
                     >
                       <span>{slide.secondaryCta.label}</span>
                     </Link>
@@ -524,7 +524,7 @@ export default function HeroBanner() {
                 key={card.uniqueId}
                 href={card.link}
                 data-category-card
-                className="group relative rounded-2xl overflow-hidden aspect-[4/3] w-[260px] sm:w-[280px] md:w-[300px] lg:w-[320px] shrink-0 snap-start shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block cursor-pointer border border-[#E2EBF2] hover:border-[#0097F3]"
+                className="group relative rounded-2xl overflow-hidden aspect-[4/3] w-[230px] sm:w-[270px] md:w-[300px] lg:w-[320px] shrink-0 snap-start shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block cursor-pointer border border-[#E2EBF2] hover:border-[#0097F3]"
               >
                 {/* Background Category Image */}
                 <Image

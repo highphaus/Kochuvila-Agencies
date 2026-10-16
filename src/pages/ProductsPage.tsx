@@ -517,7 +517,7 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
                       ? 'grid-cols-2 md:grid-cols-3'
                       : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
                     : 'grid-cols-1'
-                } gap-4 sm:gap-6`}
+                } gap-2.5 sm:gap-4 md:gap-5 lg:gap-6`}
               >
                 {products.map((product) => (
                   <ProductCard key={product._id} product={product} />

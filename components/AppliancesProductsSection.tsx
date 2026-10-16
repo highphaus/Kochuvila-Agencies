@@ -55,12 +55,12 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             </p>
           </div>
 
-          {/* Subcategory Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-bold">
+          {/* Subcategory Filter Tabs with touch-friendly horizontal scroll */}
+          <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold overflow-x-auto scrollbar-none pb-1 max-w-full flex-nowrap sm:flex-wrap">
             <button
               type="button"
               onClick={() => setActiveSubcat('all')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'all'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -71,7 +71,7 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             <button
               type="button"
               onClick={() => setActiveSubcat('refrigerators')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'refrigerators'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -82,7 +82,7 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             <button
               type="button"
               onClick={() => setActiveSubcat('televisions')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'televisions'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -93,7 +93,7 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             <button
               type="button"
               onClick={() => setActiveSubcat('washing-machines')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'washing-machines'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -104,7 +104,7 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             <button
               type="button"
               onClick={() => setActiveSubcat('air-conditioners')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'air-conditioners'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -115,7 +115,7 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
             <button
               type="button"
               onClick={() => setActiveSubcat('kitchen-appliances')}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all ${
+              className={`px-3 sm:px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'kitchen-appliances'
                   ? 'bg-brand-primary text-white shadow-sm'
                   : 'bg-white hover:bg-slate-200 text-slate-700 border border-slate-200'
@@ -126,8 +126,8 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
           </div>
         </div>
 
-        {/* 5-Column Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+        {/* 5-Column Responsive Product Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-4.5">
           {displayList.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}

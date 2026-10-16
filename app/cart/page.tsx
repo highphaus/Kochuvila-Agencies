@@ -199,7 +199,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#f8fbfe] min-h-screen py-8 sm:py-12">
+    <div className="bg-[#f8fbfe] min-h-screen pt-6 sm:pt-8 pb-28 lg:pb-12">
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -307,20 +307,22 @@ export default function CartPage() {
                     </div>
 
                     {/* Actions: Quantity, Save for Later & Remove */}
-                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 flex-wrap sm:flex-nowrap">
                       <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
                         <button
                           onClick={() => updateQuantity(product._id, quantity - 1)}
-                          className="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100"
+                          aria-label={`Decrease quantity of ${product.name}`}
+                          className="min-w-[32px] min-h-[32px] flex items-center justify-center text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
                         >
                           -
                         </button>
-                        <span className="px-3 py-1 text-xs font-bold text-slate-900">
+                        <span className="min-w-[32px] px-2 text-center text-xs font-bold text-slate-900">
                           {quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(product._id, quantity + 1)}
-                          className="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-100"
+                          aria-label={`Increase quantity of ${product.name}`}
+                          className="min-w-[32px] min-h-[32px] flex items-center justify-center text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
                         >
                           +
                         </button>
@@ -598,7 +600,7 @@ export default function CartPage() {
                 <button
                   onClick={() => router.push('/checkout')}
                   disabled={items.length === 0}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-button transition-all active:scale-98 disabled:opacity-50"
+                  className="w-full min-h-[48px] flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-button transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4" />
@@ -609,7 +611,7 @@ export default function CartPage() {
                     href={generateWhatsAppCartLink()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-sm transition-all"
+                    className="w-full min-h-[44px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-sm transition-all"
                   >
                     <WhatsAppIcon className="w-4 h-4 fill-current" />
                     <span>Order Entire Cart on WhatsApp</span>

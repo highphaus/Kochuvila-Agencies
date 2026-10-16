@@ -39,7 +39,7 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
         </div>
 
         {/* Top Brands Grid (8 brands) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {displayedBrands.map((b) => {
             const specialties: Record<string, string> = {
               Samsung: '4K QLED TVs & Double Door Fridges',
@@ -58,7 +58,7 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
               <Link
                 key={b._id}
                 href={`/products?brand=${encodeURIComponent(b.name)}`}
-                className="group p-5 rounded-2xl border border-brand-border hover:border-brand-primary bg-white hover:bg-brand-lightBlueSoft/20 transition-all text-left flex flex-col justify-between shadow-card hover:shadow-cardHover relative overflow-hidden"
+                className="group p-3.5 sm:p-5 rounded-2xl border border-brand-border hover:border-brand-primary bg-white hover:bg-brand-lightBlueSoft/20 transition-all text-left flex flex-col justify-between shadow-card hover:shadow-cardHover relative overflow-hidden"
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="font-black text-sm sm:text-base text-black group-hover:text-brand-primary transition-colors tracking-wide uppercase">

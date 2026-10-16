@@ -33,10 +33,11 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
             </h2>
 
             {/* Tabs: Best Sellers | New Arrivals | Top Rated in 0097f3 */}
-            <div className="flex items-center gap-4 text-xs sm:text-sm font-semibold">
+            <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm font-semibold overflow-x-auto scrollbar-none pb-1">
               <button
+                type="button"
                 onClick={() => setActiveTab('best_sellers')}
-                className={`py-1 transition-colors relative ${
+                className={`py-2 px-1 min-h-[44px] transition-colors relative whitespace-nowrap ${
                   activeTab === 'best_sellers'
                     ? 'text-[#0097F3] font-bold'
                     : 'text-[#64748B] hover:text-[#000000]'
@@ -44,12 +45,13 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
               >
                 Best Sellers
                 {activeTab === 'best_sellers' && (
-                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
                 )}
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('new_arrivals')}
-                className={`py-1 transition-colors relative ${
+                className={`py-2 px-1 min-h-[44px] transition-colors relative whitespace-nowrap ${
                   activeTab === 'new_arrivals'
                     ? 'text-[#0097F3] font-bold'
                     : 'text-[#64748B] hover:text-[#000000]'
@@ -57,12 +59,13 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
               >
                 New Arrivals
                 {activeTab === 'new_arrivals' && (
-                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
                 )}
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('top_rated')}
-                className={`py-1 transition-colors relative ${
+                className={`py-2 px-1 min-h-[44px] transition-colors relative whitespace-nowrap ${
                   activeTab === 'top_rated'
                     ? 'text-[#0097F3] font-bold'
                     : 'text-[#64748B] hover:text-[#000000]'
@@ -70,7 +73,7 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
               >
                 Top Rated
                 {activeTab === 'top_rated' && (
-                  <span className="absolute -bottom-[17px] left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#0097F3] rounded-full"></span>
                 )}
               </button>
             </div>
@@ -78,7 +81,7 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
         </div>
 
         {/* 5-Column Responsive Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-4.5">
           {displayList.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}

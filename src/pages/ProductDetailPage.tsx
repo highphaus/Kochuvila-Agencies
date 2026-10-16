@@ -76,8 +76,8 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="bg-[#f8fbfe] min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="bg-[#f8fbfe] min-h-screen pt-4 sm:pt-6 pb-28 lg:pb-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6">
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap scrollbar-none py-1">
           <Link href="/" className="hover:text-brand-primary shrink-0 whitespace-nowrap text-slate-500">

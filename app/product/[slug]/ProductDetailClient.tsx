@@ -471,7 +471,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       </div>
 
       {/* Sticky Mobile Purchase Bar (Thumb-friendly UX) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-brand-border p-3 flex items-center justify-between gap-3 shadow-elevated">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-brand-border px-4 py-3 flex items-center justify-between gap-3 shadow-elevated safe-bottom">
         <div className="min-w-0">
           <div className="flex items-baseline gap-1.5">
             <span className="text-base font-black text-black">{formatINR(product.price)}</span>
@@ -487,14 +487,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <div className="flex items-center gap-2">
           <button
             onClick={handleAddToCart}
-            className="px-3.5 py-2.5 rounded-xl bg-brand-lightBlueSoft text-brand-deepBlue border border-brand-lightBlue font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all"
+            className="px-3.5 py-2.5 min-h-[44px] rounded-xl bg-brand-lightBlueSoft text-brand-deepBlue border border-brand-lightBlue font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all"
+            aria-label="Add to cart"
           >
             <ShoppingCart className="w-4 h-4 text-brand-primary" />
             <span>Add</span>
           </button>
           <button
             onClick={handleBuyNow}
-            className="px-5 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-deepBlue text-white font-bold text-xs shadow-button active:scale-95 transition-all flex items-center gap-1"
+            className="px-5 py-2.5 min-h-[44px] rounded-xl bg-brand-primary hover:bg-brand-deepBlue text-white font-bold text-xs shadow-button active:scale-95 transition-all flex items-center gap-1"
+            aria-label="Buy now"
           >
             <Zap className="w-4 h-4" />
             <span>Buy Now</span>

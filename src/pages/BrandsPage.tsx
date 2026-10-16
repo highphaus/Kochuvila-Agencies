@@ -40,26 +40,26 @@ export default function BrandsPage() {
         </div>
 
         {/* Brands Grid matching the Reference Image */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6 mb-12 sm:mb-16">
           {SAMPLE_BRANDS.map((brand) => (
             <Link
               key={brand._id}
               href={`/products?brand=${encodeURIComponent(brand.name)}`}
-              className="group bg-white rounded-2xl p-6 border border-[#E2EBF2] hover:border-[#0097F3] shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+              className="group bg-white rounded-2xl p-3.5 sm:p-5 md:p-6 border border-[#E2EBF2] hover:border-[#0097F3] shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Brand Name Monogram */}
-                <div className="h-16 w-full rounded-xl bg-[#F8FBFE] border border-[#E2EBF2]/60 flex items-center justify-center mb-4 group-hover:bg-[#EBF6FC] transition-colors">
-                  <span className="text-xl sm:text-2xl font-black font-display tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors">
+                <div className="h-14 sm:h-16 w-full rounded-xl bg-[#F8FBFE] border border-[#E2EBF2]/60 flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-[#EBF6FC] transition-colors">
+                  <span className="text-lg sm:text-2xl font-black font-display tracking-wider text-[#1A1A1A] group-hover:text-[#0097F3] transition-colors truncate px-2">
                     {brand.name}
                   </span>
                 </div>
-                <p className="text-xs text-[#666666] line-clamp-3 leading-relaxed mb-4">
+                <p className="text-[11px] sm:text-xs text-[#666666] line-clamp-3 leading-relaxed mb-3 sm:mb-4">
                   {brandDescriptions[brand.name] || 'Official brand catalog available at Kochuvila showroom with full Kerala warranty.'}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-[#E2EBF2]/60 flex items-center justify-between text-xs font-semibold text-[#0097F3]">
+              <div className="pt-2.5 sm:pt-3 border-t border-[#E2EBF2]/60 flex items-center justify-between text-xs font-semibold text-[#0097F3]">
                 <span>View Products</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>

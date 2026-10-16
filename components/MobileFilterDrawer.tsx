@@ -110,11 +110,13 @@ export default function MobileFilterDrawer({
   return (
     <>
       {/* Sticky Mobile Filter & Sort Control Bar */}
-      <div className="lg:hidden sticky top-[57px] z-30 bg-white/95 backdrop-blur-md border-b border-brand-border py-2.5 px-4 shadow-2xs mb-6">
-        <div className="flex items-center justify-between gap-3">
+      <div className="lg:hidden sticky top-14 z-30 bg-white/95 backdrop-blur-md border-b border-brand-border py-2 px-3 sm:px-4 shadow-2xs mb-6 safe-top">
+        <div className="flex items-center justify-between gap-2.5">
           <button
+            type="button"
             onClick={() => setIsOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors"
+            className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors active:scale-95"
+            aria-label="Open filter options"
           >
             <Filter className="w-3.5 h-3.5 text-brand-primary" />
             <span>Filters</span>
@@ -126,8 +128,10 @@ export default function MobileFilterDrawer({
           </button>
 
           <button
+            type="button"
             onClick={() => setIsSortOpen(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors"
+            className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors active:scale-95"
+            aria-label="Sort products"
           >
             <ArrowUpDown className="w-3.5 h-3.5 text-brand-primary" />
             <span>Sort By</span>

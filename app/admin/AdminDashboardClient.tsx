@@ -326,10 +326,10 @@ export default function AdminDashboardClient({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-brand-border text-xs font-bold">
+        <div className="flex items-center gap-2 border-b border-brand-border text-xs font-bold overflow-x-auto scrollbar-none pb-0.5">
           <button
             onClick={() => setActiveTab('orders')}
-            className={`py-3 px-4 border-b-2 transition-all ${
+            className={`py-3 px-4 border-b-2 transition-all shrink-0 ${
               activeTab === 'orders'
                 ? 'border-brand-primary text-brand-primary'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -339,7 +339,7 @@ export default function AdminDashboardClient({
           </button>
           <button
             onClick={() => setActiveTab('products')}
-            className={`py-3 px-4 border-b-2 transition-all ${
+            className={`py-3 px-4 border-b-2 transition-all shrink-0 ${
               activeTab === 'products'
                 ? 'border-brand-primary text-brand-primary'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -349,7 +349,7 @@ export default function AdminDashboardClient({
           </button>
           <button
             onClick={() => setActiveTab('system')}
-            className={`py-3 px-4 border-b-2 transition-all ${
+            className={`py-3 px-4 border-b-2 transition-all shrink-0 ${
               activeTab === 'system'
                 ? 'border-brand-primary text-brand-primary'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -383,7 +383,7 @@ export default function AdminDashboardClient({
 
             <div className="bg-white rounded-2xl border border-brand-border shadow-card overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-stone-700">
+                <table className="w-full text-left text-xs text-stone-700 min-w-[720px]">
                   <thead className="bg-stone-50 border-b border-brand-border uppercase text-[11px] font-bold text-stone-600">
                     <tr>
                       <th className="py-3.5 px-4">Order ID</th>
@@ -490,7 +490,7 @@ export default function AdminDashboardClient({
 
             <div className="bg-white rounded-2xl border border-brand-border shadow-card overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-700">
+                <table className="w-full text-left text-xs text-slate-700 min-w-[700px]">
                   <thead className="bg-slate-50 border-b border-brand-border uppercase text-[11px] font-bold text-slate-600">
                     <tr>
                       <th className="py-3.5 px-4">Item Details</th>

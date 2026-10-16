@@ -31,18 +31,18 @@ export default function AboutPage() {
               </p>
 
               {/* 3 Pills matching Reference Image */}
-              <div className="grid grid-cols-3 gap-3 pt-2">
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-2">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
                   <ShieldCheck className="w-5 h-5 text-[#0097F3] mx-auto mb-1.5" />
                   <span className="block text-xs font-bold text-[#1A1A1A]">Quality Products</span>
                   <span className="text-[10px] text-[#666666]">100% Genuine</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
                   <Users className="w-5 h-5 text-[#0097F3] mx-auto mb-1.5" />
                   <span className="block text-xs font-bold text-[#1A1A1A]">Customer First</span>
                   <span className="text-[10px] text-[#666666]">Dedicated Support</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-white border border-[#E2EBF2] text-center shadow-xs">
                   <Award className="w-5 h-5 text-[#0097F3] mx-auto mb-1.5" />
                   <span className="block text-xs font-bold text-[#1A1A1A]">Trusted Since 1993</span>
                   <span className="text-[10px] text-[#666666]">30+ Years Legacy</span>

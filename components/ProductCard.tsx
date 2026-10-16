@@ -87,17 +87,17 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
       </Link>
 
       {/* Content */}
-      <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2.5">
+      <div className="p-2.5 sm:p-3.5 flex-1 flex flex-col justify-between space-y-2">
         <div>
           {/* Brand */}
-          <div className="text-[11px] font-bold tracking-wider uppercase text-[#017ED0] mb-0.5">
+          <div className="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-[#017ED0] mb-0.5 truncate">
             {product.brand}
           </div>
 
           {/* Product Name */}
           <Link
             href={`/product/${product.slug}`}
-            className="block text-xs sm:text-sm font-semibold text-[#000000] group-hover:text-[#0097F3] transition-colors line-clamp-2 leading-snug mb-1.5"
+            className="block text-xs sm:text-sm font-semibold text-[#000000] group-hover:text-[#0097F3] transition-colors line-clamp-2 leading-snug mb-1"
           >
             {product.name}
           </Link>
@@ -114,12 +114,12 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
 
         {/* Price & Action Button */}
         <div className="pt-2 border-t border-[#E2EBF2] space-y-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm sm:text-base font-bold text-[#000000]">
+          <div className="flex flex-wrap items-baseline gap-1.5">
+            <span className="text-xs sm:text-base font-bold text-[#000000]">
               {formatINR(product.price)}
             </span>
             {product.mrp > product.price && (
-              <span className="text-[11px] text-[#94A3B8] line-through">
+              <span className="text-[10px] sm:text-[11px] text-[#94A3B8] line-through">
                 {formatINR(product.mrp)}
               </span>
             )}
@@ -128,11 +128,12 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
           <div className="grid grid-cols-4 gap-1.5">
             <button
               onClick={handleAddToCart}
-              className={`col-span-3 flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1.5 sm:px-2.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all shadow-xs active:scale-95 truncate ${
+              className={`col-span-3 min-h-[40px] flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-xs active:scale-95 truncate ${
                 justAdded
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[#0097F3] hover:bg-[#017ED0] text-white'
               }`}
+              aria-label={`Add ${product.name} to Cart`}
             >
               {justAdded ? (
                 <>
@@ -154,7 +155,7 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
               onClick={(e) => e.stopPropagation()}
               title="Enquire on WhatsApp"
               aria-label={`Enquire about ${product.name} on WhatsApp`}
-              className="col-span-1 flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-lg transition-all border border-[#25D366]/30 active:scale-95"
+              className="col-span-1 min-h-[40px] flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-lg transition-all border border-[#25D366]/30 active:scale-95"
             >
               <WhatsAppIcon className="w-4 h-4 fill-current" />
             </a>

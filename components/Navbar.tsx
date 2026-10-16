@@ -74,10 +74,10 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="hidden md:block sticky top-0 z-50 bg-[#FDFDFD] shadow-2xs transition-all duration-200 border-b border-[#E2EBF2]/60">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10" ref={searchContainerRef}>
+      <header className="sticky top-0 z-50 bg-[#FDFDFD]/95 backdrop-blur-md shadow-2xs transition-all duration-200 border-b border-[#E2EBF2]/80 safe-top">
+        <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10" ref={searchContainerRef}>
           {/* Main Single-Line Navbar Row across all devices */}
-          <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-6">
+          <div className="flex items-center justify-between h-14 sm:h-16 md:h-20 gap-2 sm:gap-4 lg:gap-6">
             {/* 1. Brand Logo & Company Name positioned cleanly to the left */}
             <div className="flex-shrink-0">
               <Logo isLight={false} />
@@ -88,19 +88,20 @@ export default function Navbar() {
               <SearchAutocomplete />
             </div>
 
-            {/* 3. Action Icons: Search -> Cart -> Wishlist -> Profile (Profile shifted to right side) */}
-            <div className="flex items-center gap-1 sm:gap-2.5 flex-shrink-0">
-              {/* 1. Search Icon Trigger button (on smaller devices < md) */}
+            {/* 3. Action Icons: Search -> Cart -> Wishlist -> Profile */}
+            <div className="flex items-center gap-0.5 sm:gap-1.5 md:gap-2.5 flex-shrink-0">
+              {/* 1. Search Icon Trigger button (on mobile < md) */}
               <button
                 type="button"
                 onClick={() => setIsSearchOpen((prev) => !prev)}
-                className={`p-2 sm:p-2.5 rounded-full transition-all duration-200 cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center md:hidden ${
+                className={`p-2 rounded-full transition-all duration-200 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center md:hidden active:scale-95 ${
                   isSearchOpen
                     ? 'text-[#0097F3] bg-[#EBF6FC] shadow-2xs'
                     : 'text-[#1E293B] hover:text-[#0097F3] hover:bg-[#EBF6FC]'
                 }`}
                 title={isSearchOpen ? 'Close Search' : 'Search Products'}
                 aria-label={isSearchOpen ? 'Close Search' : 'Search Products'}
+                aria-expanded={isSearchOpen}
               >
                 {isSearchOpen ? (
                   <X className="w-5 h-5 text-[#0097F3]" />
@@ -112,13 +113,13 @@ export default function Navbar() {
               {/* 2. Cart Icon with Live Count */}
               <Link
                 href="/cart"
-                className="p-2 sm:p-2.5 rounded-full text-[#1E293B] hover:text-[#0097F3] hover:bg-[#EBF6FC] transition-all duration-200 relative cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center"
+                className="p-2 rounded-full text-[#1E293B] hover:text-[#0097F3] hover:bg-[#EBF6FC] transition-all duration-200 relative cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
                 title="Shopping Cart"
-                aria-label="Shopping Cart"
+                aria-label={`Shopping Cart with ${cartItemCount} items`}
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartItemCount > 0 && (
-                  <span className="absolute top-1 right-1 bg-[#0097F3] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                  <span className="absolute top-1.5 right-1.5 bg-[#0097F3] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                     {cartItemCount}
                   </span>
                 )}
@@ -127,27 +128,28 @@ export default function Navbar() {
               {/* 3. Wishlist Icon */}
               <Link
                 href="/wishlist"
-                className="p-2 sm:p-2.5 rounded-full text-[#1E293B] hover:text-[#0097F3] hover:bg-[#EBF6FC] transition-all duration-200 relative cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center"
+                className="p-2 rounded-full text-[#1E293B] hover:text-[#0097F3] hover:bg-[#EBF6FC] transition-all duration-200 relative cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
                 title="My Wishlist"
-                aria-label="Wishlist"
+                aria-label={`Wishlist with ${wishlistCount} items`}
               >
                 <Heart className="w-5 h-5" />
                 {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 bg-[#0097F3] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                  <span className="absolute top-1.5 right-1.5 bg-[#0097F3] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                     {wishlistCount}
                   </span>
                 )}
               </Link>
 
-              {/* 4. Account Dropdown / Profile / Sign In (On the right side) */}
+              {/* 4. Account Dropdown / Profile / Sign In */}
               <div className="relative" ref={dropdownRef}>
                 {user ? (
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-1 p-1 sm:p-1.5 rounded-full hover:bg-[#EBF6FC] transition-colors cursor-pointer min-w-[38px] min-h-[38px] justify-center"
+                    className="flex items-center gap-1 p-1 rounded-full hover:bg-[#EBF6FC] transition-colors cursor-pointer min-w-[44px] min-h-[44px] justify-center active:scale-95"
                     title="Account Menu"
                     aria-label="Account Menu"
+                    aria-expanded={userDropdownOpen}
                   >
                     <div className="w-8 h-8 rounded-full bg-[#0097F3] text-white flex items-center justify-center text-xs font-bold shadow-xs">
                       {user.name ? user.name[0].toUpperCase() : 'U'}
@@ -161,7 +163,7 @@ export default function Navbar() {
                       setAuthMode('login');
                       setAuthModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-full text-slate-800 hover:text-[#0097F3] bg-slate-50 hover:bg-[#EBF6FC] border border-[#E2EBF2] transition-all duration-200 cursor-pointer text-xs sm:text-sm font-bold shadow-2xs min-h-[38px]"
+                    className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full text-slate-800 hover:text-[#0097F3] bg-slate-50 hover:bg-[#EBF6FC] border border-[#E2EBF2] transition-all duration-200 cursor-pointer text-xs sm:text-sm font-bold shadow-2xs min-h-[44px] active:scale-95"
                     title="Sign In / Register"
                     aria-label="Sign In"
                   >
@@ -172,7 +174,7 @@ export default function Navbar() {
 
                 {/* User Dropdown Menu */}
                 {user && userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[#E2EBF2] py-2 z-50 text-xs animate-fade-in">
+                  <div className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-[#E2EBF2] py-2 z-50 text-xs animate-fade-in">
                     <div className="px-4 py-2 border-b border-[#E2EBF2]">
                       <p className="font-bold text-[#000000] truncate">{user.name}</p>
                       <p className="text-[11px] text-[#64748B] truncate">{user.email}</p>

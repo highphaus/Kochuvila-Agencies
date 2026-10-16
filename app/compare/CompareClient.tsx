@@ -81,10 +81,14 @@ export default function CompareClient() {
           </div>
         ) : (
           /* Comparison Matrix Table (Flipkart & Croma style) */
-          <div className="bg-white rounded-3xl border border-brand-border shadow-card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left">
-                <tbody>
+          <div className="space-y-2">
+            <p className="text-[11px] text-slate-500 font-medium text-center md:hidden">
+              ← Swipe horizontally to compare all models →
+            </p>
+            <div className="bg-white rounded-3xl border border-brand-border shadow-card overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left min-w-[650px]">
+                  <tbody>
                   {/* Row: Product Header Cards */}
                   <tr className="border-b border-brand-border bg-[#FAFBFD]">
                     <td className="p-4 sm:p-6 w-48 sm:w-64 font-bold text-xs uppercase tracking-wider text-slate-400">
@@ -228,6 +232,7 @@ export default function CompareClient() {
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
         )}
       </div>

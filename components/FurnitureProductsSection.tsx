@@ -53,12 +53,12 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
             </p>
           </div>
 
-          {/* Subcategory Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold">
+          {/* Subcategory Filter Tabs with touch-friendly horizontal scroll */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 max-w-full text-xs sm:text-sm font-bold flex-nowrap sm:flex-wrap">
             <button
               type="button"
               onClick={() => setActiveSubcat('all')}
-              className={`px-4 py-2 rounded-xl transition-all ${
+              className={`px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'all'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -69,7 +69,7 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
             <button
               type="button"
               onClick={() => setActiveSubcat('sofas')}
-              className={`px-4 py-2 rounded-xl transition-all ${
+              className={`px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'sofas'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -80,7 +80,7 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
             <button
               type="button"
               onClick={() => setActiveSubcat('beds')}
-              className={`px-4 py-2 rounded-xl transition-all ${
+              className={`px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'beds'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -91,7 +91,7 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
             <button
               type="button"
               onClick={() => setActiveSubcat('dining')}
-              className={`px-4 py-2 rounded-xl transition-all ${
+              className={`px-3.5 py-2 rounded-xl transition-all shrink-0 min-h-[38px] ${
                 activeSubcat === 'dining'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -102,8 +102,8 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
           </div>
         </div>
 
-        {/* 5-Column Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+        {/* 5-Column Responsive Product Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-4.5">
           {displayList.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}

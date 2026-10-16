@@ -242,6 +242,7 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="tel"
+                      inputMode="tel"
                       name="phone"
                       required
                       placeholder="e.g. 9847123456"
@@ -345,6 +346,7 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      inputMode="numeric"
                       name="pincode"
                       maxLength={6}
                       required

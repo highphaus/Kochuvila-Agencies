@@ -272,17 +272,17 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
   };
 
   return (
-    <div className="min-h-[82vh] flex items-center justify-center px-4 py-12 bg-[#F8FAFC]">
-      <div className="w-full max-w-[420px] bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div className="min-h-[82vh] flex items-center justify-center px-3 sm:px-4 py-8 sm:py-12 bg-[#F8FAFC]">
+      <div className="w-full max-w-[420px] bg-white rounded-3xl p-5 sm:p-10 border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         
         {/* Brand Header */}
-        <div className="text-center mb-7">
+        <div className="text-center mb-6 sm:mb-7">
           <Link href="/" className="inline-block group mb-3">
             <span className="text-xl font-black font-display tracking-tight text-slate-900 group-hover:text-brand-primary transition-colors">
               KOCHUVILA<span className="text-brand-primary">.</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold font-display text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight">
             {step === 'verify-otp'
               ? 'Enter verification code'
               : mode === 'signin'
@@ -389,7 +389,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 mt-2 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-3 mt-2 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer min-h-[44px]"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               <span>{mode === 'signin' ? 'Send Login OTP' : 'Send Registration OTP'}</span>
@@ -438,7 +438,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
               <label className="block text-center text-xs font-semibold text-slate-700">
                 Enter 6-Digit Code
               </label>
-              <div className="flex justify-between gap-2 sm:gap-2.5">
+              <div className="flex justify-between gap-1.5 sm:gap-2.5">
                 {otpDigits.map((digit, idx) => (
                   <input
                     key={idx}
@@ -451,7 +451,7 @@ export default function LoginClient({ isRegisterMode = false }: { isRegisterMode
                     value={digit}
                     onChange={(e) => handleDigitChange(idx, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(idx, e)}
-                    className="w-11 sm:w-12 h-13 text-center text-lg sm:text-xl font-bold font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary focus:bg-white transition-all shadow-2xs"
+                    className="w-9 sm:w-12 h-11 sm:h-13 text-center text-base sm:text-xl font-bold font-mono bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary focus:bg-white transition-all shadow-2xs"
                   />
                 ))}
               </div>
