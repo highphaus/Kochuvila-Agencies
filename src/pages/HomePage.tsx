@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import HeroBanner from '@/components/HeroBanner';
+import TodaysDealsSection from '@/components/TodaysDealsSection';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import PromoBanners from '@/components/PromoBanners';
 import BrandShowcase from '@/components/BrandShowcase';
@@ -53,10 +54,15 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
-      {/* 1. HERO SECTION (Hero Canvas + Trust Bar + Curated Category Cards) */}
+      {/* 1. HERO SECTION (Desktop Only Carousel + Trust Bar) */}
       <HeroBanner />
 
-      {/* 2. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
+      {/* 2. TODAY'S DEALS & OFFERS (Amazon-style fast product deals rail) */}
+      <TodaysDealsSection
+        products={[...featuredProducts, ...furnitureProducts, ...appliancesProducts]}
+      />
+
+      {/* 3. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
       <FeaturedProductsSection products={featuredProducts} />
 
       {/* 3. PROMOTIONAL EDITORIAL BANNERS (Comfort for Every Corner & Trusted Home Appliances) */}

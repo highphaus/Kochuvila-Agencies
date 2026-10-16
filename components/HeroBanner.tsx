@@ -304,7 +304,7 @@ export default function HeroBanner() {
   };
 
   return (
-    <section className="w-full bg-[#FDFDFD] border-b border-[#E2EBF2] select-none">
+    <section className="hidden md:block w-full bg-[#FDFDFD] border-b border-[#E2EBF2] select-none">
       {/* 
         1. Main Hero Carousel Canvas:
         - Continuous infinite loop auto-scrolling with smooth forward slide animation

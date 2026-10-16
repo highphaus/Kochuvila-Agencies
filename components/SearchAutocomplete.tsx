@@ -180,7 +180,7 @@ export default function SearchAutocomplete({
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          placeholder="Search 4K TVs, Teak Sofas, Inverter ACs, Fridges, Washers..."
+          placeholder="Search appliances, furniture and more"
           className="w-full bg-[#f4f9fd] border border-brand-border text-slate-900 text-xs sm:text-sm rounded-full pl-10 pr-24 py-2.5 sm:py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all placeholder:text-slate-400 font-medium"
         />
 
