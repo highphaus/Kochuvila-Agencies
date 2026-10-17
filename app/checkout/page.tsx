@@ -274,7 +274,7 @@ export default function CheckoutPage() {
                   <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-xs flex items-center justify-center font-bold shadow-xs">
                     2
                   </span>
-                  Delivery Address in Kerala
+                  Delivery Address (Trivandrum & Surrounding Areas)
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -510,13 +510,9 @@ export default function CheckoutPage() {
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span>Delivery Charge</span>
+                    <span>Trivandrum Showroom Delivery</span>
                     <span className="font-semibold text-slate-900">
-                      {deliveryCharge === 0 ? (
-                        <span className="text-emerald-700 font-bold">FREE</span>
-                      ) : (
-                        formatINR(deliveryCharge)
-                      )}
+                      {deliveryCharge === 0 ? 'Standard Delivery' : formatINR(deliveryCharge)}
                     </span>
                   </div>
                   <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline">
@@ -545,7 +541,7 @@ export default function CheckoutPage() {
 
                 <div className="text-[11px] text-slate-500 text-center space-y-1">
                   <p>• Verified Manufacturer Warranties included</p>
-                  <p>• Dedicated doorstep handling across Kerala</p>
+                  <p>• Dedicated doorstep handling from Trivandrum showrooms</p>
                 </div>
               </div>
             </div>

@@ -135,21 +135,21 @@ export default function KeralaHeritageBento() {
             </div>
           </div>
 
-          {/* Card 3: 14 Districts Doorstep Transit (4 cols) */}
+          {/* Card 3: Trivandrum Showroom Transit (4 cols) */}
           <div className="lg:col-span-4 bg-white rounded-3xl p-6 border border-brand-border shadow-card hover:shadow-cardHover transition-all flex flex-col justify-between">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-brand-lightBlueSoft text-brand-primary flex items-center justify-center border border-brand-lightBlue/60">
                 <Truck className="w-5 h-5" />
               </div>
               <h4 className="font-black text-base text-black font-display uppercase tracking-tight">
-                Dedicated Kerala Transit Fleet
+                Trivandrum Showroom Transit
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Air-cushioned delivery trucks safely deliver 65" 4K TVs and 6-seater solid wood dining tables right to your living room across all 14 Kerala districts.
+                Dedicated delivery and handling directly from our Pangode &amp; Kallara showrooms for 65&quot; 4K TVs and solid wood furniture right to your home.
               </p>
             </div>
             <div className="pt-4 text-xs font-bold text-brand-primary">
-              Thiruvananthapuram to Kasaragod
+              Pangode &amp; Kallara Showroom Dispatch
             </div>
           </div>
 

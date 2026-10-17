@@ -25,8 +25,7 @@ export default function Footer() {
           <div className="lg:col-span-4 space-y-4">
             <Logo isLight />
             <p className="text-xs text-[#94A3B8] leading-relaxed max-w-sm pt-1">
-              Kochuvila Agencies is Kerala’s premier retail showroom for 100% genuine home
-              appliances and handcrafted solid furniture. Built on trust, quality, and lifetime care.
+              Kochuvila Agencies is Trivandrum’s premier retail showroom located in Pangode &amp; Kallara, offering 100% genuine home appliances and handcrafted solid furniture. Built on trust, quality, and lifetime care.
             </p>
             <div className="pt-1 text-xs text-[#CBD5E1] space-y-2">
               <p className="flex items-center gap-2">
@@ -35,7 +34,7 @@ export default function Footer() {
               </p>
               <p className="flex items-center gap-2">
                 <Truck className="w-4 h-4 text-[#9FD8F1] shrink-0" />
-                <span>Safe Doorstep Delivery across Kerala</span>
+                <span>Safe Doorstep Delivery from Trivandrum Showroom</span>
               </p>
             </div>
 

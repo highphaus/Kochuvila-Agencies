@@ -62,7 +62,7 @@ export default function TrackOrderPage() {
             Track Your Kochuvila Order
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-2">
-            Enter your order reference number (e.g. KCH-2026-9041) to view real-time delivery status across Kerala.
+            Enter your order reference number (e.g. KCH-2026-9041) to view real-time delivery status from our Trivandrum showroom.
           </p>
         </div>
 

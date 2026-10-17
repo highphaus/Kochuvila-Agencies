@@ -150,8 +150,8 @@ export const useCartStore = create<CartState>()(
       getDeliveryCharge: () => {
         const subtotal = get().getSubtotal();
         if (subtotal === 0) return 0;
-        // Free delivery on orders above ₹2000
-        return subtotal >= 2000 ? 0 : 150;
+        // Standard Trivandrum Showroom Delivery Charge (No free delivery)
+        return 150;
       },
 
       getTotal: () => {

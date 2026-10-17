@@ -10,22 +10,16 @@ import {
   Zap,
   Truck,
   ShieldCheck,
-  RotateCcw,
   CheckCircle2,
   MapPin,
   Star,
-  Award,
-  Clock,
   Sparkles,
-  Phone,
-  Scale,
 } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { Product } from '@/types';
 import { formatINR, calculateEMI, generateWhatsAppEnquiryLink } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { useCompareStore } from '@/store/compareStore';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -46,22 +40,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
   const isInWishlist = useWishlistStore((state) => state.isInWishlist(product._id));
-  const addToCompare = useCompareStore((state) => state.addToCompare);
-  const removeFromCompare = useCompareStore((state) => state.removeFromCompare);
-  const inCompare = useCompareStore((state) => state.isInCompare(product._id));
 
   const emi = calculateEMI(product.price, 6);
   const emi12 = calculateEMI(product.price, 12);
   const whatsappUrl = generateWhatsAppEnquiryLink(product);
   const savings = Math.max(0, product.mrp - product.price);
-
-  const handleToggleCompare = () => {
-    if (inCompare) {
-      removeFromCompare(product._id);
-    } else {
-      addToCompare(product);
-    }
-  };
 
   const handleAddToCart = () => {
     addItem(product, quantity);
@@ -83,15 +66,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       return;
     }
 
-    // Kerala PIN codes typically start with 67, 68, or 69
-    if (cleanPin.startsWith('67') || cleanPin.startsWith('68') || cleanPin.startsWith('69')) {
+    // Trivandrum / regional PIN check
+    if (cleanPin.startsWith('695') || cleanPin.startsWith('691') || cleanPin.startsWith('69')) {
       setPincodeMessage({
-        text: '✅ Delivery available! Free delivery within 24-48 hours with showroom installation assistance.',
+        text: '✅ Delivery available! Direct doorstep dispatch from our Trivandrum showroom (Pangode & Kallara) with installation assistance.',
         isAvailable: true,
       });
     } else {
       setPincodeMessage({
-        text: '🚚 Delivery available via our Kerala extended regional logistics partner (3-5 business days).',
+        text: '📍 Showroom pickup or Trivandrum dispatch available. Please contact our Trivandrum store for delivery inquiries.',
         isAvailable: true,
       });
     }
@@ -116,41 +99,30 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-      {/* Product Image Gallery */}
-      <div className="lg:col-span-6 space-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+      {/* 1. Product Image Gallery */}
+      <div className="lg:col-span-6 space-y-3.5">
         {/* Main image container */}
-        <div className="relative aspect-square bg-white rounded-3xl border border-brand-border p-8 flex items-center justify-center shadow-card overflow-hidden group">
-          {/* Action buttons: Wishlist & Compare */}
-          <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 items-end">
+        <div className="relative aspect-square sm:aspect-4/3 max-h-[380px] sm:max-h-[460px] bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-4 sm:p-8 flex items-center justify-center shadow-xs overflow-hidden group">
+          {/* Wishlist Button on Top Right */}
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
             <button
               onClick={() => toggleWishlist(product)}
-              className={`p-3 rounded-full backdrop-blur-md transition-all shadow-md ${
+              className={`p-2.5 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-md active:scale-95 ${
                 isInWishlist
                   ? 'bg-[#EBF6FC] text-[#0097F3]'
                   : 'bg-white/80 text-slate-500 hover:text-brand-primary hover:bg-white'
               }`}
               title="Add to Wishlist"
+              aria-label="Add to Wishlist"
             >
-              <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-[#0097F3] text-[#0097F3]' : ''}`} />
-            </button>
-
-            <button
-              onClick={handleToggleCompare}
-              className={`p-3 rounded-full backdrop-blur-md transition-all shadow-md ${
-                inCompare
-                  ? 'bg-brand-primary text-white scale-105'
-                  : 'bg-white/80 text-slate-500 hover:text-brand-primary hover:bg-white'
-              }`}
-              title={inCompare ? 'Remove from Compare' : 'Add to Compare'}
-            >
-              <Scale className="w-5 h-5" />
+              <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist ? 'fill-[#0097F3] text-[#0097F3]' : ''}`} />
             </button>
           </div>
 
-          {/* Discount Pill */}
+          {/* Discount Pill on Top Left */}
           {product.discountPercentage > 0 && (
-            <div className="absolute top-4 left-4 z-10 bg-brand-primary text-white text-xs font-black px-3 py-1 rounded-full shadow-button">
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 bg-[#0097F3] text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-full shadow-xs">
               {product.discountPercentage}% OFF
             </div>
           )}
@@ -160,23 +132,25 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             alt={product.name}
             fill
             priority
-            sizes="(max-width: 1024px) 100vw, 550px"
-            className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 95vw, (max-width: 1024px) 50vw, 550px"
+            className="object-contain p-4 sm:p-6 transition-transform duration-500 group-hover:scale-105 select-none"
           />
         </div>
 
         {/* Thumbnail selector */}
         {product.images.length > 1 && (
-          <div className="flex items-center gap-3 overflow-x-auto pb-2">
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-none py-1">
             {product.images.map((img, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => setSelectedImageIndex(idx)}
-                className={`relative w-20 h-20 rounded-xl bg-white border-2 p-1 flex items-center justify-center flex-shrink-0 transition-all ${
+                className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white border-2 p-1 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer ${
                   idx === selectedImageIndex
-                    ? 'border-brand-primary shadow-xs'
-                    : 'border-slate-200 hover:border-slate-400'
+                    ? 'border-[#0097F3] shadow-xs'
+                    : 'border-slate-200 hover:border-slate-300'
                 }`}
+                aria-label={`View Image ${idx + 1}`}
               >
                 <Image
                   src={img}
@@ -191,127 +165,127 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         )}
 
         {/* Showroom Trust Assurances */}
-        <div className="grid grid-cols-2 gap-3 pt-4">
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <div className="text-xs">
-              <p className="font-bold text-slate-800">100% Genuine</p>
-              <p className="text-[11px] text-slate-500">Official Brand Warranty</p>
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-2">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200/90 flex items-center gap-2.5 sm:gap-3">
+            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0" />
+            <div className="text-left min-w-0">
+              <p className="font-bold text-slate-800 text-[11px] sm:text-xs truncate">100% Genuine</p>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 truncate">Official Brand Warranty</p>
             </div>
           </div>
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-            <Truck className="w-5 h-5 text-brand-primary flex-shrink-0" />
-            <div className="text-xs">
-              <p className="font-bold text-slate-800">Safe Kerala Transit</p>
-              <p className="text-[11px] text-slate-500">Careful doorstep delivery</p>
+          <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200/90 flex items-center gap-2.5 sm:gap-3">
+            <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0097F3] flex-shrink-0" />
+            <div className="text-left min-w-0">
+              <p className="font-bold text-slate-800 text-[11px] sm:text-xs truncate">Trivandrum Dispatch</p>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 truncate">Doorstep Showroom Delivery</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Product Details & Purchase Controls */}
-      <div className="lg:col-span-6 space-y-6">
+      {/* 2. Product Details & Purchase Controls */}
+      <div className="lg:col-span-6 space-y-4 sm:space-y-5">
         <div>
-          {/* Brand & Category tags */}
+          {/* Brand & Category badges */}
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-xs font-black uppercase tracking-widest text-brand-primary bg-blue-50 px-2.5 py-0.5 rounded-md">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#0097F3] bg-[#EBF6FC] px-2.5 py-0.5 rounded-md border border-[#D6EBF8]">
               {product.brand}
             </span>
-            <span className="text-xs text-slate-600 font-medium">
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">
               SKU: {product.sku}
             </span>
             {product.energyRating && (
-              <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded text-xs border border-emerald-200">
+              <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-emerald-200">
                 {product.energyRating}
               </span>
             )}
             {product.dealTag && (
-              <span className="bg-cyan-50 text-cyan-800 font-bold px-2 py-0.5 rounded text-xs border border-cyan-100">
+              <span className="bg-amber-50 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-amber-200">
                 {product.dealTag}
               </span>
             )}
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-brand-dark font-display leading-snug">
+          <h1 className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 font-display leading-snug tracking-tight">
             {product.name}
           </h1>
 
           {/* Rating */}
-          <div className="flex items-center gap-3 mt-3">
-            <div className="flex items-center gap-1 bg-emerald-600 text-white text-xs font-bold px-2 py-1 rounded">
+          <div className="flex items-center gap-2.5 mt-2 flex-wrap">
+            <div className="flex items-center gap-1 bg-emerald-600 text-white text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded">
               <span>{product.rating.toFixed(1)}</span>
               <Star className="w-3 h-3 fill-white" />
             </div>
-            <span className="text-xs text-slate-600 font-medium">
-              {product.reviewCount} Verified Buyer Ratings
+            <span className="text-[11px] sm:text-xs text-slate-600 font-medium">
+              {product.reviewCount} Verified Ratings
             </span>
             <span className="text-slate-300">|</span>
-            <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
+            <span className="text-[11px] sm:text-xs text-emerald-700 font-semibold flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              In Stock & Ready for Dispatch
+              In Stock &amp; Ready for Dispatch
             </span>
           </div>
         </div>
 
         {/* Pricing block */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-brand-border shadow-card space-y-3">
-          <div className="flex items-baseline gap-3 flex-wrap">
-            <span className="text-3xl sm:text-4xl font-black text-brand-dark">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5 sm:space-y-3">
+          <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
+            <span className="text-2xl xs:text-3xl sm:text-4xl font-black text-slate-950">
               {formatINR(product.price)}
             </span>
             {product.mrp > product.price && (
               <>
-                <span className="text-base text-slate-600 line-through">
+                <span className="text-xs sm:text-base text-slate-400 line-through">
                   {formatINR(product.mrp)}
                 </span>
-                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">
-                  You Save {formatINR(savings)} ({product.discountPercentage}% OFF)
+                <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  Save {formatINR(savings)} ({product.discountPercentage}% OFF)
                 </span>
               </>
             )}
           </div>
-          <p className="text-xs text-slate-600">
-            Inclusive of all taxes. Free doorstep shipping in Kerala on this product.
+          <p className="text-[11px] sm:text-xs text-slate-500">
+            Inclusive of all taxes. Doorstep delivery from our Trivandrum showroom.
           </p>
 
           {/* EMI breakdown card */}
-          <div className="p-3 bg-blue-50/70 border border-brand-skyLight/70 rounded-xl text-xs text-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="p-2.5 sm:p-3 bg-blue-50/70 border border-blue-100 rounded-xl text-xs text-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <p className="font-bold flex items-center gap-1 text-brand-primary">
-                <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
-                Zero Cost EMI available
+              <p className="font-bold flex items-center gap-1 text-[#0097F3] text-[11px] sm:text-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#0097F3]" />
+                Zero Cost EMI Available
               </p>
-              <p className="text-slate-600 text-[11px]">
-                Pay as low as <strong>{formatINR(emi)}/month</strong> for 6 months or <strong>{formatINR(emi12)}/month</strong> for 12 months.
+              <p className="text-slate-600 text-[10px] sm:text-[11px] mt-0.5">
+                Pay as low as <strong>{formatINR(emi)}/mo</strong> for 6 months or <strong>{formatINR(emi12)}/mo</strong> for 12 months.
               </p>
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-brand-primary bg-white px-2 py-1 rounded border border-brand-skyLight">
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#0097F3] bg-white px-2 py-1 rounded border border-blue-200 self-start sm:self-center shrink-0">
               0% Interest
             </span>
           </div>
         </div>
 
-        {/* Interactive Variant Selection (Flipkart/Myntra Pattern) */}
-        <div className="p-4 rounded-2xl bg-white border border-brand-border space-y-4 shadow-xs">
+        {/* Configuration / Variant Selection */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 space-y-3.5 shadow-2xs">
           <div>
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
-                Configuration / Edition:
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="font-bold text-slate-700 uppercase tracking-wider text-[10px] sm:text-[11px]">
+                Edition:
               </span>
-              <span className="font-bold text-brand-deepBlue text-xs">
+              <span className="font-bold text-[#0097F3] text-xs">
                 {variantOptions[selectedVariant]}
               </span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {variantOptions.map((opt, idx) => (
                 <button
                   key={opt}
                   type="button"
                   onClick={() => setSelectedVariant(idx)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                     selectedVariant === idx
-                      ? 'border-brand-primary bg-brand-lightBlueSoft text-brand-deepBlue shadow-xs'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-[#FAFBFD]'
+                      ? 'border-[#0097F3] bg-[#EBF6FC] text-[#0097F3] shadow-2xs'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                   }`}
                 >
                   {opt}
@@ -321,27 +295,27 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           </div>
 
           <div>
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="font-bold text-slate-700 uppercase tracking-wider text-[10px] sm:text-[11px]">
                 Color / Finish:
               </span>
               <span className="font-bold text-slate-800 text-xs">
                 {colorSwatches[selectedColor].name}
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               {colorSwatches.map((swatch, idx) => (
                 <button
                   key={swatch.name}
                   type="button"
                   onClick={() => setSelectedColor(idx)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                     selectedColor === idx
-                      ? 'border-brand-primary bg-slate-50 ring-2 ring-brand-primary/20'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                      ? 'border-[#0097F3] bg-slate-50 ring-2 ring-[#0097F3]/20'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-white'
                   }`}
                 >
-                  <span className={`w-3.5 h-3.5 rounded-full ${swatch.bg} border border-slate-300`} />
+                  <span className={`w-3.5 h-3.5 rounded-full ${swatch.bg} border border-slate-300 shrink-0`} />
                   <span>{swatch.name}</span>
                 </button>
               ))}
@@ -349,51 +323,57 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           </div>
         </div>
 
-        {/* Purchase Controls & WhatsApp Enquiry */}
+        {/* Quantity and Primary CTAs */}
         <div className="space-y-3">
           {/* Quantity selector */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
               Quantity:
             </span>
-            <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-white">
+            <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-white shadow-2xs">
               <button
+                type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="px-3 py-1.5 hover:bg-slate-100 text-sm font-bold text-slate-700"
+                className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-100 active:scale-95 cursor-pointer text-sm"
+                aria-label="Decrease quantity"
               >
                 -
               </button>
-              <span className="px-4 py-1.5 text-sm font-bold text-slate-900">
+              <span className="w-10 text-center text-sm font-bold text-slate-900 select-none">
                 {quantity}
               </span>
               <button
+                type="button"
                 onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
-                className="px-3 py-1.5 hover:bg-slate-100 text-sm font-bold text-slate-700"
+                className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center font-bold text-slate-700 hover:bg-slate-100 active:scale-95 cursor-pointer text-sm"
+                aria-label="Increase quantity"
               >
                 +
               </button>
             </div>
-            <span className="text-xs text-slate-500">
-              ({product.stock} units available)
+            <span className="text-[11px] text-slate-500">
+              ({product.stock} units in stock)
             </span>
           </div>
 
-          {/* Main CTAs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          {/* Main Action Buttons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
             <button
+              type="button"
               onClick={handleAddToCart}
-              className="flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#f0f8fd] hover:bg-[#e1f2fc] text-brand-primary font-bold text-sm transition-all border border-brand-skyLight/70 active:scale-98 shadow-xs"
+              className="flex items-center justify-center gap-2 min-h-[46px] sm:min-h-[48px] py-3 px-5 rounded-2xl bg-[#EBF6FC] hover:bg-[#D9EEFA] text-[#0097F3] font-bold text-xs sm:text-sm border border-[#0097F3]/30 transition-all active:scale-98 shadow-2xs cursor-pointer"
             >
-              <ShoppingCart className="w-4 h-4 text-brand-primary" />
-              Add to Cart
+              <ShoppingCart className="w-4 h-4 text-[#0097F3]" />
+              <span>Add to Cart</span>
             </button>
 
             <button
+              type="button"
               onClick={handleBuyNow}
-              className="flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm transition-all shadow-button active:scale-98"
+              className="flex items-center justify-center gap-2 min-h-[46px] sm:min-h-[48px] py-3 px-5 rounded-2xl bg-[#0097F3] hover:bg-[#0084D6] text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-[#0097F3]/25 active:scale-98 cursor-pointer"
             >
-              <Zap className="w-4 h-4 text-brand-skyLight" />
-              Buy Now (Express)
+              <Zap className="w-4 h-4 text-white" />
+              <span>Buy Now (Express)</span>
             </button>
           </div>
 
@@ -402,32 +382,32 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm shadow-button transition-all active:scale-98"
+            className="w-full flex items-center justify-center gap-2 min-h-[46px] sm:min-h-[48px] py-3 px-5 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-98 cursor-pointer"
           >
             <WhatsAppIcon className="w-5 h-5 fill-current" />
-            Enquire &amp; Order Directly on WhatsApp
+            <span>Enquire &amp; Order on WhatsApp</span>
           </a>
         </div>
 
-        {/* Kerala Pincode Delivery Checker */}
-        <div className="p-4 rounded-2xl bg-white border border-brand-border shadow-xs space-y-3">
+        {/* Pincode Delivery Checker */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5">
           <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-            <MapPin className="w-4 h-4 text-brand-primary" />
-            <span>Check Kerala Delivery & Installation Availability</span>
+            <MapPin className="w-4 h-4 text-[#0097F3]" />
+            <span>Check Trivandrum Delivery &amp; Installation Availability</span>
           </div>
 
           <form onSubmit={handleCheckPincode} className="flex gap-2">
             <input
               type="text"
               maxLength={6}
-              placeholder="Enter 6-digit Pincode (e.g. 695011)"
+              placeholder="Enter 6-digit Pincode (e.g. 695609)"
               value={pincode}
               onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-              className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+              className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0097F3]/30"
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-colors"
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all active:scale-95 cursor-pointer shrink-0"
             >
               Check
             </button>
@@ -447,15 +427,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
           <div className="text-[11px] text-slate-600 space-y-1">
             <p>• {product.warranty}</p>
-            <p>• {product.deliveryInfo || 'Doorstep delivery across all 14 Kerala districts.'}</p>
+            <p>• {product.deliveryInfo || 'Doorstep delivery from our Trivandrum showrooms.'}</p>
             <p>• 7-Day Replacement for manufacturing defects.</p>
           </div>
         </div>
 
         {/* Key Features List */}
         {product.features && product.features.length > 0 && (
-          <div className="space-y-2 pt-2">
-            <h4 className="text-xs font-bold text-black uppercase tracking-wider">
+          <div className="space-y-2 pt-1">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
               Key Highlights:
             </h4>
             <ul className="space-y-1.5 text-xs text-slate-700">
@@ -470,35 +450,37 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         )}
       </div>
 
-      {/* Sticky Mobile Purchase Bar (Thumb-friendly UX) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-brand-border px-4 py-3 flex items-center justify-between gap-3 shadow-elevated safe-bottom">
+      {/* 3. Sticky Mobile Purchase Bar (For smaller devices) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3.5 py-2.5 flex items-center justify-between gap-2.5 shadow-lg safe-bottom">
         <div className="min-w-0">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-black text-black">{formatINR(product.price)}</span>
+            <span className="text-base font-black text-slate-950">{formatINR(product.price)}</span>
             {savings > 0 && (
-              <span className="text-[11px] text-slate-400 line-through">{formatINR(product.mrp)}</span>
+              <span className="text-[10px] text-slate-400 line-through">{formatINR(product.mrp)}</span>
             )}
           </div>
-          <span className="text-[10px] font-bold text-brand-primary uppercase tracking-wider block">
-            {product.stock > 0 ? 'In Stock • Kerala Delivery' : 'Out of Stock'}
+          <span className="text-[10px] font-bold text-[#0097F3] uppercase tracking-wider block truncate">
+            {product.stock > 0 ? 'In Stock • Trivandrum Store' : 'Out of Stock'}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
+            type="button"
             onClick={handleAddToCart}
-            className="px-3.5 py-2.5 min-h-[44px] rounded-xl bg-brand-lightBlueSoft text-brand-deepBlue border border-brand-lightBlue font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all"
+            className="px-3.5 py-2 min-h-[40px] rounded-xl bg-[#EBF6FC] text-[#0097F3] border border-[#0097F3]/40 font-bold text-xs flex items-center gap-1 active:scale-95 transition-all cursor-pointer"
             aria-label="Add to cart"
           >
-            <ShoppingCart className="w-4 h-4 text-brand-primary" />
+            <ShoppingCart className="w-3.5 h-3.5" />
             <span>Add</span>
           </button>
           <button
+            type="button"
             onClick={handleBuyNow}
-            className="px-5 py-2.5 min-h-[44px] rounded-xl bg-brand-primary hover:bg-brand-deepBlue text-white font-bold text-xs shadow-button active:scale-95 transition-all flex items-center gap-1"
+            className="px-4 py-2 min-h-[40px] rounded-xl bg-[#0097F3] hover:bg-[#0084D6] text-white font-bold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
             aria-label="Buy now"
           >
-            <Zap className="w-4 h-4" />
+            <Zap className="w-3.5 h-3.5 text-white" />
             <span>Buy Now</span>
           </button>
         </div>

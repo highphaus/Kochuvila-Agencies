@@ -120,9 +120,9 @@ export default function TodaysDealsSection({ products }: TodaysDealsSectionProps
                     </div>
 
                     {/* Delivery Assurance */}
-                    <p className="text-[10px] text-emerald-700 font-medium truncate flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-                      <span>Free Kerala Delivery</span>
+                    <p className="text-[10px] text-slate-600 font-medium truncate flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-[#007185] shrink-0" />
+                      <span>Trivandrum Showroom Dispatch</span>
                     </p>
                   </div>
                 </div>

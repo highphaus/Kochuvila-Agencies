@@ -56,7 +56,7 @@ export interface Product {
   specifications: SpecificationGroup[];
   dimensions?: string; // e.g. "912 x 1790 x 738 mm"
   weight?: string; // e.g. "116 kg"
-  deliveryInfo?: string; // e.g. "Free 2-day delivery across Kerala"
+  deliveryInfo?: string; // e.g. "Trivandrum Showroom Dispatch (24-48 hrs)"
   tags?: string[];
   isFeatured?: boolean;
   isDeal?: boolean;

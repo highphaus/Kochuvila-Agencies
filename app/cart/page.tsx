@@ -63,9 +63,6 @@ export default function CartPage() {
   const total = getTotal();
   const itemCount = getItemCount();
 
-  const freeDeliveryThreshold = 2000;
-  const freeDeliveryRemaining = Math.max(0, freeDeliveryThreshold - subtotal);
-  const freeDeliveryProgress = Math.min(100, (subtotal / freeDeliveryThreshold) * 100);
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,31 +217,21 @@ export default function CartPage() {
           )}
         </div>
 
-        {/* Free delivery progress strip */}
+        {/* Trivandrum Showroom Dispatch Information Strip */}
         {items.length > 0 && (
-          <div className="mb-8 p-4 bg-white rounded-2xl border border-brand-border shadow-card">
-            <div className="flex items-center justify-between text-xs font-semibold mb-2">
-              <span className="flex items-center gap-1.5 text-slate-700">
-                <Truck className="w-4 h-4 text-brand-primary" />
-                {freeDeliveryRemaining === 0 ? (
-                  <strong className="text-emerald-700 font-bold">
-                    🎉 Congratulations! You have unlocked FREE Doorstep Delivery across Kerala!
-                  </strong>
-                ) : (
-                  <span>
-                    Add <strong>{formatINR(freeDeliveryRemaining)}</strong> more to get{' '}
-                    <strong className="text-brand-primary">FREE Delivery</strong>
-                  </span>
-                )}
-              </span>
-              <span className="text-slate-500">{Math.round(freeDeliveryProgress)}%</span>
+          <div className="mb-8 p-3.5 sm:p-4 bg-white rounded-2xl border border-brand-border shadow-xs flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-slate-700 font-medium">
+              <div className="w-8 h-8 rounded-xl bg-[#EBF6FC] flex items-center justify-center text-[#0097F3] shrink-0">
+                <Truck className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-bold text-slate-900">Showroom Dispatch from Trivandrum</p>
+                <p className="text-[11px] text-slate-500">Careful doorstep delivery &amp; unboxing from Pangode &amp; Kallara showrooms.</p>
+              </div>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-brand-primary h-full transition-all duration-500"
-                style={{ width: `${freeDeliveryProgress}%` }}
-              />
-            </div>
+            <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] uppercase tracking-wider shrink-0">
+              Trivandrum Store
+            </span>
           </div>
         )}
 
@@ -578,13 +565,9 @@ export default function CartPage() {
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span>Delivery</span>
+                  <span>Trivandrum Showroom Delivery</span>
                   <span className="font-semibold text-slate-800">
-                    {deliveryCharge === 0 ? (
-                      <span className="text-emerald-700 font-bold">FREE</span>
-                    ) : (
-                      formatINR(deliveryCharge)
-                    )}
+                    {deliveryCharge === 0 ? 'Calculated at checkout' : formatINR(deliveryCharge)}
                   </span>
                 </div>
                 <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline text-slate-900">

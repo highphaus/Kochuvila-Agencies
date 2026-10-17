@@ -237,7 +237,7 @@ export default function ShowroomExperience() {
     },
     {
       icon: Truck,
-      title: 'Direct Kerala Delivery',
+      title: 'Trivandrum Showroom Delivery',
       subtitle: 'Safe, prompt transport straight to your doorstep with trained unboxing crew',
       badge: 'Safe Transit',
     },

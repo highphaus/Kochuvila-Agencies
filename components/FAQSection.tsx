@@ -65,7 +65,7 @@ export default function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">
-            Clear answers about doorstep delivery, brand warranties, solid teakwood care, and zero-cost financing across Kerala.
+            Clear answers about doorstep delivery, brand warranties, solid teakwood care, and zero-cost financing from our Trivandrum showroom.
           </p>
         </div>
 

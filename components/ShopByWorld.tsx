@@ -97,7 +97,7 @@ export default function ShopByWorld() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Truck className="w-3.5 h-3.5 text-brand-primary flex-shrink-0" />
-                  <span>Doorstep Delivery Across Kerala</span>
+                  <span>Doorstep Delivery From Trivandrum</span>
                 </div>
               </div>
 
@@ -175,7 +175,7 @@ export default function ShopByWorld() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Wrench className="w-3.5 h-3.5 text-brand-primary flex-shrink-0" />
-                  <span>Free In-Home Carpenter Assembly</span>
+                  <span>Showroom Carpenter Assembly</span>
                 </div>
               </div>
 

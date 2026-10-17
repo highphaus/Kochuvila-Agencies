@@ -39,14 +39,14 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
         {/* Header & Subcategory Tabs */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[#E2EBF2] mb-8">
           <div className="space-y-2.5 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-lightBlueSoft text-brand-deepBlue border border-brand-lightBlue/60 text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-              <span>Authorized Brand Partner</span>
+            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-brand-lightBlueSoft text-brand-deepBlue border border-brand-lightBlue/60 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-primary" />
+              <span>Smart Home Appliances</span>
               <span className="w-1 h-1 rounded-full bg-brand-primary" />
-              <span className="text-[11px] font-semibold text-slate-600 lowercase">official warranty</span>
+              <span className="text-[10px] sm:text-[11px] font-semibold text-slate-600 lowercase">official warranty</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
+            <h2 className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
               Smart Home Appliances &amp; Electronics
             </h2>
 

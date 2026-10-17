@@ -66,7 +66,7 @@ export default function FinalCTA() {
           </div>
           <div className="flex items-center gap-1.5">
             <Truck className="w-4 h-4 text-brand-primary" />
-            <span>Doorstep Transit Across All 14 Districts</span>
+            <span>Doorstep Transit From Trivandrum Showrooms</span>
           </div>
           <div className="flex items-center gap-1.5">
             <CreditCard className="w-4 h-4 text-brand-primary" />

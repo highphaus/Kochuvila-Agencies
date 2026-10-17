@@ -11,11 +11,11 @@ export default function PolicyPage({ type }: PolicyPageProps) {
     shipping: {
       title: 'Shipping & Delivery Policy',
       icon: Truck,
-      subtitle: 'Doorstep transit across all 14 districts in Kerala.',
+      subtitle: 'Doorstep transit from our Trivandrum showrooms.',
       sections: [
         {
-          heading: 'Kerala-Wide Doorstep Delivery',
-          text: 'Kochuvila Home & Living coordinates direct dispatch for heavy home appliances and solid wood furniture across all 14 districts in Kerala through our specialized fleet and regional logistics partners.',
+          heading: 'Trivandrum Showroom Doorstep Delivery',
+          text: 'Kochuvila Home & Living coordinates direct showroom dispatch for home appliances and solid wood furniture from our Trivandrum showrooms (Pangode & Kallara) through our dedicated delivery vehicles.',
         },
         {
           heading: 'Delivery Timelines',

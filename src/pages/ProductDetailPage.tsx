@@ -28,10 +28,10 @@ export default function ProductDetailPage() {
         if (!isMounted) return;
         if (p) {
           setProduct(p);
-          fetchProducts({ category: p.category, limit: 5 })
+          fetchProducts({ category: p.category, limit: 10 })
             .then((data) => {
               if (isMounted) {
-                setRelatedProducts(data.products.filter((item) => item._id !== p._id).slice(0, 4));
+                setRelatedProducts(data.products.filter((item) => item._id !== p._id).slice(0, 8));
               }
             })
             .catch(() => {});
@@ -166,15 +166,15 @@ export default function ProductDetailPage() {
           initialCount={product.reviewCount}
         />
 
-        {/* Related Products */}
+        {/* Related Products - Horizontal swipeable without buttons */}
         {relatedProducts.length > 0 && (
-          <section className="mt-16">
-            <div className="flex items-center justify-between mb-8">
+          <section className="mt-12 sm:mt-16">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-primary">
                   Recommended For You
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-brand-dark font-display mt-0.5">
+                <h3 className="text-lg xs:text-xl sm:text-2xl font-black text-brand-dark font-display mt-0.5">
                   Similar {product.category === 'appliances' ? 'Appliances' : 'Furniture'}
                 </h3>
               </div>
@@ -182,13 +182,19 @@ export default function ProductDetailPage() {
                 href={`/products?category=${product.category}`}
                 className="text-xs font-bold text-brand-primary hover:underline"
               >
-                Browse category
+                Browse category →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Horizontal swipeable track for all devices, smooth swipe */}
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory py-2 will-change-scroll -mx-3 px-3 sm:mx-0 sm:px-0">
               {relatedProducts.map((p) => (
-                <ProductCard key={p._id} product={p} />
+                <div
+                  key={p._id}
+                  className="w-[220px] xs:w-[240px] sm:w-[260px] md:w-[280px] shrink-0 snap-start"
+                >
+                  <ProductCard product={p} />
+                </div>
               ))}
             </div>
           </section>

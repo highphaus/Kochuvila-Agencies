@@ -53,7 +53,7 @@ const MOBILE_HERO_SLIDES: MobileSlide[] = [
   },
   {
     id: 'slide-cooling',
-    badge: '🚚 Free Doorstep Unboxing',
+    badge: '🚚 Careful Doorstep Unboxing',
     badgeBg: 'bg-indigo-500',
     badgeText: 'text-white',
     title: 'Smart Cooling & Laundry',
@@ -204,8 +204,8 @@ export default function MobileAmazonHero() {
       <div className="mx-2 mt-1.5 p-2 bg-white rounded-xl border border-slate-200/80 shadow-2xs grid grid-cols-3 divide-x divide-slate-100 text-center">
         <div className="flex flex-col items-center justify-center px-1">
           <Truck className="w-3.5 h-3.5 text-[#0097F3] mb-0.5" />
-          <span className="text-[10px] font-bold text-slate-800 leading-tight">Free Delivery</span>
-          <span className="text-[8px] text-slate-400">All 14 Districts</span>
+          <span className="text-[10px] font-bold text-slate-800 leading-tight">Trivandrum Store</span>
+          <span className="text-[8px] text-slate-400">Showroom Delivery</span>
         </div>
         <div className="flex flex-col items-center justify-center px-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 mb-0.5" />

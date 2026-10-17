@@ -412,7 +412,7 @@ export default function HeroBanner() {
 
       {/* 
         2. Trust Bar in a clean HORIZONTAL row across all devices:
-        - Free Delivery
+        - Trivandrum Showroom Delivery
         - Quality Assured
         - Dedicated Support
       */}
@@ -426,10 +426,10 @@ export default function HeroBanner() {
               </div>
               <div>
                 <h4 className="text-[11px] sm:text-sm font-bold text-[#000000] leading-tight">
-                  Free Delivery
+                  Trivandrum Showroom Delivery
                 </h4>
                 <p className="text-[10px] sm:text-xs text-[#64748B] hidden sm:block">
-                  To your doorstep
+                  Direct from our stores
                 </p>
               </div>
             </div>

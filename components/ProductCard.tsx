@@ -111,10 +111,10 @@ const ProductCard = React.memo(function ProductCard({ product }: ProductCardProp
             <span className="text-slate-400 text-[10px]">({product.reviewCount})</span>
           </div>
 
-          {/* Free Kerala Delivery Trust Tag */}
-          <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-medium truncate pt-0.5">
-            <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-            <span>Free Kerala Delivery</span>
+          {/* Trivandrum Showroom Dispatch Tag */}
+          <div className="flex items-center gap-1 text-[10px] text-slate-600 font-medium truncate pt-0.5">
+            <ShieldCheck className="w-3 h-3 text-[#007185] shrink-0" />
+            <span>Trivandrum Showroom Dispatch</span>
           </div>
         </div>
       </div>

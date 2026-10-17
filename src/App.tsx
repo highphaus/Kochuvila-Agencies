@@ -8,7 +8,7 @@ import CartPage from '@/app/cart/page';
 import CheckoutPage from '@/app/checkout/page';
 import OrderSuccessPage from '@/src/pages/OrderSuccessPage';
 import WishlistPage from '@/app/wishlist/WishlistClient';
-import ComparePage from '@/app/compare/CompareClient';
+import { Navigate } from 'react-router-dom';
 import ContactPage from '@/app/contact/page';
 import AboutPage from '@/src/pages/AboutPage';
 import BrandsPage from '@/src/pages/BrandsPage';
@@ -50,7 +50,7 @@ export default function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-success" element={<OrderSuccessPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
-          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/compare" element={<Navigate to="/products" replace />} />
 
           {/* Informational Pages */}
           <Route path="/about" element={<AboutPage />} />

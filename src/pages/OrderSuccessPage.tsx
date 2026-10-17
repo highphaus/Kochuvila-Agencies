@@ -44,7 +44,7 @@ export default function OrderSuccessPage() {
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
               Your order has been recorded. Our showroom logistics team will inspect the items
-              and initiate doorstep delivery to your address in Kerala.
+              and initiate doorstep delivery from our Trivandrum showroom.
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export default function OrderSuccessPage() {
               {orderNumber}
             </p>
             <p className="text-[11px] text-slate-500 mt-1">
-              Estimated Delivery: 24 to 48 Hours Across Kerala
+              Estimated Delivery: 24 to 48 Hours from Trivandrum Showroom
             </p>
           </div>
 

@@ -4,7 +4,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import MobileBottomNav from '@/components/MobileBottomNav';
-import CompareDrawer from '@/components/CompareDrawer';
 
 export default function Layout() {
   return (
@@ -16,7 +15,6 @@ export default function Layout() {
       <Footer />
       <WhatsAppButton />
       <MobileBottomNav />
-      <CompareDrawer />
     </div>
   );
 }

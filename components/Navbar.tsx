@@ -160,13 +160,13 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Compact Kerala Delivery Location Strip */}
+        {/* Compact Trivandrum Showroom Location Strip */}
         <div className="flex items-center justify-between px-3 py-1 bg-[#EBF6FC] text-[#007185] text-[11px] font-medium border-t border-[#D6EBF8]">
           <div className="flex items-center gap-1.5 truncate">
             <MapPin className="w-3.5 h-3.5 text-[#007185] shrink-0" />
-            <span className="truncate">Deliver to Kerala - 695609 (Showroom Dispatch)</span>
+            <span className="truncate">Trivandrum Store (Pangode &amp; Kallara Showrooms)</span>
           </div>
-          <span className="text-[10px] font-bold text-emerald-700 shrink-0">Free Unboxing</span>
+          <span className="text-[10px] font-bold text-[#007185] shrink-0">Showroom Dispatch</span>
         </div>
       </header>
 
