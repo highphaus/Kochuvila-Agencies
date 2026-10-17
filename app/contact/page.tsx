@@ -108,10 +108,10 @@ export default function ContactPage() {
                   <div>
                     <h4 className="font-bold text-[#1A1A1A]">Email Us</h4>
                     <a
-                      href="mailto:contact@kochuvilaagencies.com"
+                      href="mailto:kochuvilapgd1141@gmail.com"
                       className="text-xs text-[#0097F3] hover:underline mt-0.5 block font-medium"
                     >
-                      contact@kochuvilaagencies.com
+                      kochuvilapgd1141@gmail.com
                     </a>
                   </div>
                 </div>
@@ -129,12 +129,7 @@ export default function ContactPage() {
                       >
                         +91 97451 11141
                       </a>
-                      <a
-                        href="tel:+919972223065"
-                        className="text-xs text-slate-600 hover:text-[#0097F3] transition-colors"
-                      >
-                        +91 99722 23065
-                      </a>
+                      <span className="text-[11px] text-slate-500">Showroom Enquiries &amp; Orders</span>
                     </div>
                   </div>
                 </div>

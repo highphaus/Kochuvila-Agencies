@@ -101,111 +101,92 @@ export default function MobileAmazonHero() {
   };
 
   return (
-    <div className="w-full bg-[#F0F2F5] pb-2">
-      {/* 1. Amazon-style Banner Carousel */}
-      <div
-        className="relative w-full aspect-[16/9] max-h-[225px] overflow-hidden select-none bg-slate-900"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {MOBILE_HERO_SLIDES.map((slide, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-600 ease-in-out ${
-                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-              }`}
-            >
-              <Link href={slide.href} className="block relative w-full h-full">
-                {/* Hero Background Image */}
-                <Image
-                  src={slide.imageSrc}
-                  alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  className="object-cover object-center"
-                />
+    <div className="w-full bg-[#FAFBFD] pt-2 pb-1">
+      {/* 1. Flipkart-style Framed Banner Carousel */}
+      <div className="px-2.5 sm:px-4">
+        <div
+          className="relative w-full aspect-[16/9] xs:aspect-[18/9] max-h-[210px] rounded-2xl overflow-hidden select-none bg-slate-900 shadow-sm border border-slate-200/80"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {MOBILE_HERO_SLIDES.map((slide, index) => {
+            const isActive = index === currentSlide;
+            return (
+              <div
+                key={slide.id}
+                className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+                  isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                }`}
+              >
+                <Link href={slide.href} className="block relative w-full h-full">
+                  {/* Hero Background Image */}
+                  <Image
+                    src={slide.imageSrc}
+                    alt={slide.title}
+                    fill
+                    priority={index === 0}
+                    sizes="(max-width: 640px) 95vw, 600px"
+                    className="object-cover object-center select-none"
+                  />
 
-                {/* Amazon-style High Contrast Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+                  {/* Flipkart High Contrast Gradient Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
 
-                {/* Banner Content Card */}
-                <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-end text-white">
-                  {/* Badge */}
-                  <span
-                    className={`inline-block self-start px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider shadow-xs mb-1.5 ${slide.badgeBg} ${slide.badgeText}`}
-                  >
-                    {slide.badge}
-                  </span>
+                  {/* Banner Content Card */}
+                  <div className="absolute inset-0 p-3.5 sm:p-5 flex flex-col justify-end text-white">
+                    {/* Badge */}
+                    <span
+                      className={`inline-block self-start px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-black uppercase tracking-wider shadow-xs mb-1 ${slide.badgeBg} ${slide.badgeText}`}
+                    >
+                      {slide.badge}
+                    </span>
 
-                  {/* Title */}
-                  <h2 className="text-lg sm:text-xl font-black font-display leading-tight drop-shadow-sm text-white line-clamp-1">
-                    {slide.title}
-                  </h2>
+                    {/* Title */}
+                    <h2 className="text-base sm:text-lg font-black font-display leading-tight drop-shadow-sm text-white line-clamp-1">
+                      {slide.title}
+                    </h2>
 
-                  {/* Subtitle */}
-                  <p className="text-[11px] sm:text-xs text-slate-200 font-medium drop-shadow-xs line-clamp-1 mt-0.5">
-                    {slide.subtitle}
-                  </p>
+                    {/* Subtitle */}
+                    <p className="text-[10px] sm:text-xs text-slate-200 font-medium drop-shadow-xs line-clamp-1 mt-0.5">
+                      {slide.subtitle}
+                    </p>
 
-                  {/* Amazon-style Tap CTA */}
-                  <div className="pt-2 flex items-center gap-1 text-[11px] font-bold text-amber-300">
-                    <span>{slide.ctaText}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    {/* Flipkart Tap CTA */}
+                    <div className="pt-1.5 flex items-center gap-1 text-[11px] font-bold text-amber-300">
+                      <span>{slide.ctaText}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
-          );
-        })}
+                </Link>
+              </div>
+            );
+          })}
 
-        {/* Manual Arrow Buttons for quick tap */}
-        <button
-          type="button"
-          onClick={() =>
-            setCurrentSlide((prev) => (prev - 1 + MOBILE_HERO_SLIDES.length) % MOBILE_HERO_SLIDES.length)
-          }
-          aria-label="Previous Slide"
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-xs active:scale-95 cursor-pointer"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % MOBILE_HERO_SLIDES.length)}
-          aria-label="Next Slide"
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-xs active:scale-95 cursor-pointer"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-
-        {/* Slide Indicator Dots */}
-        <div className="absolute bottom-2 right-3 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full">
-          {MOBILE_HERO_SLIDES.map((_, dotIdx) => (
-            <button
-              key={dotIdx}
-              type="button"
-              onClick={() => setCurrentSlide(dotIdx)}
-              aria-label={`Go to slide ${dotIdx + 1}`}
-              className={`rounded-full transition-all duration-300 ${
-                dotIdx === currentSlide ? 'w-4 h-1.5 bg-[#0097F3]' : 'w-1.5 h-1.5 bg-white/60'
-              }`}
-            />
-          ))}
+          {/* Centered Slide Indicator Dots (Flipkart Style) */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full">
+            {MOBILE_HERO_SLIDES.map((_, dotIdx) => (
+              <button
+                key={dotIdx}
+                type="button"
+                onClick={() => setCurrentSlide(dotIdx)}
+                aria-label={`Go to slide ${dotIdx + 1}`}
+                className={`rounded-full transition-all duration-300 ${
+                  dotIdx === currentSlide ? 'w-3.5 h-1.5 bg-[#FFE500]' : 'w-1.5 h-1.5 bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* 2. Amazon-style Micro Trust Strip directly below Hero Carousel */}
-      <div className="mx-2 mt-1.5 p-2 bg-white rounded-xl border border-slate-200/80 shadow-2xs grid grid-cols-3 divide-x divide-slate-100 text-center">
+      {/* 2. Flipkart-style Micro Trust Strip directly below Hero Carousel */}
+      <div className="mx-2.5 sm:mx-4 mt-1.5 p-2 bg-white rounded-xl border border-slate-200/80 shadow-2xs grid grid-cols-3 divide-x divide-slate-100 text-center">
         <div className="flex flex-col items-center justify-center px-1">
           <Truck className="w-3.5 h-3.5 text-[#0097F3] mb-0.5" />
           <span className="text-[10px] font-bold text-slate-800 leading-tight">Trivandrum Store</span>
-          <span className="text-[8px] text-slate-400">Showroom Delivery</span>
+          <span className="text-[8px] text-slate-400">Showroom Dispatch</span>
         </div>
         <div className="flex flex-col items-center justify-center px-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 mb-0.5" />
@@ -214,8 +195,8 @@ export default function MobileAmazonHero() {
         </div>
         <div className="flex flex-col items-center justify-center px-1">
           <CreditCard className="w-3.5 h-3.5 text-amber-600 mb-0.5" />
-          <span className="text-[10px] font-bold text-slate-800 leading-tight">0% EMI</span>
-          <span className="text-[8px] text-slate-400">Paperless Approval</span>
+          <span className="text-[10px] font-bold text-slate-800 leading-tight">0% No Cost EMI</span>
+          <span className="text-[8px] text-slate-400">Instant Approval</span>
         </div>
       </div>
     </div>

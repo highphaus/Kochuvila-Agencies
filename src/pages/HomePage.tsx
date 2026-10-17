@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import HeroBanner from '@/components/HeroBanner';
+import MobileAmazonHero from '@/components/MobileAmazonHero';
 import TodaysDealsSection from '@/components/TodaysDealsSection';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import PromoBanners from '@/components/PromoBanners';
@@ -56,6 +57,11 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
       {/* 1. HERO SECTION (Desktop Only Carousel + Trust Bar) */}
       <HeroBanner />
+
+      {/* FLIPKART-STYLE FRAMED HERO CAROUSEL (Smaller Devices Only) */}
+      <div className="block md:hidden">
+        <MobileAmazonHero />
+      </div>
 
       {/* 2. TODAY'S DEALS & OFFERS (Amazon-style fast product deals rail) */}
       <TodaysDealsSection

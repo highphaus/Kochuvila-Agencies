@@ -132,41 +132,81 @@ export default function Navbar() {
   return (
     <>
       {/* 
+      {/* 
         ========================================================================
-        1. MOBILE PHONE HEADER:
-        - Removed top navbar & search input bar as requested
-        - Category discovery shortcut rail placed at the top
-        - Compact Kerala delivery location strip
+        1. FLIPKART-STYLE MOBILE HEADER (For smaller devices):
+        - Flipkart signature blue top bar with official Kochuvila logo
+        - Integrated white search bar with clean autocomplete
+        - Trivandrum showroom location strip
+        - Flipkart's iconic circular category tray with real icons & labels
         ========================================================================
       */}
-      <header className="block md:hidden bg-white border-b border-[#E2EBF2] shadow-2xs safe-top select-none sticky top-0 z-40">
-        {/* Category Discovery Shortcut Row (Clean text-only pills, no SVGs) */}
-        <div className="bg-[#FAFBFD] px-3 py-2 overflow-x-auto scrollbar-none flex items-center gap-2">
+      <header className="block md:hidden bg-[#0097F3] shadow-md safe-top select-none sticky top-0 z-40">
+        {/* Top Brand Bar & Search Row */}
+        <div className="px-3 pt-2.5 pb-2">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            {/* Brand Title (Text only, no logo, no explore plus) */}
+            <Link href="/" className="flex items-center group">
+              <span className="font-extrabold text-white text-lg tracking-tight font-display leading-none">
+                KOCHUVILA
+              </span>
+            </Link>
+
+            {/* Helpline / Showroom Call */}
+            <a
+              href="tel:+919745111141"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 text-white text-[11px] font-bold border border-white/20 active:scale-95 transition-transform"
+            >
+              <Phone className="w-3 h-3 text-amber-300" />
+              <span>Call Showroom</span>
+            </a>
+          </div>
+
+          {/* Flipkart-style White Search Box */}
+          <div className="relative">
+            <SearchAutocomplete isMobile={true} />
+          </div>
+        </div>
+
+        {/* Compact Trivandrum Showroom Location Strip */}
+        <div className="flex items-center justify-between px-3 py-1.5 bg-[#0086D9] text-white/95 text-[11px] font-medium border-t border-white/10">
+          <div className="flex items-center gap-1.5 truncate">
+            <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+            <span className="truncate">Deliver to Trivandrum 695609 (Showroom Dispatch)</span>
+          </div>
+          <span className="text-[10px] font-bold text-amber-300 shrink-0">Showroom Store</span>
+        </div>
+
+        {/* Flipkart's Iconic Circular Category Tray */}
+        <div className="bg-white border-b border-slate-200/90 px-2 py-2.5 overflow-x-auto scrollbar-none flex items-center gap-3">
           {MOBILE_CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
             const isSelected = pathname === cat.href || (cat.href !== '/' && pathname.startsWith(cat.href));
             return (
               <Link
                 key={cat.name}
                 href={cat.href}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shadow-2xs active:scale-95 ${
-                  isSelected
-                    ? 'bg-[#0097F3] text-white border-[#0097F3] shadow-xs'
-                    : 'bg-white text-slate-700 border-slate-200/90 hover:border-[#0097F3] hover:text-[#0097F3]'
-                }`}
+                className="flex flex-col items-center gap-1 shrink-0 group active:scale-95 transition-transform"
               >
-                {cat.name}
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center p-2.5 transition-all shadow-2xs border ${
+                    isSelected
+                      ? 'bg-[#EBF6FC] border-[#0097F3] ring-2 ring-[#0097F3]/30 text-[#0097F3]'
+                      : `${cat.bg} hover:border-[#0097F3]`
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+                <span
+                  className={`text-[10px] font-bold text-center leading-tight truncate max-w-[62px] ${
+                    isSelected ? 'text-[#0097F3]' : 'text-slate-800'
+                  }`}
+                >
+                  {cat.name}
+                </span>
               </Link>
             );
           })}
-        </div>
-
-        {/* Compact Trivandrum Showroom Location Strip */}
-        <div className="flex items-center justify-between px-3 py-1 bg-[#EBF6FC] text-[#007185] text-[11px] font-medium border-t border-[#D6EBF8]">
-          <div className="flex items-center gap-1.5 truncate">
-            <MapPin className="w-3.5 h-3.5 text-[#007185] shrink-0" />
-            <span className="truncate">Trivandrum Store (Pangode &amp; Kallara Showrooms)</span>
-          </div>
-          <span className="text-[10px] font-bold text-[#007185] shrink-0">Showroom Dispatch</span>
         </div>
       </header>
 

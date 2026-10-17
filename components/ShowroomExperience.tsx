@@ -648,7 +648,7 @@ export default function ShowroomExperience() {
                         {activeBranch.secondaryPhone}
                       </a>
                     </div>
-                    <p className="text-[11px] text-blue-200">contact@kochuvilaagencies.com</p>
+                    <p className="text-[11px] text-blue-200">kochuvilapgd1141@gmail.com</p>
                   </div>
                 </div>
 

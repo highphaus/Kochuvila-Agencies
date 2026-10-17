@@ -16,6 +16,8 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
+import AuthModal from '@/components/AuthModal';
 import { formatINR } from '@/lib/utils';
 import { PaymentMethod } from '@/types';
 
@@ -48,22 +50,42 @@ export default function CheckoutPage() {
     clearCart,
   } = useCartStore();
 
+  const user = useAuthStore((state) => state.user);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+
   const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    street: '',
-    landmark: '',
-    city: '',
-    district: 'Thiruvananthapuram',
+    fullName: user?.name || '',
+    phone: user?.phone || '',
+    email: user?.email || '',
+    street: user?.addresses?.[0]?.street || '',
+    landmark: user?.addresses?.[0]?.landmark || '',
+    city: user?.addresses?.[0]?.city || '',
+    district: user?.addresses?.[0]?.district || 'Thiruvananthapuram',
     state: 'Kerala',
-    pincode: '',
+    pincode: user?.addresses?.[0]?.pincode || '',
     notes: '',
   });
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Sync formData when user logs in via modal
+  React.useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+        street: prev.street || user.addresses?.[0]?.street || '',
+        city: prev.city || user.addresses?.[0]?.city || '',
+        district: prev.district || user.addresses?.[0]?.district || 'Thiruvananthapuram',
+        pincode: prev.pincode || user.addresses?.[0]?.pincode || '',
+      }));
+    }
+  }, [user]);
 
   const subtotal = getSubtotal();
   const deliveryCharge = getDeliveryCharge();
@@ -79,6 +101,13 @@ export default function CheckoutPage() {
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
+
+    // Check if user is logged in before placing order
+    if (!user) {
+      setErrorMessage('Please sign in or create an account to place your order.');
+      setAuthModalOpen(true);
+      return;
+    }
 
     // Validation
     if (!formData.fullName.trim()) {
@@ -206,6 +235,62 @@ export default function CheckoutPage() {
             Complete your order with Kochuvila Agencies. Warranty included.
           </p>
         </div>
+
+        {/* Guest / Not Logged In Notice */}
+        {!user && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm font-bold text-amber-950">
+                  Account Sign In / Sign Up Required for Order Placement
+                </p>
+                <p className="text-[11px] text-amber-800">
+                  Sign in or create your account to unlock order tracking, warranty records, and complete checkout.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('login');
+                  setAuthModalOpen(true);
+                }}
+                className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#0097F3] hover:bg-[#0084D6] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('signup');
+                  setAuthModalOpen(true);
+                }}
+                className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition-all cursor-pointer"
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Verified User Banner */}
+        {user && (
+          <div className="mb-6 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="text-xs font-bold text-emerald-900">
+                Logged in as <span className="underline">{user.name || user.email}</span> ({user.email})
+              </span>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-md">
+              Verified Account
+            </span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmitOrder}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -533,10 +618,16 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-button transition-all active:scale-98 disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-button transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
                 >
                   <Lock className="w-4 h-4 text-brand-sky" />
-                  <span>{isSubmitting ? 'Placing Order...' : 'Confirm & Place Order'}</span>
+                  <span>
+                    {isSubmitting
+                      ? 'Placing Order...'
+                      : !user
+                      ? 'Sign In / Sign Up to Place Order'
+                      : 'Confirm & Place Order'}
+                  </span>
                 </button>
 
                 <div className="text-[11px] text-slate-500 text-center space-y-1">
@@ -548,6 +639,12 @@ export default function CheckoutPage() {
           </div>
         </form>
       </div>
+
+      <AuthModal
+        isOpen={authModalOpen}
+        initialMode={authMode}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, Sparkles } from 'lucide-react';
-import WhatsAppIcon from './WhatsAppIcon';
-import { generateGeneralWhatsAppLink } from '@/lib/utils';
+import { HelpCircle, ChevronDown, Sparkles, Phone } from 'lucide-react';
 
 interface FAQItem {
   question: string;
@@ -46,7 +44,6 @@ const FAQS: FAQItem[] = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const whatsappUrl = generateGeneralWhatsAppLink();
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -123,13 +120,11 @@ export default function FAQSection() {
           </div>
 
           <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all shadow-sm flex-shrink-0 active:scale-98"
+            href="tel:+919745111141"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0097F3] hover:bg-[#0084D6] text-white text-xs font-bold transition-all shadow-sm flex-shrink-0 active:scale-98"
           >
-            <WhatsAppIcon className="w-4 h-4 fill-current" />
-            <span>Ask on WhatsApp</span>
+            <Phone className="w-4 h-4" />
+            <span>Call Showroom Helpline</span>
           </a>
         </div>
       </div>

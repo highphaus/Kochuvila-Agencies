@@ -9,12 +9,9 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Logo from './Logo';
-import WhatsAppIcon from './WhatsAppIcon';
-import { generateGeneralWhatsAppLink } from '@/lib/utils';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const whatsappUrl = generateGeneralWhatsAppLink();
 
   return (
     <footer className="bg-[#06121E] text-[#94A3B8] pt-12 sm:pt-14 pb-24 md:pb-8 border-t border-[#102A45]">
@@ -38,16 +35,14 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Quick WhatsApp Support Action */}
+            {/* Quick Showroom Helpline Support Action */}
             <div className="pt-2">
               <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#25D366] border border-[#25D366]/30 text-xs font-semibold transition-all group"
+                href="tel:+919745111141"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0097F3]/15 hover:bg-[#0097F3]/25 text-[#9FD8F1] border border-[#0097F3]/30 text-xs font-semibold transition-all group"
               >
-                <WhatsAppIcon className="w-4 h-4 fill-current shrink-0 group-hover:scale-110 transition-transform" />
-                <span>Chat on WhatsApp (+91 97451 11141)</span>
+                <Phone className="w-4 h-4 text-[#9FD8F1] shrink-0 group-hover:scale-110 transition-transform" />
+                <span>Call Showroom (+91 97451 11141)</span>
               </a>
             </div>
           </div>
@@ -171,8 +166,8 @@ export default function Footer() {
 
               <div className="flex items-center gap-2.5 pt-1">
                 <Mail className="w-4 h-4 text-[#9FD8F1] shrink-0" />
-                <a href="mailto:contact@kochuvilaagencies.com" className="hover:text-[#9FD8F1] transition-colors truncate">
-                  contact@kochuvilaagencies.com
+                <a href="mailto:kochuvilapgd1141@gmail.com" className="hover:text-[#9FD8F1] transition-colors truncate">
+                  kochuvilapgd1141@gmail.com
                 </a>
               </div>
 
@@ -182,9 +177,7 @@ export default function Footer() {
                   <a href="tel:+919745111141" className="hover:text-[#9FD8F1] transition-colors font-bold text-white">
                     +91 97451 11141
                   </a>
-                  <a href="tel:+919972223065" className="hover:text-[#9FD8F1] transition-colors text-[11px] text-slate-400">
-                    +91 99722 23065
-                  </a>
+                  <span className="text-[11px] text-slate-400">Pangode &amp; Kallara Showrooms</span>
                 </div>
               </div>
 
