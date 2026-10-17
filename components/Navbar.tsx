@@ -133,91 +133,40 @@ export default function Navbar() {
     <>
       {/* 
         ========================================================================
-        1. MOBILE PHONE HEADER (Amazon-inspired 4-row structure):
-        - Row 1: Brand logo + Account/Sign-In + Wishlist + Cart with live badge
-        - Row 2: Prominent Search bar with live autocomplete
-        - Row 3: Compact Kerala delivery location strip
-        - Row 4: Horizontal scroll category discovery shortcut rail
+        1. MOBILE PHONE HEADER:
+        - Removed top navbar & search input bar as requested
+        - Category discovery shortcut rail placed at the top
+        - Compact Kerala delivery location strip
         ========================================================================
       */}
       <header className="block md:hidden bg-white border-b border-[#E2EBF2] shadow-2xs safe-top select-none sticky top-0 z-40">
-        {/* Row 1: Top brand row */}
-        <div className="flex items-center justify-between px-3 h-11 bg-white border-b border-slate-100">
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-1.5 shrink-0 focus:outline-none">
-            <div className="w-7 h-7 relative shrink-0">
-              <Image
-                src="/Logo/kochuvila-logo.png"
-                alt="Kochuvila Agencies"
-                width={28}
-                height={28}
-                priority
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-extrabold tracking-tight text-slate-950 leading-none">
-                KOCHUVILA
-              </span>
-              <span className="text-[9px] font-bold text-[#0097F3] uppercase tracking-wider leading-none mt-0.5">
-                Agencies
-              </span>
-            </div>
-          </Link>
-
-          {/* Showroom Helpline Contact */}
-          <a
-            href="tel:+919745111141"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF6FC] text-[#007185] hover:text-[#0097F3] transition-colors text-[11px] font-bold"
-            aria-label="Call Showroom: +91 97451 11141"
-          >
-            <Phone className="w-3.5 h-3.5 text-[#0097F3]" />
-            <span>97451 11141</span>
-          </a>
+        {/* Category Discovery Shortcut Row (Clean text-only pills, no SVGs) */}
+        <div className="bg-[#FAFBFD] px-3 py-2 overflow-x-auto scrollbar-none flex items-center gap-2">
+          {MOBILE_CATEGORIES.map((cat) => {
+            const isSelected = pathname === cat.href || (cat.href !== '/' && pathname.startsWith(cat.href));
+            return (
+              <Link
+                key={cat.name}
+                href={cat.href}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shadow-2xs active:scale-95 ${
+                  isSelected
+                    ? 'bg-[#0097F3] text-white border-[#0097F3] shadow-xs'
+                    : 'bg-white text-slate-700 border-slate-200/90 hover:border-[#0097F3] hover:text-[#0097F3]'
+                }`}
+              >
+                {cat.name}
+              </Link>
+            );
+          })}
         </div>
 
-        {/* Row 2: Prominent Search Bar */}
-        <div className="px-3 py-1.5 bg-white">
-          <SearchAutocomplete isMobile />
-        </div>
-
-        {/* Row 3: Compact Kerala Delivery Location Strip */}
-        <div className="flex items-center justify-between px-3 py-1 bg-[#EBF6FC] text-[#007185] text-[11px] font-medium border-y border-[#D6EBF8]">
+        {/* Compact Kerala Delivery Location Strip */}
+        <div className="flex items-center justify-between px-3 py-1 bg-[#EBF6FC] text-[#007185] text-[11px] font-medium border-t border-[#D6EBF8]">
           <div className="flex items-center gap-1.5 truncate">
             <MapPin className="w-3.5 h-3.5 text-[#007185] shrink-0" />
             <span className="truncate">Deliver to Kerala - 695609 (Showroom Dispatch)</span>
           </div>
           <span className="text-[10px] font-bold text-emerald-700 shrink-0">Free Unboxing</span>
-        </div>
-
-        {/* Row 4: Category Discovery Shortcut Row */}
-        <div className="bg-[#FAFBFD] px-2.5 py-2 overflow-x-auto scrollbar-none flex items-center gap-2.5">
-          {MOBILE_CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isSelected = pathname === cat.href || pathname.startsWith(cat.href);
-            return (
-              <Link
-                key={cat.name}
-                href={cat.href}
-                className="flex flex-col items-center justify-center shrink-0 group focus:outline-none"
-              >
-                <div
-                  className={`w-11 h-11 rounded-full border shadow-2xs flex items-center justify-center transition-transform active:scale-95 ${cat.bg} ${
-                    isSelected ? 'ring-2 ring-[#0097F3] ring-offset-1 scale-105' : ''
-                  }`}
-                >
-                  <Icon className="w-5 h-5 stroke-[2.2px]" />
-                </div>
-                <span
-                  className={`text-[10px] mt-1 font-semibold tracking-tight text-center truncate max-w-[56px] leading-tight ${
-                    isSelected ? 'text-[#0097F3] font-bold' : 'text-slate-700'
-                  }`}
-                >
-                  {cat.name}
-                </span>
-              </Link>
-            );
-          })}
         </div>
       </header>
 
