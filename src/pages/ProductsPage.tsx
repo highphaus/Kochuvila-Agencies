@@ -214,6 +214,9 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
           isDeal={isDeal}
           activeSort={sort}
           totalProducts={total}
+          productsCount={products.length}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
         />
 
         {/* Main 2-Column Catalog Layout */}
@@ -426,8 +429,8 @@ export default function ProductsPage({ defaultDepartment }: ProductsPageProps) {
 
           {/* Right Product Grid Area: 9 cols when filter is open, full 12 cols when closed */}
           <div className={`${isFilterOpen ? 'lg:col-span-9' : 'lg:col-span-12'} space-y-6 transition-all duration-300`}>
-            {/* Top Toolbar matching Reference Image */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-xl p-3.5 border border-[#E2EBF2] shadow-xs">
+            {/* Top Toolbar (Desktop Only, hidden on mobile) */}
+            <div className="hidden lg:flex items-center justify-between gap-4 bg-white rounded-xl p-3.5 border border-[#E2EBF2] shadow-xs">
               <div className="flex items-center gap-3">
                 {/* Desktop Filter Toggle Button: Open / Close */}
                 <button

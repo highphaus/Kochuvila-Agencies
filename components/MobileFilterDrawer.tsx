@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Filter, X, ArrowUpDown, Flame, Check, RotateCcw, ChevronRight } from 'lucide-react';
+import { Filter, X, ArrowUpDown, Flame, Check, RotateCcw, ChevronRight, SlidersHorizontal, Grid, List } from 'lucide-react';
 import { Category, Brand } from '@/types';
 
 interface MobileFilterDrawerProps {
@@ -17,7 +17,28 @@ interface MobileFilterDrawerProps {
   isDeal?: boolean;
   activeSort?: string;
   totalProducts: number;
+  productsCount?: number;
+  viewMode?: 'grid' | 'list';
+  onViewModeChange?: (mode: 'grid' | 'list') => void;
 }
+
+const SORT_OPTIONS = [
+  { key: 'popularity', label: 'Popularity' },
+  { key: 'newest', label: 'Newest First' },
+  { key: 'price_asc', label: 'Price: Low to High' },
+  { key: 'price_desc', label: 'Price: High to Low' },
+  { key: 'rating', label: 'Customer Rating' },
+  { key: 'discount', label: 'Highest Offers / Discount' },
+];
+
+const SORT_LABELS: Record<string, string> = {
+  popularity: 'Popularity',
+  newest: 'Newest',
+  price_asc: 'Price: Low to High',
+  price_desc: 'Price: High to Low',
+  rating: 'Rating',
+  discount: 'Offers',
+};
 
 export default function MobileFilterDrawer({
   categories,
@@ -29,11 +50,16 @@ export default function MobileFilterDrawer({
   activeMaxPrice,
   activeRating,
   isDeal,
-  activeSort = 'newest',
+  activeSort = 'popularity',
   totalProducts,
+  productsCount,
+  viewMode = 'grid',
+  onViewModeChange,
 }: MobileFilterDrawerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const currentSortLabel = SORT_LABELS[activeSort] || 'Popularity';
 
   const [isOpen, setIsOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -109,32 +135,72 @@ export default function MobileFilterDrawer({
 
   return (
     <>
-      {/* Sticky Mobile Filter & Sort Control Bar */}
-      <div className="lg:hidden sticky top-14 z-30 bg-white/95 backdrop-blur-md border-b border-brand-border py-2 px-3 sm:px-4 shadow-2xs mb-6 safe-top">
-        <div className="flex items-center justify-between gap-2.5">
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors active:scale-95"
-            aria-label="Open filter options"
-          >
-            <Filter className="w-3.5 h-3.5 text-brand-primary" />
-            <span>Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-brand-primary text-white text-[10px] font-black flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
+      {/* Mobile-Only Top Information Bar & Sticky Sort/Filter Controls */}
+      <div className="lg:hidden mb-4 space-y-2.5">
+        {/* Row 1: Showing count & View Mode Switcher */}
+        <div className="flex items-center justify-between px-1">
+          <p className="text-xs text-[#666666]">
+            Showing <strong className="text-[#1A1A1A] font-bold">{productsCount ?? totalProducts}</strong> of{' '}
+            <strong className="text-[#1A1A1A] font-bold">{totalProducts}</strong> products
+          </p>
 
+          {onViewModeChange && (
+            <div className="flex items-center border border-[#E2EBF2] rounded-lg p-0.5 bg-[#EBF6FC]/30">
+              <button
+                type="button"
+                onClick={() => onViewModeChange('grid')}
+                className={`p-1.5 rounded transition-all cursor-pointer ${
+                  viewMode === 'grid' ? 'bg-white shadow-2xs text-[#0097F3]' : 'text-slate-400 hover:text-slate-600'
+                }`}
+                title="Grid View"
+                aria-label="Grid View"
+              >
+                <Grid className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onViewModeChange('list')}
+                className={`p-1.5 rounded transition-all cursor-pointer ${
+                  viewMode === 'list' ? 'bg-white shadow-2xs text-[#0097F3]' : 'text-slate-400 hover:text-slate-600'
+                }`}
+                title="List View"
+                aria-label="List View"
+              >
+                <List className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Row 2: Sticky 50/50 Sort and Filter Bar */}
+        <div className="sticky top-14 z-30 bg-white/95 backdrop-blur-md rounded-xl border border-[#E2EBF2] shadow-xs p-1 flex items-center divide-x divide-[#E2EBF2] safe-top">
+          {/* Sort Button (Left 50%) */}
           <button
             type="button"
             onClick={() => setIsSortOpen(true)}
-            className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F5F7F9] hover:bg-brand-lightBlueSoft border border-brand-border text-slate-800 text-xs font-bold transition-colors active:scale-95"
+            className="flex-1 py-2 px-3 flex items-center justify-center gap-1.5 text-[#1A1A1A] text-xs font-bold hover:bg-[#F8FBFE] rounded-lg transition-all active:scale-98 min-w-0 cursor-pointer"
             aria-label="Sort products"
           >
-            <ArrowUpDown className="w-3.5 h-3.5 text-brand-primary" />
-            <span>Sort By</span>
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#0097F3] shrink-0" />
+            <span className="truncate">
+              Sort: <span className="text-[#0097F3] font-bold">{currentSortLabel}</span>
+            </span>
+          </button>
+
+          {/* Filter Button (Right 50%) */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="flex-1 py-2 px-3 flex items-center justify-center gap-1.5 text-[#1A1A1A] text-xs font-bold hover:bg-[#F8FBFE] rounded-lg transition-all active:scale-98 min-w-0 cursor-pointer"
+            aria-label="Open filter options"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#0097F3] shrink-0" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="min-w-4 h-4 px-1 rounded-full bg-[#0097F3] text-white text-[10px] font-black flex items-center justify-center shrink-0">
+                {activeFilterCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -150,31 +216,25 @@ export default function MobileFilterDrawer({
               </h3>
               <button
                 onClick={() => setIsSortOpen(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-black"
+                className="p-1 rounded-full text-slate-400 hover:text-black cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-1 text-xs">
-              {[
-                { key: 'newest', label: 'Featured / Newest Arrivals' },
-                { key: 'price_asc', label: 'Price: Low to High' },
-                { key: 'price_desc', label: 'Price: High to Low' },
-                { key: 'discount', label: 'Highest Discount / Best Offers' },
-                { key: 'rating', label: 'Customer Rating: High to Low' },
-              ].map(({ key, label }) => (
+              {SORT_OPTIONS.map(({ key, label }) => (
                 <button
                   key={key}
                   onClick={() => handleSelectSort(key)}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl text-left font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-left font-semibold transition-colors cursor-pointer ${
                     activeSort === key
-                      ? 'bg-brand-lightBlueSoft text-brand-deepBlue font-bold'
+                      ? 'bg-[#EBF6FC] text-[#0097F3] font-bold'
                       : 'hover:bg-slate-50 text-slate-700'
                   }`}
                 >
                   <span>{label}</span>
-                  {activeSort === key && <Check className="w-4 h-4 text-brand-primary" />}
+                  {activeSort === key && <Check className="w-4 h-4 text-[#0097F3]" />}
                 </button>
               ))}
             </div>
