@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Grid, Search, ShoppingBag, User, X } from 'lucide-react';
+import { Home, Search, ShoppingBag, User, X } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import SearchAutocomplete from './SearchAutocomplete';
@@ -37,7 +37,6 @@ export default function MobileBottomNav() {
   }
 
   const isHomeActive = pathname === '/';
-  const isShopActive = pathname.startsWith('/products') && !searchOpen;
   const isCartActive = pathname === '/cart';
   const isAccountActive = pathname === '/account' || pathname === '/login';
 
@@ -99,21 +98,7 @@ export default function MobileBottomNav() {
             {isHomeActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
           </Link>
 
-          {/* 2. Shop / Categories */}
-          <Link
-            href="/products"
-            className={`flex flex-col items-center justify-center min-w-[54px] py-1 px-1 rounded-xl transition-all relative ${
-              isShopActive
-                ? 'text-[#0097F3] font-bold'
-                : 'text-slate-600 hover:text-black font-medium'
-            }`}
-          >
-            <Grid className={`w-5 h-5 ${isShopActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
-            <span className="text-[10px] mt-1 tracking-tight">Shop</span>
-            {isShopActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
-          </Link>
-
-          {/* 3. Search Button (Prominent Action) */}
+          {/* 2. Search Button (Prominent Action) */}
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
