@@ -152,3 +152,37 @@
   content-visibility: auto;
   contain-intrinsic-size: 1px 500px;
 }
+
+/* Continuous Infinite Circular Loop Carousel Marquee */
+@keyframes marqueeLoop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-loop {
+  display: flex;
+  width: max-content;
+  animation: marqueeLoop 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-loop:hover,
+.animate-marquee-loop:active {
+  animation-play-state: paused;
+}
+
+.animate-marquee-loop-fast {
+  display: flex;
+  width: max-content;
+  animation: marqueeLoop 16s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-loop-fast:hover,
+.animate-marquee-loop-fast:active {
+  animation-play-state: paused;
+}

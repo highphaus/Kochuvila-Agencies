@@ -134,7 +134,92 @@ export default function AppliancesProductsSection({ products }: AppliancesProduc
         </div>
 
         {/* Authorized Dealer & Service Highlights Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8 pt-6 border-t border-slate-200">
+        {/* Mobile: Horizontal auto-scrolling circular loop carousel */}
+        <div className="block sm:hidden mt-6 pt-4 border-t border-slate-200 overflow-hidden relative -mx-4 px-4">
+          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+          <div className="animate-marquee-loop-fast flex items-center gap-2.5 select-none py-1">
+            {[
+              {
+                icon: Zap,
+                title: 'Inverter Tech',
+                desc: 'Up to 50% power savings',
+                bg: 'bg-amber-100',
+                color: 'text-amber-700',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Official Warranty',
+                desc: 'Authorized brand support',
+                bg: 'bg-emerald-100',
+                color: 'text-emerald-700',
+              },
+              {
+                icon: Wrench,
+                title: 'Free In-Home Demo',
+                desc: 'Certified brand engineers',
+                bg: 'bg-blue-100',
+                color: 'text-blue-700',
+              },
+              {
+                icon: CreditCard,
+                title: '0% Paperless EMI',
+                desc: '5-min instant approval',
+                bg: 'bg-purple-100',
+                color: 'text-purple-700',
+              },
+              // Duplicate items for continuous circular loop
+              {
+                icon: Zap,
+                title: 'Inverter Tech',
+                desc: 'Up to 50% power savings',
+                bg: 'bg-amber-100',
+                color: 'text-amber-700',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Official Warranty',
+                desc: 'Authorized brand support',
+                bg: 'bg-emerald-100',
+                color: 'text-emerald-700',
+              },
+              {
+                icon: Wrench,
+                title: 'Free In-Home Demo',
+                desc: 'Certified brand engineers',
+                bg: 'bg-blue-100',
+                color: 'text-blue-700',
+              },
+              {
+                icon: CreditCard,
+                title: '0% Paperless EMI',
+                desc: '5-min instant approval',
+                bg: 'bg-purple-100',
+                color: 'text-purple-700',
+              },
+            ].map((h, i) => {
+              const Icon = h.icon;
+              return (
+                <div
+                  key={i}
+                  className="w-[190px] shrink-0 flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs"
+                >
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${h.bg} ${h.color}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 truncate">{h.title}</p>
+                    <p className="text-[10px] text-slate-500 truncate">{h.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop / Tablet: Static 4-column grid */}
+        <div className="hidden sm:grid sm:grid-cols-4 gap-3 sm:gap-4 mt-8 pt-6 border-t border-slate-200">
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
             <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
               <Zap className="w-4 h-4" />

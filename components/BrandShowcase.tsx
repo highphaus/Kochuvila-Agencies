@@ -8,12 +8,34 @@ interface BrandShowcaseProps {
 }
 
 export default function BrandShowcase({ brands }: BrandShowcaseProps) {
-  // Show only top 8 curated brands on the home page
-  const displayedBrands = brands.slice(0, 8);
+  const brandList = brands && brands.length > 0 ? brands : [
+    { _id: '1', name: 'Samsung', slug: 'samsung' },
+    { _id: '2', name: 'LG', slug: 'lg' },
+    { _id: '3', name: 'Sony', slug: 'sony' },
+    { _id: '4', name: 'Bosch', slug: 'bosch' },
+    { _id: '5', name: 'Whirlpool', slug: 'whirlpool' },
+    { _id: '6', name: 'Royal Teak', slug: 'royal-teak' },
+    { _id: '7', name: 'Nilkamal', slug: 'nilkamal' },
+    { _id: '8', name: 'Daikin', slug: 'daikin' },
+  ];
+
+  // Duplicate for continuous seamless circular loop
+  const loopBrands = [...brandList, ...brandList];
+
+  const specialties: Record<string, string> = {
+    Samsung: '4K QLED TVs & Double Door Fridges',
+    LG: 'Direct Drive Washers & French Door Fridges',
+    Sony: 'Bravia OLED TVs & Cinematic Audio',
+    Bosch: 'German Front-Load Washers & Dishwashers',
+    Whirlpool: 'Intellifresh Refrigerators',
+    'Royal Teak': 'Solid Living Sofas, Dining & Beds',
+    Nilkamal: 'Ergonomic Living & Study Furniture',
+    Daikin: 'Inverter Climate Control & Split ACs',
+  };
 
   return (
     /* SECTION 8 — BRANDS: SHOP BY BRAND */
-    <section className="py-8 sm:py-12 bg-white border-b border-brand-border">
+    <section className="py-8 sm:py-12 bg-white border-b border-brand-border overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
           <div>
@@ -38,53 +60,49 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
           </Link>
         </div>
 
-        {/* Top Brands Grid (8 brands) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2.5 sm:gap-4">
-          {displayedBrands.map((b) => {
-            const specialties: Record<string, string> = {
-              Samsung: '4K QLED TVs & Double Door Fridges',
-              LG: 'Direct Drive Washers & French Door Fridges',
-              Sony: 'Bravia OLED TVs & Cinematic Audio',
-              Bosch: 'German Front-Load Washers & Dishwashers',
-              Whirlpool: 'Intellifresh Refrigerators',
-              'Royal Teak': 'Solid Teak Sofas, Dining & Beds',
-              Nilkamal: 'Ergonomic Living & Study Furniture',
-              Daikin: 'Inverter Climate Control & Split ACs',
-            };
+        {/* Horizontal Auto-Scrollable Circular Loop Carousel */}
+        <div className="relative overflow-hidden w-full py-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+          {/* Edge Vignette Gradients */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 sm:w-16 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 sm:w-16 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
-            const specialty = specialties[b.name] || 'Authorized Showroom Collection';
+          {/* Marquee Track: continuous 60fps infinite circular loop */}
+          <div className="animate-marquee-loop flex items-center gap-3 sm:gap-4 select-none">
+            {loopBrands.map((b, index) => {
+              const specialty = specialties[b.name] || 'Authorized Showroom Collection';
 
-            return (
-              <Link
-                key={b._id}
-                href={`/products?brand=${encodeURIComponent(b.name)}`}
-                className="group p-3.5 sm:p-5 rounded-2xl border border-brand-border hover:border-brand-primary bg-white hover:bg-brand-lightBlueSoft/20 transition-all text-left flex flex-col justify-between shadow-card hover:shadow-cardHover relative overflow-hidden"
-              >
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-black text-sm sm:text-base text-black group-hover:text-brand-primary transition-colors tracking-wide uppercase">
-                    {b.name}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-deepBlue bg-brand-lightBlueSoft px-2 py-0.5 rounded-full border border-brand-lightBlue/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-                    Authorized
-                  </span>
-                </div>
+              return (
+                <Link
+                  key={`${b._id}-${index}`}
+                  href={`/products?brand=${encodeURIComponent(b.name)}`}
+                  className="w-[200px] sm:w-[240px] shrink-0 p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 hover:border-[#0097F3] bg-white hover:bg-[#EBF6FC]/40 transition-all text-left flex flex-col justify-between shadow-2xs hover:shadow-md group relative cursor-pointer"
+                >
+                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                    <span className="font-extrabold text-sm sm:text-base text-slate-900 group-hover:text-[#0097F3] transition-colors tracking-wide uppercase truncate">
+                      {b.name}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-[#017ED0] bg-[#EBF6FC] px-1.5 py-0.5 rounded-full border border-sky-200/60 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3]" />
+                      Authorized
+                    </span>
+                  </div>
 
-                <p className="text-xs text-slate-500 line-clamp-1 font-normal mb-3">
-                  {specialty}
-                </p>
+                  <p className="text-[11px] sm:text-xs text-slate-500 line-clamp-1 font-normal mb-2.5">
+                    {specialty}
+                  </p>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-brand-primary group-hover:text-brand-deepBlue">
-                  <span>Explore Catalog</span>
-                  <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            );
-          })}
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-[#0097F3] group-hover:text-[#017ED0]">
+                    <span>Explore Catalog</span>
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* Explore More Brands Action Button */}
-        <div className="mt-8 sm:mt-10 text-center">
+        <div className="mt-6 sm:mt-8 text-center">
           <Link
             href="/brands"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#06121E] hover:bg-[#0097F3] text-white text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 shadow-md hover:shadow-lg active:scale-98 group cursor-pointer"
