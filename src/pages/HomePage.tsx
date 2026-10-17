@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import HeroBanner from '@/components/HeroBanner';
 import MobileAmazonHero from '@/components/MobileAmazonHero';
-import TodaysDealsSection from '@/components/TodaysDealsSection';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import PromoBanners from '@/components/PromoBanners';
 import BrandShowcase from '@/components/BrandShowcase';
@@ -63,12 +62,7 @@ export default function HomePage() {
         <MobileAmazonHero />
       </div>
 
-      {/* 2. TODAY'S DEALS & OFFERS (Amazon-style fast product deals rail) */}
-      <TodaysDealsSection
-        products={[...featuredProducts, ...furnitureProducts, ...appliancesProducts]}
-      />
-
-      {/* 3. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
+      {/* 2. FEATURED PRODUCTS (Best Sellers, New Arrivals, Top Rated) */}
       <FeaturedProductsSection products={featuredProducts} />
 
       {/* 3. PROMOTIONAL EDITORIAL BANNERS (Comfort for Every Corner & Trusted Home Appliances) */}
