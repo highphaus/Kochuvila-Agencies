@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, ShoppingBag, User, X } from 'lucide-react';
+import { Home, Heart, Search, ShoppingBag, User, X } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
 import { useAuthStore } from '@/store/authStore';
 import SearchAutocomplete from './SearchAutocomplete';
 
@@ -12,6 +13,7 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const cartCount = useCartStore((state) => state.getItemCount());
+  const wishlistCount = useWishlistStore((state) => state.getCount());
   const user = useAuthStore((state) => state.user);
 
   // Close search drawer when route changes
@@ -37,6 +39,7 @@ export default function MobileBottomNav() {
   }
 
   const isHomeActive = pathname === '/';
+  const isWishlistActive = pathname === '/wishlist';
   const isCartActive = pathname === '/cart';
   const isAccountActive = pathname === '/account' || pathname === '/login';
 
@@ -87,7 +90,7 @@ export default function MobileBottomNav() {
           {/* 1. Home */}
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center min-w-[54px] py-1 px-1 rounded-xl transition-all relative ${
+            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
               isHomeActive
                 ? 'text-[#0097F3] font-bold'
                 : 'text-slate-600 hover:text-black font-medium'
@@ -98,12 +101,37 @@ export default function MobileBottomNav() {
             {isHomeActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
           </Link>
 
-          {/* 2. Search Button (Prominent Action) */}
+          {/* 2. Wishlist */}
+          <Link
+            href="/wishlist"
+            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
+              isWishlistActive
+                ? 'text-[#0097F3] font-bold'
+                : 'text-slate-600 hover:text-black font-medium'
+            }`}
+          >
+            <div className="relative">
+              <Heart
+                className={`w-5 h-5 ${
+                  isWishlistActive ? 'stroke-[2.5px] fill-[#0097F3] text-[#0097F3]' : 'stroke-2'
+                }`}
+              />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 shadow-xs">
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] mt-1 tracking-tight">Wishlist</span>
+            {isWishlistActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
+          </Link>
+
+          {/* 3. Search Button (Prominent Action) */}
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
             aria-label="Open Search"
-            className={`flex flex-col items-center justify-center min-w-[54px] py-1 px-1 rounded-xl transition-all relative ${
+            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
               searchOpen
                 ? 'text-[#0097F3] font-bold'
                 : 'text-slate-600 hover:text-[#0097F3] font-medium'
@@ -119,7 +147,7 @@ export default function MobileBottomNav() {
           {/* 4. Cart */}
           <Link
             href="/cart"
-            className={`flex flex-col items-center justify-center min-w-[54px] py-1 px-1 rounded-xl transition-all relative ${
+            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
               isCartActive
                 ? 'text-[#0097F3] font-bold'
                 : 'text-slate-600 hover:text-black font-medium'
@@ -140,7 +168,7 @@ export default function MobileBottomNav() {
           {/* 5. Account */}
           <Link
             href="/account"
-            className={`flex flex-col items-center justify-center min-w-[54px] py-1 px-1 rounded-xl transition-all relative ${
+            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
               isAccountActive
                 ? 'text-[#0097F3] font-bold'
                 : 'text-slate-600 hover:text-black font-medium'

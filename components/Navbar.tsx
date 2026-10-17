@@ -142,7 +142,7 @@ export default function Navbar() {
       */}
       <header className="block md:hidden bg-white border-b border-[#E2EBF2] shadow-2xs safe-top select-none sticky top-0 z-40">
         {/* Row 1: Top brand row */}
-        <div className="flex items-center justify-between px-3 h-12 bg-white border-b border-slate-100">
+        <div className="flex items-center justify-between px-3 h-11 bg-white border-b border-slate-100">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-1.5 shrink-0 focus:outline-none">
             <div className="w-7 h-7 relative shrink-0">
@@ -165,57 +165,15 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Top Row Right Actions: Wishlist + User Account/Sign In + Cart */}
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            {/* Wishlist */}
-            <Link
-              href="/wishlist"
-              className="p-1.5 text-slate-700 hover:text-[#0097F3] relative rounded-full hover:bg-slate-100 transition-colors"
-              aria-label="Wishlist"
-            >
-              <Heart className="w-5 h-5 stroke-[2]" />
-              {wishlistCount > 0 && (
-                <span className="absolute top-0 right-0 bg-rose-500 text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-
-            {/* Account / Sign In */}
-            {user ? (
-              <Link
-                href="/account"
-                className="p-1.5 text-slate-700 hover:text-[#0097F3] rounded-full hover:bg-slate-100 transition-colors"
-                aria-label="My Account"
-              >
-                <User className="w-5 h-5 stroke-[2]" />
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('login');
-                  setAuthModalOpen(true);
-                }}
-                className="px-2 py-1 text-[11px] font-bold text-slate-800 border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
-                aria-label="Sign In"
-              >
-                Sign In
-              </button>
-            )}
-
-            {/* Shopping Cart with live badge */}
-            <Link
-              href="/cart"
-              className="p-1.5 text-slate-800 hover:text-[#0097F3] relative rounded-full hover:bg-slate-100 transition-colors flex items-center"
-              aria-label={`Shopping cart with ${cartItemCount} items`}
-            >
-              <ShoppingCart className="w-5 h-5 stroke-[2]" />
-              <span className="absolute top-0 right-0 bg-[#F59E0B] text-slate-950 text-[10px] font-black rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center shadow-2xs">
-                {cartItemCount}
-              </span>
-            </Link>
-          </div>
+          {/* Showroom Helpline Contact */}
+          <a
+            href="tel:+919745111141"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF6FC] text-[#007185] hover:text-[#0097F3] transition-colors text-[11px] font-bold"
+            aria-label="Call Showroom: +91 97451 11141"
+          >
+            <Phone className="w-3.5 h-3.5 text-[#0097F3]" />
+            <span>97451 11141</span>
+          </a>
         </div>
 
         {/* Row 2: Prominent Search Bar */}
