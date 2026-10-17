@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Brand } from '@/types';
-import { Award, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface BrandShowcaseProps {
   brands: Brand[];
@@ -39,15 +39,11 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-primary mb-2">
-              <Award className="w-3.5 h-3.5 text-brand-primary" />
-              <span>Official Retail Partners</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-black font-display uppercase tracking-tight">
               Shop By Brand
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-lg">
-              Official authorized dealership for leading appliance and home manufacturers. 100% genuine products with manufacturer warranty.
+              Leading appliance and home manufacturers with 100% genuine products and warranty support.
             </p>
           </div>
 
@@ -55,7 +51,7 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
             href="/brands"
             className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-primary hover:text-brand-deepBlue hover:underline group"
           >
-            <span>Explore All Brands ({brands.length})</span>
+            <span>Explore All Brands</span>
             <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -80,10 +76,6 @@ export default function BrandShowcase({ brands }: BrandShowcaseProps) {
                   <div className="flex items-center justify-between gap-1.5 mb-1.5">
                     <span className="font-extrabold text-sm sm:text-base text-slate-900 group-hover:text-[#0097F3] transition-colors tracking-wide uppercase truncate">
                       {b.name}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-[#017ED0] bg-[#EBF6FC] px-1.5 py-0.5 rounded-full border border-sky-200/60 shrink-0">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3]" />
-                      Authorized
                     </span>
                   </div>
 

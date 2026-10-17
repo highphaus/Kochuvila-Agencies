@@ -166,7 +166,7 @@
 .animate-marquee-loop {
   display: flex;
   width: max-content;
-  animation: marqueeLoop 24s linear infinite;
+  animation: marqueeLoop 52s linear infinite;
   will-change: transform;
 }
 
@@ -178,7 +178,7 @@
 .animate-marquee-loop-fast {
   display: flex;
   width: max-content;
-  animation: marqueeLoop 16s linear infinite;
+  animation: marqueeLoop 38s linear infinite;
   will-change: transform;
 }
 
