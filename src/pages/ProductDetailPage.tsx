@@ -12,18 +12,32 @@ import { SAMPLE_PRODUCTS } from '@/lib/data/sample-data';
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const cleanSlug = slug ? decodeURIComponent(slug).trim() : '';
   const [product, setProduct] = useState<Product | null>(() => {
-    return SAMPLE_PRODUCTS.find((p) => p.slug === slug) || null;
+    if (!cleanSlug) return null;
+    return (
+      SAMPLE_PRODUCTS.find(
+        (p) =>
+          p.slug.toLowerCase() === cleanSlug.toLowerCase() ||
+          p._id.toLowerCase() === cleanSlug.toLowerCase()
+      ) || null
+    );
   });
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(!product);
 
   useEffect(() => {
-    if (!slug) return;
+    if (product) {
+      document.title = `${product.name} | Kochuvila Home & Living`;
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (!cleanSlug) return;
     let isMounted = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    fetchProductBySlug(slug)
+    fetchProductBySlug(cleanSlug)
       .then((p) => {
         if (!isMounted) return;
         if (p) {
@@ -47,7 +61,7 @@ export default function ProductDetailPage() {
     return () => {
       isMounted = false;
     };
-  }, [slug]);
+  }, [cleanSlug]);
 
   if (loading) {
     return (

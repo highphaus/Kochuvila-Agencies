@@ -14,6 +14,8 @@ import {
   MapPin,
   Star,
   Sparkles,
+  Share2,
+  Check,
 } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { Product } from '@/types';
@@ -43,6 +45,35 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
   const emi = calculateEMI(product.price, 6);
   const emi12 = calculateEMI(product.price, 12);
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    const shareData = {
+      title: `${product.name} | Kochuvila Home & Living`,
+      text: `Check out ${product.name} at Kochuvila Home & Living:`,
+      url: url,
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (err: any) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      } catch {
+        // clipboard copy fallback
+      }
+    }
+  };
   const whatsappUrl = generateWhatsAppEnquiryLink(product);
   const savings = Math.max(0, product.mrp - product.price);
 
@@ -104,14 +135,37 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       <div className="lg:col-span-6 space-y-3.5">
         {/* Main image container */}
         <div className="relative aspect-square sm:aspect-4/3 max-h-[380px] sm:max-h-[460px] bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-4 sm:p-8 flex items-center justify-center shadow-xs overflow-hidden group">
-          {/* Wishlist Button on Top Right */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
+          {/* Action Buttons on Top Right */}
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 flex items-center gap-1.5 sm:gap-2">
+            {/* Share Button */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="p-2.5 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-md active:scale-95 bg-white/90 text-slate-600 hover:text-[#0097F3] hover:bg-white cursor-pointer"
+                title="Share product link"
+                aria-label="Share product"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+                ) : (
+                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
+              </button>
+              {copied && (
+                <div className="absolute top-full mt-1.5 right-0 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2 py-1 rounded shadow-lg animate-in fade-in z-20">
+                  Link copied!
+                </div>
+              )}
+            </div>
+
+            {/* Wishlist Button */}
             <button
               onClick={() => toggleWishlist(product)}
-              className={`p-2.5 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-md active:scale-95 ${
+              className={`p-2.5 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-md active:scale-95 cursor-pointer ${
                 isInWishlist
                   ? 'bg-[#EBF6FC] text-[#0097F3]'
-                  : 'bg-white/80 text-slate-500 hover:text-brand-primary hover:bg-white'
+                  : 'bg-white/90 text-slate-600 hover:text-[#0097F3] hover:bg-white'
               }`}
               title="Add to Wishlist"
               aria-label="Add to Wishlist"
