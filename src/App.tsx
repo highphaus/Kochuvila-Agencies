@@ -63,6 +63,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<LoginPage isRegisterMode />} />
+          <Route path="/signup" element={<LoginPage isRegisterMode />} />
 
           {/* Customer Service & Policies */}
           <Route path="/shipping-policy" element={<PolicyPage type="shipping" />} />
