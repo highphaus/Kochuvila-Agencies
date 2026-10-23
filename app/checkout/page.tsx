@@ -53,28 +53,42 @@ export default function CheckoutPage() {
   const user = useAuthStore((state) => state.user);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [pendingSubmit, setPendingSubmit] = useState(false);
 
-  const [formData, setFormData] = useState({
-    fullName: user?.name || '',
-    phone: user?.phone || '',
-    email: user?.email || '',
-    street: user?.addresses?.[0]?.street || '',
-    landmark: user?.addresses?.[0]?.landmark || '',
-    city: user?.addresses?.[0]?.city || '',
-    district: user?.addresses?.[0]?.district || 'Thiruvananthapuram',
-    state: 'Kerala',
-    pincode: user?.addresses?.[0]?.pincode || '',
-    notes: '',
+  // Initialize formData from draft or user (preserves guest typed data)
+  const [formData, setFormData] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedDraft = sessionStorage.getItem('kochuvila_checkout_draft');
+        if (savedDraft) {
+          return JSON.parse(savedDraft);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return {
+      fullName: user?.name || '',
+      phone: user?.phone || '',
+      email: user?.email || '',
+      street: user?.addresses?.[0]?.street || '',
+      landmark: user?.addresses?.[0]?.landmark || '',
+      city: user?.addresses?.[0]?.city || '',
+      district: user?.addresses?.[0]?.district || 'Thiruvananthapuram',
+      state: 'Kerala',
+      pincode: user?.addresses?.[0]?.pincode || '',
+      notes: '',
+    };
   });
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Sync formData when user logs in via modal
+  // Sync formData when user logs in, preserving any values already typed
   React.useEffect(() => {
     if (user) {
-      setFormData((prev) => ({
+      setFormData((prev: typeof formData) => ({
         ...prev,
         fullName: prev.fullName || user.name || '',
         email: prev.email || user.email || '',
@@ -95,49 +109,52 @@ export default function CheckoutPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev: typeof formData) => {
+      const updated = { ...prev, [name]: value };
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem('kochuvila_checkout_draft', JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+      }
+      return updated;
+    });
   };
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Reusable order placement logic
+  const executeOrder = async (currentUser?: any) => {
+    const activeUser = currentUser || useAuthStore.getState().user;
+    setIsSubmitting(true);
     setErrorMessage('');
 
-    // Check if user is logged in before placing order
-    if (!user) {
-      setErrorMessage('Please sign in or create an account to place your order.');
-      setAuthModalOpen(true);
-      return;
+    // Save the entered address into the user's permanent profile addresses
+    if (activeUser) {
+      try {
+        useAuthStore.getState().addAddress({
+          fullName: formData.fullName.trim(),
+          phone: formData.phone.trim(),
+          street: formData.street.trim(),
+          landmark: formData.landmark.trim(),
+          city: formData.city.trim(),
+          district: formData.district,
+          state: 'Kerala',
+          pincode: formData.pincode.trim(),
+        });
+      } catch {
+        // non-blocking
+      }
     }
-
-    // Validation
-    if (!formData.fullName.trim()) {
-      setErrorMessage('Please enter your full name');
-      return;
-    }
-    if (!formData.phone.trim() || formData.phone.trim().length < 10) {
-      setErrorMessage('Please enter a valid 10-digit mobile phone number');
-      return;
-    }
-    if (!formData.street.trim() || !formData.city.trim() || !formData.pincode.trim()) {
-      setErrorMessage('Please complete your street, city, and Kerala PIN code');
-      return;
-    }
-    if (items.length === 0) {
-      setErrorMessage('Your cart is empty');
-      return;
-    }
-
-    setIsSubmitting(true);
 
     try {
       const orderPayload = {
         customer: {
           fullName: formData.fullName.trim(),
-          email: formData.email.trim() || 'customer@kochuvila.com',
-          phone: formData.phone.trim(),
+          email: formData.email.trim() || activeUser?.email || 'customer@kochuvila.com',
+          phone: formData.phone.trim() || activeUser?.phone || '',
           address: {
             fullName: formData.fullName.trim(),
-            phone: formData.phone.trim(),
+            phone: formData.phone.trim() || activeUser?.phone || '',
             street: formData.street.trim(),
             landmark: formData.landmark.trim(),
             city: formData.city.trim(),
@@ -149,7 +166,7 @@ export default function CheckoutPage() {
         items: items.map((item) => ({
           productId: item.product._id,
           name: item.product.name,
-          image: item.product.images[0],
+          image: item.product.images?.[0] || '',
           brand: item.product.brand,
           price: item.product.price,
           mrp: item.product.mrp,
@@ -166,7 +183,7 @@ export default function CheckoutPage() {
         notes: formData.notes,
       };
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) || '/api';
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
 
@@ -182,6 +199,9 @@ export default function CheckoutPage() {
 
       if (res.ok && orderData.orderNumber) {
         clearCart();
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('kochuvila_checkout_draft');
+        }
         router.push(`/order-success?orderNumber=${orderData.orderNumber}`);
       } else {
         setErrorMessage(orderData.error || 'Failed to place order. Please try again.');
@@ -200,6 +220,9 @@ export default function CheckoutPage() {
           paymentMethod,
         });
         localStorage.setItem('kochuvila_orders', JSON.stringify(savedOrders));
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('kochuvila_checkout_draft');
+        }
       } catch {
         // storage fallback
       }
@@ -207,6 +230,50 @@ export default function CheckoutPage() {
       router.push(`/order-success?orderNumber=${generatedOrderNumber}`);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmitOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    // 1. Validation first (Validate address and contact details)
+    if (!formData.fullName.trim()) {
+      setErrorMessage('Please enter your full name');
+      return;
+    }
+    if (!formData.phone.trim() || formData.phone.trim().length < 10) {
+      setErrorMessage('Please enter a valid 10-digit mobile phone number');
+      return;
+    }
+    if (!formData.street.trim() || !formData.city.trim() || !formData.pincode.trim()) {
+      setErrorMessage('Please complete your street address, city, and Kerala PIN code');
+      return;
+    }
+    if (items.length === 0) {
+      setErrorMessage('Your cart is empty');
+      return;
+    }
+
+    // 2. If user is NOT logged in, trigger login/signup modal now!
+    // Customer filled details are safely preserved, only payment submit requires login/signup
+    if (!user) {
+      setPendingSubmit(true);
+      setAuthMode('login');
+      setAuthModalOpen(true);
+      return;
+    }
+
+    // 3. User is already logged in, proceed directly
+    await executeOrder(user);
+  };
+
+  // Called automatically when customer logs in or signs up from the modal
+  const handleAuthSuccess = () => {
+    const loggedInUser = useAuthStore.getState().user;
+    if (pendingSubmit && loggedInUser) {
+      setPendingSubmit(false);
+      executeOrder(loggedInUser);
     }
   };
 
@@ -225,89 +292,49 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-[#f8fbfe] min-h-screen py-8 sm:py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-black text-brand-dark font-display">
-            Checkout & Delivery Information
+    <div className="bg-[#f8fbfe] min-h-screen py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
+        {/* Header */}
+        <div className="mb-3.5 sm:mb-6">
+          <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-brand-dark font-display">
+            Checkout & Delivery
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Complete your order with Kochuvila Agencies. Warranty included.
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+            Complete your order with Kochuvila Agencies. Doorstep delivery &amp; warranty included.
           </p>
         </div>
 
-        {/* Guest / Not Logged In Notice */}
-        {!user && (
-          <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
-                <Lock className="w-4 h-4" />
-              </div>
-              <div>
-                <p className="text-xs sm:text-sm font-bold text-amber-950">
-                  Account Sign In / Sign Up Required for Order Placement
-                </p>
-                <p className="text-[11px] text-amber-800">
-                  Sign in or create your account to unlock order tracking, warranty records, and complete checkout.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('login');
-                  setAuthModalOpen(true);
-                }}
-                className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#0097F3] hover:bg-[#0084D6] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('signup');
-                  setAuthModalOpen(true);
-                }}
-                className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition-all cursor-pointer"
-              >
-                Sign Up
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Verified User Banner */}
+        {/* Subtle Verified User Pill (Only shown when logged in) */}
         {user && (
-          <div className="mb-6 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3 shadow-xs">
-            <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span className="text-xs font-bold text-emerald-900">
-                Logged in as <span className="underline">{user.name || user.email}</span> ({user.email})
+          <div className="mb-3.5 sm:mb-4 px-3 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200/80 flex items-center justify-between gap-2 shadow-2xs">
+            <div className="flex items-center gap-2 min-w-0 text-xs text-emerald-900">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span className="truncate">
+                Logged in as <span className="font-bold underline">{user.name || user.email}</span>
               </span>
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-md">
-              Verified Account
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md shrink-0">
+              Verified
             </span>
           </div>
         )}
 
         <form onSubmit={handleSubmitOrder}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
             {/* Form Section */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-8 space-y-3.5 sm:space-y-5">
               {/* Customer Contact */}
-              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card space-y-4">
-                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-brand-border pb-3 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-xs flex items-center justify-center font-bold shadow-xs">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3 sm:space-y-3.5">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2 sm:pb-2.5 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-brand-primary text-white text-[10px] sm:text-xs flex items-center justify-center font-bold shadow-xs shrink-0">
                     1
                   </span>
                   Customer Details
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
                       Full Name *
                     </label>
                     <input
@@ -317,12 +344,12 @@ export default function CheckoutPage() {
                       placeholder="e.g. Suresh Kumar"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
                       Mobile Phone Number *
                     </label>
                     <input
@@ -333,12 +360,12 @@ export default function CheckoutPage() {
                       placeholder="e.g. 9847123456"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold text-slate-700 mb-1">
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
                       Email Address (Optional for order invoice)
                     </label>
                     <input
@@ -347,25 +374,25 @@ export default function CheckoutPage() {
                       placeholder="suresh.k@example.com"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Kerala Delivery Address */}
-              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card space-y-4">
-                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-brand-border pb-3 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-xs flex items-center justify-center font-bold shadow-xs">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3 sm:space-y-3.5">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2 sm:pb-2.5 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-brand-primary text-white text-[10px] sm:text-xs flex items-center justify-center font-bold shadow-xs shrink-0">
                     2
                   </span>
-                  Delivery Address (Trivandrum & Surrounding Areas)
+                  Delivery Address (Kerala Doorstep)
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold text-slate-700 mb-1">
-                      House / Building Name & Street Address *
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
+                      House / Building Name &amp; Street Address *
                     </label>
                     <input
                       type="text"
@@ -374,12 +401,12 @@ export default function CheckoutPage() {
                       placeholder="e.g. TC 14/2045, Rose Villa, Medical College Road"
                       value={formData.street}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
                     />
                   </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
+                  <div className="sm:col-span-2">
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
                       Landmark (Optional)
                     </label>
                     <input
@@ -388,34 +415,54 @@ export default function CheckoutPage() {
                       placeholder="e.g. Near Kochuvila Temple / Petrol Pump"
                       value={formData.landmark}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
                     />
                   </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
-                      City / Town *
-                    </label>
-                    <input
-                      type="text"
-                      name="city"
-                      required
-                      placeholder="e.g. Thiruvananthapuram"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-                    />
+                  {/* Compact 2-column mobile row for City & Pincode */}
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:col-span-2">
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
+                        City / Town *
+                      </label>
+                      <input
+                        type="text"
+                        name="city"
+                        required
+                        placeholder="e.g. Trivandrum"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
+                        PIN Code (Kerala) *
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        name="pincode"
+                        maxLength={6}
+                        required
+                        placeholder="e.g. 695011"
+                        value={formData.pincode}
+                        onChange={handleInputChange}
+                        className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
+                  <div className="sm:col-span-2">
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
                       Kerala District *
                     </label>
                     <select
                       name="district"
                       value={formData.district}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 bg-white"
+                      className="w-full h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 transition-all outline-none cursor-pointer"
                     >
                       {KERALA_DISTRICTS.map((dist) => (
                         <option key={dist} value={dist}>
@@ -425,26 +472,9 @@ export default function CheckoutPage() {
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">
-                      Pincode (Kerala) *
-                    </label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      name="pincode"
-                      maxLength={6}
-                      required
-                      placeholder="e.g. 695011"
-                      value={formData.pincode}
-                      onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
-                    />
-                  </div>
-
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold text-slate-700 mb-1">
-                      Delivery & Installation Instructions (Optional)
+                    <label className="block font-semibold text-slate-700 mb-1 text-[11px] sm:text-xs">
+                      Delivery &amp; Installation Instructions (Optional)
                     </label>
                     <textarea
                       name="notes"
@@ -452,27 +482,27 @@ export default function CheckoutPage() {
                       placeholder="e.g. Second floor apartment, lift available. Please call before arrival."
                       value={formData.notes}
                       onChange={handleInputChange}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-primary/30"
+                      className="w-full px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-[#0097F3] focus:ring-1.5 focus:ring-[#0097F3]/20 text-[11px] sm:text-xs text-slate-900 placeholder:text-slate-400 placeholder:text-[10.5px] sm:placeholder:text-[11.5px] transition-all outline-none resize-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Payment Method */}
-              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card space-y-4">
-                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-brand-border pb-3 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-xs flex items-center justify-center font-bold shadow-xs">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3 sm:space-y-3.5">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2 sm:pb-2.5 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-brand-primary text-white text-[10px] sm:text-xs flex items-center justify-center font-bold shadow-xs shrink-0">
                     3
                   </span>
                   Payment Method
                 </h2>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-2.5">
                   {/* COD */}
                   <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-start gap-2.5 sm:gap-3 p-2.5 sm:p-3.5 rounded-xl border cursor-pointer transition-all ${
                       paymentMethod === 'cod'
-                        ? 'border-brand-primary bg-blue-50/50'
+                        ? 'border-brand-primary bg-blue-50/50 ring-1 ring-brand-primary/30'
                         : 'border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -481,14 +511,14 @@ export default function CheckoutPage() {
                       name="paymentMethod"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
-                      className="mt-1 text-brand-primary focus:ring-brand-primary"
+                      className="mt-0.5 sm:mt-1 text-brand-primary focus:ring-brand-primary shrink-0"
                     />
-                    <div className="text-xs">
-                      <p className="font-bold text-slate-900 flex items-center gap-1.5">
-                        <Banknote className="w-4 h-4 text-brand-primary" />
-                        Cash on Delivery (Pay on Delivery)
+                    <div className="text-xs min-w-0">
+                      <p className="font-bold text-slate-900 flex items-center gap-1.5 text-xs sm:text-sm">
+                        <Banknote className="w-4 h-4 text-brand-primary shrink-0" />
+                        <span>Cash on Delivery (Pay on Delivery)</span>
                       </p>
-                      <p className="text-slate-500 mt-0.5">
+                      <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
                         Pay safely in cash or UPI when our delivery team delivers and unboxes your appliance.
                       </p>
                     </div>
@@ -496,9 +526,9 @@ export default function CheckoutPage() {
 
                   {/* Online Payment */}
                   <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-start gap-2.5 sm:gap-3 p-2.5 sm:p-3.5 rounded-xl border cursor-pointer transition-all ${
                       paymentMethod === 'online'
-                        ? 'border-brand-primary bg-blue-50/50'
+                        ? 'border-brand-primary bg-blue-50/50 ring-1 ring-brand-primary/30'
                         : 'border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -507,14 +537,14 @@ export default function CheckoutPage() {
                       name="paymentMethod"
                       checked={paymentMethod === 'online'}
                       onChange={() => setPaymentMethod('online')}
-                      className="mt-1 text-brand-primary focus:ring-brand-primary"
+                      className="mt-0.5 sm:mt-1 text-brand-primary focus:ring-brand-primary shrink-0"
                     />
-                    <div className="text-xs">
-                      <p className="font-bold text-slate-900 flex items-center gap-1.5">
-                        <CreditCard className="w-4 h-4 text-emerald-600" />
-                        Instant Online Payment (UPI / Google Pay / NetBanking)
+                    <div className="text-xs min-w-0">
+                      <p className="font-bold text-slate-900 flex items-center gap-1.5 text-xs sm:text-sm">
+                        <CreditCard className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>Instant Online Payment (UPI / Cards / NetBanking)</span>
                       </p>
-                      <p className="text-slate-500 mt-0.5">
+                      <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
                         Instant checkout verification with immediate dispatch scheduling.
                       </p>
                     </div>
@@ -522,9 +552,9 @@ export default function CheckoutPage() {
 
                   {/* Showroom Pickup */}
                   <label
-                    className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-start gap-2.5 sm:gap-3 p-2.5 sm:p-3.5 rounded-xl border cursor-pointer transition-all ${
                       paymentMethod === 'enquiry'
-                        ? 'border-brand-primary bg-blue-50/50'
+                        ? 'border-brand-primary bg-blue-50/50 ring-1 ring-brand-primary/30'
                         : 'border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -533,14 +563,14 @@ export default function CheckoutPage() {
                       name="paymentMethod"
                       checked={paymentMethod === 'enquiry'}
                       onChange={() => setPaymentMethod('enquiry')}
-                      className="mt-1 text-brand-primary focus:ring-brand-primary"
+                      className="mt-0.5 sm:mt-1 text-brand-primary focus:ring-brand-primary shrink-0"
                     />
-                    <div className="text-xs">
-                      <p className="font-bold text-slate-900 flex items-center gap-1.5">
-                        <Building className="w-4 h-4 text-brand-accent" />
-                        Showroom Pickup & Pay
+                    <div className="text-xs min-w-0">
+                      <p className="font-bold text-slate-900 flex items-center gap-1.5 text-xs sm:text-sm">
+                        <Building className="w-4 h-4 text-brand-accent shrink-0" />
+                        <span>Showroom Pickup &amp; Pay</span>
                       </p>
-                      <p className="text-slate-500 mt-0.5">
+                      <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
                         Reserve items online and inspect/pay directly at Kochuvila Junction showroom.
                       </p>
                     </div>
@@ -550,40 +580,53 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Summary & Submit Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="bg-white rounded-3xl p-6 border border-brand-border shadow-card space-y-6 sticky top-24">
-                <h2 className="text-sm font-bold text-brand-dark uppercase tracking-wider border-b border-brand-border pb-3">
-                  Summary ({items.length} items)
+            <div className="lg:col-span-4 space-y-3.5 sm:space-y-5">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3.5 sm:space-y-4 sticky top-16 sm:top-24">
+                <h2 className="text-xs sm:text-sm font-bold text-brand-dark uppercase tracking-wider border-b border-slate-100 pb-2 sm:pb-2.5">
+                  Summary ({items.length} {items.length === 1 ? 'item' : 'items'})
                 </h2>
 
                 {/* Items preview */}
-                <div className="space-y-3 max-h-56 overflow-y-auto pr-1">
-                  {items.map(({ product, quantity }) => (
-                    <div key={product._id} className="flex items-center gap-3 text-xs">
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        width={48}
-                        height={48}
-                        className="w-12 h-12 rounded-lg object-contain bg-slate-50 p-1 border border-slate-200"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-900 truncate">
-                          {product.name}
-                        </p>
-                        <p className="text-slate-500">
-                          Qty: {quantity} × {formatINR(product.price)}
-                        </p>
+                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                  {items.map(({ product, quantity }) => {
+                    const fallbackImg =
+                      product.category === 'furniture'
+                        ? '/banners/portrait-furniture.jpg'
+                        : '/banners/portrait-appliances.jpg';
+                    const itemImg =
+                      product.images && product.images.length > 0 && product.images[0]
+                        ? product.images[0]
+                        : fallbackImg;
+
+                    return (
+                      <div key={product._id} className="flex items-center gap-2.5 text-xs">
+                        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-slate-50 p-0.5 border border-slate-200 shrink-0 relative overflow-hidden flex items-center justify-center">
+                          <Image
+                            src={itemImg}
+                            alt={product.name}
+                            fill
+                            sizes="44px"
+                            className="object-contain p-0.5"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 truncate text-[11px] sm:text-xs">
+                            {product.name}
+                          </p>
+                          <p className="text-[10px] text-slate-500">
+                            Qty: {quantity} × {formatINR(product.price)}
+                          </p>
+                        </div>
+                        <span className="font-bold text-slate-900 text-xs sm:text-sm shrink-0">
+                          {formatINR(product.price * quantity)}
+                        </span>
                       </div>
-                      <span className="font-bold text-slate-900">
-                        {formatINR(product.price * quantity)}
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Price Breakdown */}
-                <div className="space-y-2 text-xs text-slate-600 pt-3 border-t border-brand-border">
+                <div className="space-y-1.5 text-xs text-slate-600 pt-2.5 border-t border-slate-100">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span className="font-semibold text-slate-900">{formatINR(subtotal)}</span>
@@ -600,37 +643,33 @@ export default function CheckoutPage() {
                       {deliveryCharge === 0 ? 'Standard Delivery' : formatINR(deliveryCharge)}
                     </span>
                   </div>
-                  <div className="pt-3 border-t border-slate-200 flex justify-between items-baseline">
-                    <span className="text-sm font-bold text-slate-900">Total Payable</span>
-                    <span className="text-2xl font-black text-brand-dark">
+                  <div className="pt-2 border-t border-slate-200 flex justify-between items-baseline">
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Total Payable</span>
+                    <span className="text-lg sm:text-2xl font-black text-brand-dark">
                       {formatINR(total)}
                     </span>
                   </div>
                 </div>
 
                 {errorMessage && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
+                  <div className="p-2 sm:p-2.5 bg-red-50 border border-red-200 text-red-700 text-[11px] sm:text-xs rounded-lg">
                     {errorMessage}
                   </div>
                 )}
 
-                {/* Place Order CTA */}
+                {/* Place Order CTA Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-button transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3.5 px-4 sm:px-6 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-xs sm:text-sm shadow-button transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
                 >
-                  <Lock className="w-4 h-4 text-brand-sky" />
-                  <span>
-                    {isSubmitting
-                      ? 'Placing Order...'
-                      : !user
-                      ? 'Sign In / Sign Up to Place Order'
-                      : 'Confirm & Place Order'}
+                  <Lock className="w-4 h-4 text-brand-sky shrink-0" />
+                  <span className="truncate">
+                    {isSubmitting ? 'Placing Order...' : 'Confirm & Place Order'}
                   </span>
                 </button>
 
-                <div className="text-[11px] text-slate-500 text-center space-y-1">
+                <div className="text-[10px] sm:text-[11px] text-slate-500 text-center space-y-0.5">
                   <p>• Verified Manufacturer Warranties included</p>
                   <p>• Dedicated doorstep handling from Trivandrum showrooms</p>
                 </div>
@@ -643,7 +682,11 @@ export default function CheckoutPage() {
       <AuthModal
         isOpen={authModalOpen}
         initialMode={authMode}
-        onClose={() => setAuthModalOpen(false)}
+        onClose={() => {
+          setAuthModalOpen(false);
+          setPendingSubmit(false);
+        }}
+        onSuccess={handleAuthSuccess}
       />
     </div>
   );

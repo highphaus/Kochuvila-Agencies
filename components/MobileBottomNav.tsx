@@ -8,10 +8,12 @@ import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useAuthStore } from '@/store/authStore';
 import SearchAutocomplete from './SearchAutocomplete';
+import AuthModal from './AuthModal';
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const cartCount = useCartStore((state) => state.getItemCount());
   const wishlistCount = useWishlistStore((state) => state.getCount());
   const user = useAuthStore((state) => state.user);
@@ -165,31 +167,45 @@ export default function MobileBottomNav() {
             {isCartActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
           </Link>
 
-          {/* 5. Account */}
-          <Link
-            href="/account"
-            className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
-              isAccountActive
-                ? 'text-[#0097F3] font-bold'
-                : 'text-slate-600 hover:text-black font-medium'
-            }`}
-          >
-            <div className="relative">
-              {user ? (
+          {/* 5. Account (Link if logged in, Modal if guest) */}
+          {user ? (
+            <Link
+              href="/account"
+              className={`flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative ${
+                isAccountActive
+                  ? 'text-[#0097F3] font-bold'
+                  : 'text-slate-600 hover:text-black font-medium'
+              }`}
+            >
+              <div className="relative">
                 <div className="w-5 h-5 rounded-full bg-[#0097F3] text-white flex items-center justify-center text-[10px] font-black shadow-xs">
                   {user.name ? user.name[0].toUpperCase() : 'U'}
                 </div>
-              ) : (
-                <User className={`w-5 h-5 ${isAccountActive ? 'stroke-[2.5px]' : 'stroke-2'}`} />
-              )}
-            </div>
-            <span className="text-[10px] mt-1 tracking-tight">
-              {user ? 'Profile' : 'Sign In'}
-            </span>
-            {isAccountActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
-          </Link>
+              </div>
+              <span className="text-[10px] mt-1 tracking-tight">Account</span>
+              {isAccountActive && <span className="w-1.5 h-1.5 rounded-full bg-[#0097F3] mt-0.5" />}
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setAuthModalOpen(true)}
+              className="flex flex-col items-center justify-center min-w-[50px] py-1 px-1 rounded-xl transition-all relative text-slate-600 hover:text-[#0097F3] font-medium cursor-pointer"
+            >
+              <div className="relative">
+                <User className="w-5 h-5 stroke-2" />
+              </div>
+              <span className="text-[10px] mt-1 tracking-tight">Sign In</span>
+            </button>
+          )}
         </nav>
       </div>
+
+      {/* Auth Modal triggered directly from bottom Sign In */}
+      <AuthModal
+        isOpen={authModalOpen}
+        initialMode="login"
+        onClose={() => setAuthModalOpen(false)}
+      />
     </>
   );
 }

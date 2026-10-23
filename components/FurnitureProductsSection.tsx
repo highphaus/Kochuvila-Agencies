@@ -37,7 +37,7 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
         {/* Header & Subcategory Tabs */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-[#E2EBF2] mb-8">
           <div className="space-y-2.5 max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
+            <h2 className="text-base xs:text-lg sm:text-2xl lg:text-3xl font-black text-black font-display uppercase tracking-tight whitespace-nowrap">
               Handcrafted Home Furniture
             </h2>
 
@@ -102,90 +102,6 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
           ))}
         </div>
 
-        {/* Craftsmanship & Guarantee Highlights Bar */}
-        {/* Mobile: Horizontal auto-scrolling circular loop carousel */}
-        <div className="block sm:hidden mt-6 pt-4 border-t border-slate-100 overflow-hidden relative -mx-4 px-4">
-          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[#FDFDFD] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-[#FDFDFD] to-transparent z-10 pointer-events-none" />
-
-          <div className="animate-marquee-loop-fast flex items-center gap-2.5 select-none py-1">
-            {[
-              {
-                icon: Hammer,
-                title: 'Master Carpentry',
-                desc: 'Handcrafted precision',
-                bg: 'bg-amber-100',
-                color: 'text-amber-800',
-              },
-              {
-                icon: Shield,
-                title: '5-Yr Wood Warranty',
-                desc: 'Anti-termite guarantee',
-                bg: 'bg-emerald-100',
-                color: 'text-emerald-800',
-              },
-              {
-                icon: Ruler,
-                title: 'Custom Sizing',
-                desc: 'Tailored to your floor plan',
-                bg: 'bg-blue-100',
-                color: 'text-blue-800',
-              },
-              {
-                icon: Truck,
-                title: 'Free Setup & Delivery',
-                desc: 'Direct to your room in Kerala',
-                bg: 'bg-purple-100',
-                color: 'text-purple-800',
-              },
-              // Duplicate for continuous circular loop
-              {
-                icon: Hammer,
-                title: 'Master Carpentry',
-                desc: 'Handcrafted precision',
-                bg: 'bg-amber-100',
-                color: 'text-amber-800',
-              },
-              {
-                icon: Shield,
-                title: '5-Yr Wood Warranty',
-                desc: 'Anti-termite guarantee',
-                bg: 'bg-emerald-100',
-                color: 'text-emerald-800',
-              },
-              {
-                icon: Ruler,
-                title: 'Custom Sizing',
-                desc: 'Tailored to your floor plan',
-                bg: 'bg-blue-100',
-                color: 'text-blue-800',
-              },
-              {
-                icon: Truck,
-                title: 'Free Setup & Delivery',
-                desc: 'Direct to your room in Kerala',
-                bg: 'bg-purple-100',
-                color: 'text-purple-800',
-              },
-            ].map((h, i) => {
-              const Icon = h.icon;
-              return (
-                <div
-                  key={i}
-                  className="w-[190px] shrink-0 flex items-center gap-2.5 p-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200/80 shadow-2xs"
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${h.bg} ${h.color}`}>
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-900 truncate">{h.title}</p>
-                    <p className="text-[10px] text-slate-500 truncate">{h.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Desktop / Tablet: Static 4-column grid */}
         <div className="hidden sm:grid sm:grid-cols-4 gap-3 sm:gap-4 mt-8 pt-6 border-t border-slate-100">
@@ -234,11 +150,11 @@ export default function FurnitureProductsSection({ products }: FurnitureProducts
         <div className="mt-8 flex flex-col items-center justify-center text-center">
           <Link
             href="/furniture"
-            className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-[#0097F3]/25 hover:shadow-xl hover:shadow-[#0097F3]/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+            className="group inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white font-bold text-xs tracking-normal shadow-md shadow-[#0097F3]/20 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
           >
-            <span>Explore Complete Furniture Collection</span>
-            <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 group-hover:bg-white/30 transition-all duration-200">
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
+            <span>Explore Furniture</span>
+            <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 transition-all duration-200">
+              <ArrowRight className="w-3 h-3 text-white" />
             </div>
           </Link>
         </div>

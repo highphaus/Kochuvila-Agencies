@@ -77,7 +77,7 @@ export default function DealsSection({ deals }: DealsSectionProps) {
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white font-display uppercase tracking-tight">
+            <h2 className="text-base xs:text-lg sm:text-3xl lg:text-4xl font-black text-white font-display uppercase tracking-tight whitespace-nowrap">
               Kochuvila Deals &amp; Flash Offers
             </h2>
             <p className="text-xs sm:text-sm text-brand-lightBlue font-medium max-w-xl">

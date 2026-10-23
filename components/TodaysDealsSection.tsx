@@ -80,20 +80,16 @@ export default function TodaysDealsSection({ products }: TodaysDealsSectionProps
                   {/* Image with Deal Badge */}
                   <Link
                     href={`/product/${product.slug}`}
-                    className="block relative aspect-square w-full bg-[#FAFBFD] p-3 overflow-hidden border-b border-slate-100"
+                    className="block relative aspect-square w-full bg-slate-100 overflow-hidden border-b border-slate-100"
                   >
                     <Image
                       src={product.images?.[0] || fallbackImage}
                       alt={product.name}
                       fill
                       sizes="(max-width: 640px) 180px, 220px"
-                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
 
-                    {/* Deal Badge */}
-                    <span className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-2xs tracking-tight">
-                      {product.discountPercentage}% OFF
-                    </span>
                   </Link>
 
                   {/* Card Content */}
@@ -118,12 +114,6 @@ export default function TodaysDealsSection({ products }: TodaysDealsSectionProps
                         {formatINR(product.mrp)}
                       </span>
                     </div>
-
-                    {/* Delivery Assurance */}
-                    <p className="text-[10px] text-slate-600 font-medium truncate flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-[#007185] shrink-0" />
-                      <span>Trivandrum Showroom Dispatch</span>
-                    </p>
                   </div>
                 </div>
 

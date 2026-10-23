@@ -28,7 +28,7 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
         {/* Header & Tabs */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4 border-b border-[#E2EBF2] pb-4">
           <div className="flex flex-wrap items-center gap-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#000000] font-display">
+            <h2 className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-bold text-[#000000] font-display whitespace-nowrap">
               Featured Products
             </h2>
 
@@ -91,11 +91,11 @@ export default function FeaturedProductsSection({ products }: FeaturedProductsSe
         <div className="mt-8 sm:mt-12 pt-4 flex flex-col items-center justify-center text-center space-y-3">
           <Link
             href="/products"
-            className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-[#0097F3]/25 hover:shadow-xl hover:shadow-[#0097F3]/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+            className="group inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#0097F3] hover:bg-[#017ED0] text-white font-bold text-xs tracking-normal shadow-md shadow-[#0097F3]/20 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
           >
-            <span>Explore More Products</span>
-            <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 group-hover:bg-white/30 transition-all duration-200">
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
+            <span>Explore Products</span>
+            <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 transition-all duration-200">
+              <ArrowRight className="w-3 h-3 text-white" />
             </div>
           </Link>
           <p className="text-xs text-[#64748B] font-medium max-w-md">

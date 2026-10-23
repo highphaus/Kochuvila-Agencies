@@ -95,14 +95,6 @@ export default function WishlistClient() {
                   key={product._id}
                   className="group bg-white rounded-2xl border border-slate-200/90 hover:border-[#0097F3] transition-all duration-300 flex flex-col justify-between overflow-hidden relative shadow-2xs hover:shadow-lg hover:-translate-y-0.5"
                 >
-                  {/* Discount Badge on Top Left */}
-                  {product.discountPercentage > 0 && (
-                    <div className="absolute top-2 left-2 z-10">
-                      <span className="bg-[#0097F3] text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 sm:px-2 py-0.5 rounded-md shadow-xs tracking-wider">
-                        {product.discountPercentage}% OFF
-                      </span>
-                    </div>
-                  )}
 
                   {/* Remove Button on Top Right */}
                   <button
@@ -118,7 +110,7 @@ export default function WishlistClient() {
                     {/* Product Image Link */}
                     <Link
                       href={`/product/${product.slug}`}
-                      className="block relative aspect-square w-full bg-[#FAFBFD] overflow-hidden p-2.5 sm:p-3.5 flex items-center justify-center cursor-pointer border-b border-slate-100"
+                      className="block relative aspect-square w-full bg-slate-100 overflow-hidden cursor-pointer border-b border-slate-100"
                     >
                       <Image
                         src={imageSrc}
@@ -126,7 +118,7 @@ export default function WishlistClient() {
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
                         loading="lazy"
-                        className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </Link>
 

@@ -30,7 +30,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) || '/api';
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
 

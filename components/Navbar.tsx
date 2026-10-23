@@ -141,7 +141,7 @@ export default function Navbar() {
         - Flipkart's iconic circular category tray with real icons & labels
         ========================================================================
       */}
-      <header className="block md:hidden bg-[#0097F3] shadow-md safe-top select-none sticky top-0 z-40">
+      <header className="block md:hidden bg-[#0097F3] shadow-md safe-top select-none relative z-40">
         {/* Top Brand Bar & Search Row */}
         <div className="px-3 pt-2.5 pb-2">
           <div className="flex items-center justify-between gap-3 mb-2">
@@ -168,13 +168,12 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Compact Trivandrum Showroom Location Strip */}
+        {/* Compact Trivandrum Location Strip */}
         <div className="flex items-center justify-between px-3 py-1.5 bg-[#0086D9] text-white/95 text-[11px] font-medium border-t border-white/10">
           <div className="flex items-center gap-1.5 truncate">
             <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span className="truncate">Deliver to Trivandrum 695609 (Showroom Dispatch)</span>
+            <span className="truncate">Deliver to Trivandrum 695609</span>
           </div>
-          <span className="text-[10px] font-bold text-amber-300 shrink-0">Showroom Store</span>
         </div>
 
         {/* Flipkart's Iconic Circular Category Tray */}

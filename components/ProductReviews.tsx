@@ -100,6 +100,20 @@ export default function ProductReviews({ productName, initialRating, initialCoun
     setNewName('');
     setNewTitle('');
     setNewComment('');
+
+    const API_URL = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) || '/api';
+    fetch(`${API_URL}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productName,
+        userName: newName.trim(),
+        rating: newRating,
+        headline: newTitle.trim() || 'Verified Customer Review',
+        comment: newComment.trim(),
+        verifiedPurchase: true,
+      }),
+    }).catch((err) => console.warn('Could not persist review to backend:', err));
   };
 
   // Distribution calculation

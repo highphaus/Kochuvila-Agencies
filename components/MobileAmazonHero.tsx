@@ -20,7 +20,7 @@ interface MobileSlide {
 const MOBILE_HERO_SLIDES: MobileSlide[] = [
   {
     id: 'slide-festival',
-    badge: '⚡ Kerala Festive Deals',
+    badge: 'Kerala Festive Deals',
     badgeBg: 'bg-amber-400',
     badgeText: 'text-amber-950',
     title: 'Grand Appliance Festival',
@@ -31,7 +31,7 @@ const MOBILE_HERO_SLIDES: MobileSlide[] = [
   },
   {
     id: 'slide-teak',
-    badge: '🪵 100% Solid Malabar Teak',
+    badge: '100% Solid Malabar Teak',
     badgeBg: 'bg-emerald-500',
     badgeText: 'text-white',
     title: 'Handcrafted Teak Living',
@@ -42,7 +42,7 @@ const MOBILE_HERO_SLIDES: MobileSlide[] = [
   },
   {
     id: 'slide-oled',
-    badge: '🎬 4K OLED & Cinema',
+    badge: '4K OLED & Cinema',
     badgeBg: 'bg-[#0097F3]',
     badgeText: 'text-white',
     title: 'Sony Bravia & LG OLED',
@@ -53,7 +53,7 @@ const MOBILE_HERO_SLIDES: MobileSlide[] = [
   },
   {
     id: 'slide-cooling',
-    badge: '🚚 Careful Doorstep Unboxing',
+    badge: 'Careful Doorstep Unboxing',
     badgeBg: 'bg-indigo-500',
     badgeText: 'text-white',
     title: 'Smart Cooling & Laundry',

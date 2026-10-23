@@ -58,7 +58,7 @@ export default function FAQSection() {
             <HelpCircle className="w-3.5 h-3.5 text-brand-primary" />
             <span>Got Questions?</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight">
+          <h2 className="text-lg xs:text-xl sm:text-3xl lg:text-4xl font-black text-black font-display uppercase tracking-tight whitespace-nowrap">
             Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">

@@ -74,15 +74,44 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       }
     }
   };
+
+  const hasCustomVariants = !!(product.variants && product.variants.length > 0);
+  const variantOptions = hasCustomVariants
+    ? product.variants!.map((v) => v.name)
+    : product.category === 'appliances'
+    ? ['Standard Edition', 'Inverter Plus (Featured)', 'Smart WiFi Enabled']
+    : ['Natural Solid Teakwood', 'Dark Walnut Finish', 'Royal Honey Teak'];
+
+  const currentVariant = hasCustomVariants ? product.variants![selectedVariant] : null;
+  const currentPrice = currentVariant && currentVariant.price ? currentVariant.price : product.price;
+  const currentMrp = currentVariant && currentVariant.mrp ? currentVariant.mrp : product.mrp;
+  const isCurrentlyInStock = currentVariant ? currentVariant.inStock !== false && currentVariant.stock > 0 : (product.inStock !== false && product.stock > 0);
+
   const whatsappUrl = generateWhatsAppEnquiryLink(product);
-  const savings = Math.max(0, product.mrp - product.price);
+  const savings = Math.max(0, currentMrp - currentPrice);
 
   const handleAddToCart = () => {
-    addItem(product, quantity);
+    addItem(
+      {
+        ...product,
+        price: currentPrice,
+        mrp: currentMrp,
+        images: currentVariant?.image ? [currentVariant.image, ...(product.images || [])] : product.images,
+      },
+      quantity
+    );
   };
 
   const handleBuyNow = () => {
-    addItem(product, quantity);
+    addItem(
+      {
+        ...product,
+        price: currentPrice,
+        mrp: currentMrp,
+        images: currentVariant?.image ? [currentVariant.image, ...(product.images || [])] : product.images,
+      },
+      quantity
+    );
     router.push('/checkout');
   };
 
@@ -100,21 +129,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     // Trivandrum / regional PIN check
     if (cleanPin.startsWith('695') || cleanPin.startsWith('691') || cleanPin.startsWith('69')) {
       setPincodeMessage({
-        text: '✅ Delivery available! Direct doorstep dispatch from our Trivandrum showroom (Pangode & Kallara) with installation assistance.',
+        text: 'Delivery available. Direct doorstep dispatch from our Trivandrum showroom (Pangode & Kallara) with installation assistance.',
         isAvailable: true,
       });
     } else {
       setPincodeMessage({
-        text: '📍 Showroom pickup or Trivandrum dispatch available. Please contact our Trivandrum store for delivery inquiries.',
+        text: 'Showroom pickup or Trivandrum dispatch available. Please contact our Trivandrum store for delivery inquiries.',
         isAvailable: true,
       });
     }
   };
-
-  const variantOptions =
-    product.category === 'appliances'
-      ? ['Standard Edition', 'Inverter Plus (Featured)', 'Smart WiFi Enabled']
-      : ['Natural Solid Teakwood', 'Dark Walnut Finish', 'Royal Honey Teak'];
 
   const colorSwatches =
     product.category === 'appliances'
@@ -253,6 +277,21 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 {product.energyRating}
               </span>
             )}
+            {product.capacity && (
+              <span className="bg-blue-50 text-brand-primary font-semibold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-blue-200">
+                {product.capacity}
+              </span>
+            )}
+            {product.dimensions && (
+              <span className="bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-slate-200">
+                {product.dimensions}
+              </span>
+            )}
+            {product.weight && (
+              <span className="bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-slate-200">
+                {product.weight}
+              </span>
+            )}
             {product.dealTag && (
               <span className="bg-amber-50 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px] sm:text-xs border border-amber-200">
                 {product.dealTag}
@@ -264,7 +303,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             {product.name}
           </h1>
 
-          {/* Rating */}
+          {/* Rating & Stock Availability */}
           <div className="flex items-center gap-2.5 mt-2 flex-wrap">
             <div className="flex items-center gap-1 bg-emerald-600 text-white text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded">
               <span>{product.rating.toFixed(1)}</span>
@@ -274,10 +313,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               {product.reviewCount} Verified Ratings
             </span>
             <span className="text-slate-300">|</span>
-            <span className="text-[11px] sm:text-xs text-emerald-700 font-semibold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              In Stock &amp; Ready for Dispatch
-            </span>
+            {isCurrentlyInStock ? (
+              <span className="text-[11px] sm:text-xs text-emerald-700 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                In Stock &amp; Ready for Dispatch
+              </span>
+            ) : (
+              <span className="text-[11px] sm:text-xs text-rose-600 font-bold flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-rose-500" />
+                Currently Out of Stock
+              </span>
+            )}
           </div>
         </div>
 
@@ -285,15 +331,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5 sm:space-y-3">
           <div className="flex items-baseline gap-2.5 sm:gap-3 flex-wrap">
             <span className="text-2xl xs:text-3xl sm:text-4xl font-black text-slate-950">
-              {formatINR(product.price)}
+              {formatINR(currentPrice)}
             </span>
-            {product.mrp > product.price && (
+            {currentMrp > currentPrice && (
               <>
                 <span className="text-xs sm:text-base text-slate-400 line-through">
-                  {formatINR(product.mrp)}
+                  {formatINR(currentMrp)}
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                  Save {formatINR(savings)} ({product.discountPercentage}% OFF)
+                  Save {formatINR(Math.max(0, currentMrp - currentPrice))} ({Math.round(((currentMrp - currentPrice) / currentMrp) * 100)}% OFF)
                 </span>
               </>
             )}
@@ -310,7 +356,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 Zero Cost EMI Available
               </p>
               <p className="text-slate-600 text-[10px] sm:text-[11px] mt-0.5">
-                Pay as low as <strong>{formatINR(emi)}/mo</strong> for 6 months or <strong>{formatINR(emi12)}/mo</strong> for 12 months.
+                Pay as low as <strong>{formatINR(calculateEMI(currentPrice, 6))}/mo</strong> for 6 months or <strong>{formatINR(calculateEMI(currentPrice, 12))}/mo</strong> for 12 months.
               </p>
             </div>
             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#0097F3] bg-white px-2 py-1 rounded border border-blue-200 self-start sm:self-center shrink-0">

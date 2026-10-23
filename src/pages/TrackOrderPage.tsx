@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Package, Phone, MapPin, Calendar, CheckCircle2, Loader2 } from 'lucide-react';
+import { Search, Package, Phone, MapPin, Calendar, CheckCircle2, Loader2, Truck, Copy, Check, ExternalLink } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { fetchOrderById } from '@/lib/api';
 import { formatINR } from '@/lib/utils';
@@ -14,6 +14,7 @@ export default function TrackOrderPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(Boolean(initialQuery));
+  const [copiedTracking, setCopiedTracking] = useState(false);
 
   const loadOrder = (orderNum: string) => {
     if (!orderNum) return;
@@ -145,6 +146,61 @@ export default function TrackOrderPage() {
                   </span>
                 </div>
               </div>
+
+              {/* Courier & Tracking Consignment Card */}
+              {(order.trackingId || order.courierService) && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-sky-50/50 to-slate-50 border border-blue-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-2xl bg-brand-primary text-white flex items-center justify-center shrink-0 shadow-sm">
+                      <Truck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-brand-primary bg-white px-2 py-0.5 rounded-md border border-blue-200">
+                          {order.courierService || 'Logistics Partner'}
+                        </span>
+                        <span className="text-xs text-slate-500 font-medium">Consignment Dispatched</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-slate-600 font-bold">Tracking ID:</span>
+                        <span className="font-mono text-sm font-black text-black select-all">
+                          {order.trackingId || 'N/A'}
+                        </span>
+                        {order.trackingId && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(order.trackingId!);
+                              setCopiedTracking(true);
+                              setTimeout(() => setCopiedTracking(false), 2000);
+                            }}
+                            className="p-1 rounded text-slate-500 hover:text-brand-primary hover:bg-white transition-colors"
+                            title="Copy Tracking ID"
+                          >
+                            {copiedTracking ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {order.trackingUrl && (
+                    <a
+                      href={order.trackingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-deepBlue text-white font-bold text-xs shadow-xs transition-all whitespace-nowrap self-start sm:self-center"
+                    >
+                      <span>Track on Courier Site</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              )}
 
               {/* Progress Stepper Timeline */}
               <div className="pt-2">
